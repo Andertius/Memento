@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Memento.Models
 {
@@ -27,12 +28,17 @@ namespace Memento.Models
             modelBuilder
                 .Entity<Deck>()
                 .HasOne(deck => deck.Creator)
-                .WithMany(user => user.CreatedDecks);
+                .WithMany(user => user.CreatedDecks)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder
                 .Entity<User>()
                 .HasIndex(user => user.Email)
                 .IsUnique();
+
+            modelBuilder
+                .Entity<Card>()
+                .HasOne(card => card.User);
         }
     }
 }

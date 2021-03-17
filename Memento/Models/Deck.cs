@@ -12,7 +12,7 @@ namespace Memento.Models
 
         [Required]
         [ForeignKey(nameof(Creator))]
-        public string CreatorName { get; set; }
+        public long CreatorId { get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -34,5 +34,7 @@ namespace Memento.Models
         public ICollection<User> Users { get; set; }
 
         public ICollection<Tag> Tags { get; set; }
+
+        public ICollection<Card> Cards { get; set; }
     }
 }

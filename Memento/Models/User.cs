@@ -8,7 +8,10 @@ namespace Memento.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Name { get; set; }
+        public long Id { get; set; }
+
+        [Required]
+        public string Username { get; set; }
 
         [Required]
         public string Email { get; set; }
