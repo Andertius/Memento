@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Memento.Models
 {
@@ -15,8 +10,6 @@ namespace Memento.Models
         public DbSet<Card> Cards { get; set; }
 
         public DbSet<Deck> Decks { get; set; }
-
-        public DbSet<Image> Images { get; set; }
 
         public DbSet<Tag> Tags { get; set; }
 
@@ -35,6 +28,11 @@ namespace Memento.Models
                 .Entity<Deck>()
                 .HasOne(deck => deck.Creator)
                 .WithMany(user => user.CreatedDecks);
+
+            modelBuilder
+                .Entity<User>()
+                .HasIndex(user => user.Email)
+                .IsUnique();
         }
     }
 }

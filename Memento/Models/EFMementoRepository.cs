@@ -15,8 +15,6 @@ namespace Memento.Models
 
         public IQueryable<Deck> Decks => context.Decks;
 
-        public IQueryable<Image> Images => context.Images;
-
         public IQueryable<Tag> Tags => context.Tags;
 
         public IQueryable<User> Users => context.Users;

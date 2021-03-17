@@ -6,7 +6,6 @@ namespace Memento.Models
     {
         IQueryable<Card> Cards { get; }
         IQueryable<Deck> Decks { get; }
-        IQueryable<Image> Images { get; }
         IQueryable<Tag> Tags { get; }
         IQueryable<User> Users { get; }
     }

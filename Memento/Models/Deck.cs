@@ -10,9 +10,11 @@ namespace Memento.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
+        [Required]
         [ForeignKey(nameof(Creator))]
-        public long? CreatorId { get; set; }
+        public string CreatorName { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
         public bool IsPublic { get; set; }
