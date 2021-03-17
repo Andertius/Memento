@@ -4,7 +4,7 @@ namespace Memento.Models
 {
     public class EFMementoRepository : IMementoRepository
     {
-        private MementoDbContext context;
+        private readonly MementoDbContext context;
 
         public EFMementoRepository(MementoDbContext ctx)
         {

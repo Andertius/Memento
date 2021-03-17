@@ -1,11 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Memento.Models
 {
     public class Deck
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public long Id { get; set; }
+
+        [ForeignKey(nameof(Creator))]
+        public long? CreatorId { get; set; }
+
+        public string Name { get; set; }
+
+        public bool IsPublic { get; set; }
+
+        [Column(TypeName = "decimal(2, 2)")]
+        public double Rating { get; set; }
+
+        public int CardNumber { get; set; }
+
+        public byte[] Cover { get; set; }
+
+        public byte[] Thumbnail { get; set; }
+
+
+        public User Creator { get; set; }
+
+        public ICollection<User> Users { get; set; }
+
+        public ICollection<Tag> Tags { get; set; }
     }
 }

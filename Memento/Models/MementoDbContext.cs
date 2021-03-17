@@ -21,5 +21,20 @@ namespace Memento.Models
         public DbSet<Tag> Tags { get; set; }
 
         public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder
+                .Entity<Deck>()
+                .HasMany(deck => deck.Users)
+                .WithMany(user => user.Decks);
+
+            modelBuilder
+                .Entity<Deck>()
+                .HasOne(deck => deck.Creator)
+                .WithMany(user => user.CreatedDecks);
+        }
     }
 }
