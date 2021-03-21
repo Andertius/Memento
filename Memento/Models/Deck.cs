@@ -13,7 +13,7 @@ namespace Memento.Models
 
         [Required]
         [ForeignKey(nameof(Creator))]
-        public long CreatorId { get; set; }
+        public string CreatorId { get; set; }
 
         [Required]
         public string Name { get; set; }
