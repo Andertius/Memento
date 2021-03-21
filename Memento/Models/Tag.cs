@@ -9,7 +9,9 @@ namespace Memento.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Name { get; set; }
+
         public string Description { get; set; }
+
         public int TotalCards { get; set; }
 
         public ICollection<Deck> Decks { get; set; }

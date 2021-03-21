@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -22,6 +23,7 @@ namespace Memento.Models
         [Column(TypeName = "decimal(2, 2)")]
         public double Rating { get; set; }
 
+        [Range(0, Int32.MaxValue)]
         public int CardNumber { get; set; }
 
         public byte[] Cover { get; set; }

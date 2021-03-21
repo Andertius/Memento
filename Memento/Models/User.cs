@@ -1,28 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+
+using Microsoft.AspNetCore.Identity;
 
 namespace Memento.Models
 {
-    public class User
+    public class User : IdentityUser
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
-
-        [Required]
-        public string Username { get; set; }
-
-        [Required]
-        public string Email { get; set; }
-
-        [Required]
-        public string Password { get; set; }
-
-        [Required]
-        public string Salt { get; set; }
-
         public byte[] ProfilePicture { get; set; }
+
+        [Range(0, Int32.MaxValue)]
+        public int CardsLearned { get; set; }
+
+        [Range(0.0, Double.MaxValue)]
+        public double TimeSpent { get; set; }
+
+        [Range(0.0, Double.MaxValue)]
+        public double AverageTime { get; set; }
+
 
         public ICollection<Deck> Decks { get; set; }
 
