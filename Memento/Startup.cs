@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Memento
 {
@@ -25,7 +26,13 @@ namespace Memento
                 opts.UseSqlServer(
                     Configuration["ConnectionStrings:MementoConnection"]);
             });
+
             services.AddScoped<IMementoRepository, EFMementoRepository>();
+
+            services.Configure<IdentityOptions>(opts => {
+                opts.Password.RequireNonAlphanumeric = false;
+                opts.User.RequireUniqueEmail = true;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

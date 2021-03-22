@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Memento.Models;
 using Memento.Models.ViewModel;
@@ -56,11 +57,8 @@ namespace Memento.Controllers
             return Redirect(returnUrl);
         }
 
-        public ViewResult Signup(string returnUrl)
-            => View(new LoginModel
-            {
-                ReturnUrl = returnUrl
-            });
+        public ViewResult Signup()
+            => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -85,5 +83,35 @@ namespace Memento.Controllers
             return View();
         }
 
+        public ViewResult ChangePassword()
+            => View();
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordModel changePasswordModel)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = await userManager.FindByEmailAsync(changePasswordModel.Email);
+
+                if (user is not null)
+                {
+                    await userManager.RemovePasswordAsync(user);
+                    var result = await userManager.AddPasswordAsync(user, changePasswordModel.NewPassword);
+
+                    if (result.Succeeded)
+                    {
+                        return RedirectToPage("/account/login");
+                    }
+
+                    foreach (IdentityError err in result.Errors)
+                    {
+                        ModelState.AddModelError("", err.Description);
+                    }
+                }
+            }
+
+            return View();
+        }
     }
 }
