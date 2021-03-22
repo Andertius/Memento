@@ -33,6 +33,8 @@ namespace Memento
                 opts.Password.RequireNonAlphanumeric = false;
                 opts.User.RequireUniqueEmail = true;
             });
+
+            services.AddControllersWithViews();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -43,13 +45,11 @@ namespace Memento
             }
 
             app.UseRouting();
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }

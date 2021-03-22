@@ -1,5 +1,36 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Memento</title>
+    <link href="~/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+    <header class="navbar navbar-light" style="background-color: #e3f2fd;">
+        <a class="navbar-brand" href="#">
+            <img src="/img/memento-logo.png" width="30" height="30">
+            Home
+        </a>
+        <div>
+            <button type="button" class="btn btn-outline-info btn-sm">
+                Log in
+            </button>
+            <a href="#">
+                <img src="/img/globe-icon.png" width="30" height="30" class="d-inline-block">
+            </a>
+        </div>
+    </header>
+    <div class="row m-1 p-1">
+        <div id="categories" class="col-3">
+            Put something useful here later
+        </div>
+        <div class="col-9">
+            @RenderBody()
+        </div>
+    </div>
+</body>
+</html>
