@@ -7,7 +7,7 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Memento</title>
-    <link href="~/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="~/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
     <header class="navbar navbar-light" style="background-color: #e3f2fd;">
@@ -16,20 +16,61 @@
             Home
         </a>
         <div>
-            <button type="button" class="btn btn-outline-info btn-sm">
+            <a class="btn btn-outline-info btn-sm" href="#">
                 Log in
-            </button>
+            </a>
+            <a class="btn btn-outline-info btn-sm" href="#">
+                Sign up
+            </a>
             <a href="#">
                 <img src="/img/globe-icon.png" width="30" height="30" class="d-inline-block">
             </a>
         </div>
     </header>
-    <div class="row m-1 p-1">
-        <div id="categories" class="col-3">
-            Put something useful here later
-        </div>
-        <div class="col-9">
-            @RenderBody()
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Play
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Settings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Decks
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Browse Decks
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                About
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                <div>
+                    @RenderBody()
+                </div>
+            </main>
         </div>
     </div>
 </body>
