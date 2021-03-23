@@ -19,6 +19,21 @@ namespace Memento.Migrations
                 .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("CardCardTag", b =>
+                {
+                    b.Property<long>("CardsId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("TagsName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CardsId", "TagsName");
+
+                    b.HasIndex("TagsName");
+
+                    b.ToTable("CardCardTag");
+                });
+
             modelBuilder.Entity("CardDeck", b =>
                 {
                     b.Property<long>("CardsId")
@@ -34,34 +49,19 @@ namespace Memento.Migrations
                     b.ToTable("CardDeck");
                 });
 
-            modelBuilder.Entity("CardTag", b =>
+            modelBuilder.Entity("DeckDeckTag", b =>
                 {
-                    b.Property<long>("CardsId")
+                    b.Property<long>("DeckId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("TagsName")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("CardsId", "TagsName");
+                    b.HasKey("DeckId", "TagsName");
 
                     b.HasIndex("TagsName");
 
-                    b.ToTable("CardTag");
-                });
-
-            modelBuilder.Entity("DeckTag", b =>
-                {
-                    b.Property<long>("DecksId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("TagsName")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("DecksId", "TagsName");
-
-                    b.HasIndex("TagsName");
-
-                    b.ToTable("DeckTag");
+                    b.ToTable("DeckDeckTag");
                 });
 
             modelBuilder.Entity("DeckUser", b =>
@@ -98,17 +98,29 @@ namespace Memento.Migrations
                     b.Property<string>("Transcription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Word")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Cards");
+                });
+
+            modelBuilder.Entity("Memento.Models.CardTag", b =>
+                {
+                    b.Property<string>("Name")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TotalCards")
+                        .HasColumnType("int");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("CardTags");
                 });
 
             modelBuilder.Entity("Memento.Models.Deck", b =>
@@ -148,7 +160,7 @@ namespace Memento.Migrations
                     b.ToTable("Decks");
                 });
 
-            modelBuilder.Entity("Memento.Models.Tag", b =>
+            modelBuilder.Entity("Memento.Models.DeckTag", b =>
                 {
                     b.Property<string>("Name")
                         .ValueGeneratedOnAdd()
@@ -162,7 +174,7 @@ namespace Memento.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("Tags");
+                    b.ToTable("DeckTags");
                 });
 
             modelBuilder.Entity("Memento.Models.User", b =>
@@ -233,6 +245,21 @@ namespace Memento.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("CardCardTag", b =>
+                {
+                    b.HasOne("Memento.Models.Card", null)
+                        .WithMany()
+                        .HasForeignKey("CardsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Memento.Models.CardTag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("CardDeck", b =>
                 {
                     b.HasOne("Memento.Models.Card", null)
@@ -248,30 +275,15 @@ namespace Memento.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CardTag", b =>
-                {
-                    b.HasOne("Memento.Models.Card", null)
-                        .WithMany()
-                        .HasForeignKey("CardsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Memento.Models.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DeckTag", b =>
+            modelBuilder.Entity("DeckDeckTag", b =>
                 {
                     b.HasOne("Memento.Models.Deck", null)
                         .WithMany()
-                        .HasForeignKey("DecksId")
+                        .HasForeignKey("DeckId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Memento.Models.Tag", null)
+                    b.HasOne("Memento.Models.DeckTag", null)
                         .WithMany()
                         .HasForeignKey("TagsName")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -291,15 +303,6 @@ namespace Memento.Migrations
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Memento.Models.Card", b =>
-                {
-                    b.HasOne("Memento.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Memento.Models.Deck", b =>

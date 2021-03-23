@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Memento.Migrations
 {
     [DbContext(typeof(MementoDbContext))]
-    [Migration("20210317193304_Initial")]
+    [Migration("20210323123940_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,21 @@ namespace Memento.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("CardCardTag", b =>
+                {
+                    b.Property<long>("CardsId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("TagsName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CardsId", "TagsName");
+
+                    b.HasIndex("TagsName");
+
+                    b.ToTable("CardCardTag");
+                });
 
             modelBuilder.Entity("CardDeck", b =>
                 {
@@ -36,34 +51,19 @@ namespace Memento.Migrations
                     b.ToTable("CardDeck");
                 });
 
-            modelBuilder.Entity("CardTag", b =>
+            modelBuilder.Entity("DeckDeckTag", b =>
                 {
-                    b.Property<long>("CardsId")
+                    b.Property<long>("DeckId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("TagsName")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("CardsId", "TagsName");
+                    b.HasKey("DeckId", "TagsName");
 
                     b.HasIndex("TagsName");
 
-                    b.ToTable("CardTag");
-                });
-
-            modelBuilder.Entity("DeckTag", b =>
-                {
-                    b.Property<long>("DecksId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("TagsName")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("DecksId", "TagsName");
-
-                    b.HasIndex("TagsName");
-
-                    b.ToTable("DeckTag");
+                    b.ToTable("DeckDeckTag");
                 });
 
             modelBuilder.Entity("DeckUser", b =>
@@ -71,8 +71,8 @@ namespace Memento.Migrations
                     b.Property<long>("DecksId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("UsersId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("UsersId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("DecksId", "UsersId");
 
@@ -100,17 +100,29 @@ namespace Memento.Migrations
                     b.Property<string>("Transcription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Word")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Cards");
+                });
+
+            modelBuilder.Entity("Memento.Models.CardTag", b =>
+                {
+                    b.Property<string>("Name")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TotalCards")
+                        .HasColumnType("int");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("CardTags");
                 });
 
             modelBuilder.Entity("Memento.Models.Deck", b =>
@@ -126,8 +138,9 @@ namespace Memento.Migrations
                     b.Property<byte[]>("Cover")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<long>("CreatorId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
@@ -149,49 +162,104 @@ namespace Memento.Migrations
                     b.ToTable("Decks");
                 });
 
-            modelBuilder.Entity("Memento.Models.Tag", b =>
+            modelBuilder.Entity("Memento.Models.DeckTag", b =>
                 {
                     b.Property<string>("Name")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TotalCards")
+                        .HasColumnType("int");
+
                     b.HasKey("Name");
 
-                    b.ToTable("Tags");
+                    b.ToTable("DeckTags");
                 });
 
             modelBuilder.Entity("Memento.Models.User", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<double>("AverageTime")
+                        .HasColumnType("float");
+
+                    b.Property<int>("CardsLearned")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
 
                     b.Property<byte[]>("ProfilePicture")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("Salt")
-                        .IsRequired()
+                    b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
+                    b.Property<double>("TimeSpent")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("CardCardTag", b =>
+                {
+                    b.HasOne("Memento.Models.Card", null)
+                        .WithMany()
+                        .HasForeignKey("CardsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Memento.Models.CardTag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CardDeck", b =>
@@ -209,30 +277,15 @@ namespace Memento.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CardTag", b =>
-                {
-                    b.HasOne("Memento.Models.Card", null)
-                        .WithMany()
-                        .HasForeignKey("CardsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Memento.Models.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DeckTag", b =>
+            modelBuilder.Entity("DeckDeckTag", b =>
                 {
                     b.HasOne("Memento.Models.Deck", null)
                         .WithMany()
-                        .HasForeignKey("DecksId")
+                        .HasForeignKey("DeckId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Memento.Models.Tag", null)
+                    b.HasOne("Memento.Models.DeckTag", null)
                         .WithMany()
                         .HasForeignKey("TagsName")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -252,17 +305,6 @@ namespace Memento.Migrations
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Memento.Models.Card", b =>
-                {
-                    b.HasOne("Memento.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Memento.Models.Deck", b =>

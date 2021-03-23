@@ -8,40 +8,11 @@ namespace Memento.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Tags",
-                columns: table => new
-                {
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tags", x => x.Name);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Salt = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProfilePicture = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Cards",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
                     Word = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Transcription = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -51,11 +22,84 @@ namespace Memento.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cards", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CardTags",
+                columns: table => new
+                {
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TotalCards = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CardTags", x => x.Name);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DeckTags",
+                columns: table => new
+                {
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TotalCards = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeckTags", x => x.Name);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProfilePicture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    CardsLearned = table.Column<int>(type: "int", nullable: false),
+                    TimeSpent = table.Column<double>(type: "float", nullable: false),
+                    AverageTime = table.Column<double>(type: "float", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CardCardTag",
+                columns: table => new
+                {
+                    CardsId = table.Column<long>(type: "bigint", nullable: false),
+                    TagsName = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CardCardTag", x => new { x.CardsId, x.TagsName });
                     table.ForeignKey(
-                        name: "FK_Cards_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
+                        name: "FK_CardCardTag_Cards_CardsId",
+                        column: x => x.CardsId,
+                        principalTable: "Cards",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CardCardTag_CardTags_TagsName",
+                        column: x => x.TagsName,
+                        principalTable: "CardTags",
+                        principalColumn: "Name",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -65,7 +109,7 @@ namespace Memento.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatorId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsPublic = table.Column<bool>(type: "bit", nullable: false),
                     Rating = table.Column<decimal>(type: "decimal(2,2)", nullable: false),
@@ -81,30 +125,6 @@ namespace Memento.Migrations
                         column: x => x.CreatorId,
                         principalTable: "Users",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CardTag",
-                columns: table => new
-                {
-                    CardsId = table.Column<long>(type: "bigint", nullable: false),
-                    TagsName = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CardTag", x => new { x.CardsId, x.TagsName });
-                    table.ForeignKey(
-                        name: "FK_CardTag_Cards_CardsId",
-                        column: x => x.CardsId,
-                        principalTable: "Cards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CardTag_Tags_TagsName",
-                        column: x => x.TagsName,
-                        principalTable: "Tags",
-                        principalColumn: "Name",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -132,25 +152,25 @@ namespace Memento.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DeckTag",
+                name: "DeckDeckTag",
                 columns: table => new
                 {
-                    DecksId = table.Column<long>(type: "bigint", nullable: false),
+                    DeckId = table.Column<long>(type: "bigint", nullable: false),
                     TagsName = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DeckTag", x => new { x.DecksId, x.TagsName });
+                    table.PrimaryKey("PK_DeckDeckTag", x => new { x.DeckId, x.TagsName });
                     table.ForeignKey(
-                        name: "FK_DeckTag_Decks_DecksId",
-                        column: x => x.DecksId,
+                        name: "FK_DeckDeckTag_Decks_DeckId",
+                        column: x => x.DeckId,
                         principalTable: "Decks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DeckTag_Tags_TagsName",
+                        name: "FK_DeckDeckTag_DeckTags_TagsName",
                         column: x => x.TagsName,
-                        principalTable: "Tags",
+                        principalTable: "DeckTags",
                         principalColumn: "Name",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -160,7 +180,7 @@ namespace Memento.Migrations
                 columns: table => new
                 {
                     DecksId = table.Column<long>(type: "bigint", nullable: false),
-                    UsersId = table.Column<long>(type: "bigint", nullable: false)
+                    UsersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -180,29 +200,24 @@ namespace Memento.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_CardCardTag_TagsName",
+                table: "CardCardTag",
+                column: "TagsName");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CardDeck_DecksId",
                 table: "CardDeck",
                 column: "DecksId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cards_UserId",
-                table: "Cards",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CardTag_TagsName",
-                table: "CardTag",
+                name: "IX_DeckDeckTag_TagsName",
+                table: "DeckDeckTag",
                 column: "TagsName");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Decks_CreatorId",
                 table: "Decks",
                 column: "CreatorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DeckTag_TagsName",
-                table: "DeckTag",
-                column: "TagsName");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeckUser_UsersId",
@@ -213,28 +228,32 @@ namespace Memento.Migrations
                 name: "IX_Users_Email",
                 table: "Users",
                 column: "Email",
-                unique: true);
+                unique: true,
+                filter: "[Email] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CardCardTag");
+
+            migrationBuilder.DropTable(
                 name: "CardDeck");
 
             migrationBuilder.DropTable(
-                name: "CardTag");
-
-            migrationBuilder.DropTable(
-                name: "DeckTag");
+                name: "DeckDeckTag");
 
             migrationBuilder.DropTable(
                 name: "DeckUser");
 
             migrationBuilder.DropTable(
+                name: "CardTags");
+
+            migrationBuilder.DropTable(
                 name: "Cards");
 
             migrationBuilder.DropTable(
-                name: "Tags");
+                name: "DeckTags");
 
             migrationBuilder.DropTable(
                 name: "Decks");
