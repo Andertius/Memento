@@ -13,15 +13,10 @@
     <header class="navbar navbar-light" style="background-color: #e3f2fd;">
         <a class="navbar-brand" href="#">
             <img src="/img/memento-logo.png" width="30" height="30">
-            Home
+            @RenderSection("pageTitle", required: true)
         </a>
         <div>
-            <a class="btn btn-outline-info btn-sm" asp-action="Login" asp-controller="Account">
-                Log in
-            </a>
-            <a class="btn btn-outline-info btn-sm" asp-action="Signup" asp-controller="Account">
-                Sign up
-            </a>
+            @RenderSection("status", required: true)
             <a href="#">
                 <img src="/img/globe-icon.png" width="30" height="30" class="d-inline-block">
             </a>
