@@ -27,9 +27,9 @@ namespace Memento.Models
                 .CreateScope().ServiceProvider
                 .GetRequiredService<UserManager<User>>();
 
-            User user = await userManager.FindByIdAsync(adminUser);
+            User user = await userManager.FindByNameAsync(adminUser);
 
-            if (user == null)
+            if (user is null)
             {
                 user = new User()
                 {

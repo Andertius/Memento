@@ -1,8 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Memento.Models
 {
-    public class MementoDbContext : DbContext
+    public class MementoDbContext : IdentityDbContext
     {
         public MementoDbContext(DbContextOptions<MementoDbContext> options)
             : base(options) { }
@@ -15,7 +19,7 @@ namespace Memento.Models
 
         public DbSet<DeckTag> DeckTags { get; set; }
 
-        public DbSet<User> Users { get; set; }
+        public new DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,7 +40,6 @@ namespace Memento.Models
                 .Entity<User>()
                 .HasIndex(user => user.Email)
                 .IsUnique();
-
         }
     }
 }

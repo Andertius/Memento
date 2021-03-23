@@ -21,7 +21,6 @@ namespace Memento.Controllers
             signInManager = signInMgr;
         }
 
-        [Route("/account/login")]
         public ViewResult Login(string returnUrl)
             => View(new LoginModel
             {
@@ -40,7 +39,7 @@ namespace Memento.Controllers
                 {
                     await signInManager.SignOutAsync();
 
-                    if ((await signInManager.PasswordSignInAsync(user, loginModel.Password, false, false)).Succeeded)
+                    if ((await signInManager.PasswordSignInAsync(user.UserName, loginModel.Password, false, false)).Succeeded)
                     {
                         return Redirect(loginModel?.ReturnUrl ?? "/");
                     }
@@ -59,7 +58,6 @@ namespace Memento.Controllers
             return Redirect(returnUrl);
         }
 
-        [Route("/account/signup")]
         public ViewResult Signup()
             => View(new SignupModel());
 
@@ -74,7 +72,10 @@ namespace Memento.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToPage("/");
+                    if ((await signInManager.PasswordSignInAsync(user.UserName, signupModel.Password, false, false)).Succeeded)
+                    {
+                        return Redirect("/");
+                    }
                 }
 
                 foreach (IdentityError err in result.Errors)
@@ -86,35 +87,34 @@ namespace Memento.Controllers
             return View();
         }
 
-        public ViewResult ChangePassword()
-            => View();
+        //public ViewResult ChangePassword()
+        //    => View();
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword(ChangePasswordModel changePasswordModel)
-        {
-            if (ModelState.IsValid)
-            {
-                User user = await userManager.FindByEmailAsync(changePasswordModel.Email);
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> ChangePassword(ChangePasswordModel changePasswordModel)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        User user = await userManager.FindByEmailAsync(changePasswordModel.Email);
 
-                if (user is not null)
-                {
-                    await userManager.RemovePasswordAsync(user);
-                    var result = await userManager.AddPasswordAsync(user, changePasswordModel.NewPassword);
+        //        if (user is not null)
+        //        {
+        //            var result = await userManager.ResetPasswordAsync(user, token:, changePasswordModel.NewPassword);
 
-                    if (result.Succeeded)
-                    {
-                        return RedirectToPage("/account/login");
-                    }
+        //            if (result.Succeeded)
+        //            {
+        //                return RedirectToPage("/account/login");
+        //            }
 
-                    foreach (IdentityError err in result.Errors)
-                    {
-                        ModelState.AddModelError("", err.Description);
-                    }
-                }
-            }
+        //            foreach (IdentityError err in result.Errors)
+        //            {
+        //                ModelState.AddModelError("", err.Description);
+        //            }
+        //        }
+        //    }
 
-            return View();
-        }
+        //    return View();
+        //}
     }
 }

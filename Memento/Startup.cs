@@ -31,7 +31,7 @@ namespace Memento
 
             services.AddIdentity<User, IdentityRole>(options =>
             {
-                options.User.RequireUniqueEmail = false;
+                options.User.RequireUniqueEmail = true;
                 options.Password.RequireNonAlphanumeric = false;
             })
                 .AddEntityFrameworkStores<MementoDbContext>()
@@ -48,6 +48,10 @@ namespace Memento
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
