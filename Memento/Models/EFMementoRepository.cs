@@ -8,7 +8,7 @@ namespace Memento.Models
 
         public EFMementoRepository(MementoDbContext ctx)
         {
-            context = ctx;
+            context = ctx;  
         }
 
         public IQueryable<Card> Cards => context.Cards;

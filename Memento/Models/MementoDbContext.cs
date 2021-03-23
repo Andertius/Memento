@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Memento.Models
 {
-    public class MementoDbContext : IdentityDbContext
+    public class MementoDbContext : IdentityDbContext<User>
     {
         public MementoDbContext(DbContextOptions<MementoDbContext> options)
             : base(options) { }
@@ -18,8 +18,6 @@ namespace Memento.Models
         public DbSet<CardTag> CardTags { get; set; }
 
         public DbSet<DeckTag> DeckTags { get; set; }
-
-        public new DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
