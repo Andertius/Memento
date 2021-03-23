@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Memento.Models.ViewModel
+namespace Memento.Models.ViewModels
 {
     public class LoginModel
     {

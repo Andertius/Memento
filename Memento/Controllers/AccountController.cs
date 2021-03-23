@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 using Memento.Models;
-using Memento.Models.ViewModel;
+using Memento.Models.ViewModels;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +21,7 @@ namespace Memento.Controllers
             signInManager = signInMgr;
         }
 
+        [Route("/account/login")]
         public ViewResult Login(string returnUrl)
             => View(new LoginModel
             {
@@ -51,14 +52,16 @@ namespace Memento.Controllers
         }
 
         [Authorize]
+        [Route("/account/logout")]
         public async Task<RedirectResult> Logout(string returnUrl = "/")
         {
             await signInManager.SignOutAsync();
             return Redirect(returnUrl);
         }
 
+        [Route("/account/signup")]
         public ViewResult Signup()
-            => View();
+            => View(new SignupModel());
 
         [HttpPost]
         [ValidateAntiForgeryToken]

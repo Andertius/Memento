@@ -29,10 +29,13 @@ namespace Memento
 
             services.AddScoped<IMementoRepository, EFMementoRepository>();
 
-            services.Configure<IdentityOptions>(opts => {
-                opts.Password.RequireNonAlphanumeric = false;
-                opts.User.RequireUniqueEmail = true;
-            });
+            services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = false;
+                options.Password.RequireNonAlphanumeric = false;
+            })
+                .AddEntityFrameworkStores<MementoDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
         }
@@ -51,6 +54,8 @@ namespace Memento
             {
                 endpoints.MapDefaultControllerRoute();
             });
+
+            IdentitySeedData.EnsurePopulated(app);
         }
     }
 }
