@@ -11,7 +11,9 @@ namespace Memento.Models
 
         public DbSet<Deck> Decks { get; set; }
 
-        public DbSet<Tag> Tags { get; set; }
+        public DbSet<CardTag> CardTags { get; set; }
+
+        public DbSet<DeckTag> DeckTags { get; set; }
 
         public DbSet<User> Users { get; set; }
 
@@ -35,9 +37,6 @@ namespace Memento.Models
                 .HasIndex(user => user.Email)
                 .IsUnique();
 
-            modelBuilder
-                .Entity<Card>()
-                .HasOne(card => card.User);
         }
     }
 }

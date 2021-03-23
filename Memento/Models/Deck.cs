@@ -35,7 +35,7 @@ namespace Memento.Models
 
         public ICollection<User> Users { get; set; }
 
-        public ICollection<Tag> Tags { get; set; }
+        public ICollection<DeckTag> Tags { get; set; }
 
         public ICollection<Card> Cards { get; set; }
     }

@@ -10,9 +10,6 @@ namespace Memento.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
-        [ForeignKey(nameof(User))]
-        public string UserId { get; set; }
-
         public string Word { get; set; }
 
         public string Description { get; set; }
@@ -23,11 +20,8 @@ namespace Memento.Models
 
         public byte[] ShirtImage { get; set; }
 
-
-        public User User { get; set; }
-
         public ICollection<Deck> Decks { get; set; }
 
-        public ICollection<Tag> Tags { get; set; }
+        public ICollection<CardTag> Tags { get; set; }
     }
 }
