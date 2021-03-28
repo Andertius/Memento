@@ -2,12 +2,14 @@
 using System.Net.Mail;
 using System.Threading.Tasks;
 
+using Memento.Configuration;
 using Memento.Models;
 using Memento.Models.ViewModels;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Memento.Controllers
 {
@@ -15,11 +17,13 @@ namespace Memento.Controllers
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private readonly EmailConfig emailConfig;
 
-        public AccountController(UserManager<User> userMgr, SignInManager<User> signInMgr)
+        public AccountController(UserManager<User> userMgr, SignInManager<User> signInMgr, IOptions<EmailConfig> opts)
         {
             userManager = userMgr;
             signInManager = signInMgr;
+            emailConfig = opts.Value;
         }
 
         public ViewResult Login(string returnUrl)
@@ -202,42 +206,36 @@ namespace Memento.Controllers
             return View(model);
         }
 
-        private static void SendEmailConfirmationEmail(string message, string to)
+        private void SendEmailConfirmationEmail(string message, string to)
         {
-            using var mailMessage = new MailMessage("memento.noreply213@gmail.com", to)
+            using var mailMessage = new MailMessage(emailConfig.Address, to)
             {
                 Subject = "Email Confirmation",
                 Body = message,
             };
 
-            var smtp = new SmtpClient("smtp.gmail.com", 587)
-            {
-                Credentials = new NetworkCredential()
-                {
-                    UserName = "memento.noreply213@gmail.com",
-                    Password = "#LX#s49_jGR?ycwH",
-                },
-
-                EnableSsl = true,
-            };
-
-            smtp.Send(mailMessage);
+            SendEmail(mailMessage);
         }
 
-        private static void SendPasswordResetEmail(string message, string to)
+        private void SendPasswordResetEmail(string message, string to)
         {
-            using var mailMessage = new MailMessage("memento.noreply213@gmail.com", to)
+            using var mailMessage = new MailMessage(emailConfig.Address, to)
             {
                 Subject = "Password reset",
                 Body = message,
             };
 
-            var smtp = new SmtpClient("smtp.gmail.com", 587)
+            SendEmail(mailMessage);
+        }
+
+        private void SendEmail(MailMessage mailMessage)
+        {
+            var smtp = new SmtpClient(emailConfig.Host, emailConfig.Port)
             {
                 Credentials = new NetworkCredential()
                 {
-                    UserName = "memento.noreply213@gmail.com",
-                    Password = "#LX#s49_jGR?ycwH",
+                    UserName = emailConfig.Address,
+                    Password = emailConfig.Password,
                 },
 
                 EnableSsl = true,

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Memento.Configuration;
 
 namespace Memento
 {
@@ -39,6 +40,8 @@ namespace Memento
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
+
+            services.Configure<EmailConfig>(Configuration.GetSection("Email"));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
