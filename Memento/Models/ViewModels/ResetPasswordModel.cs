@@ -2,11 +2,8 @@
 
 namespace Memento.Models.ViewModels
 {
-    public class SignupModel
+    public class ResetPasswordModel
     {
-        [Required]
-        public string UserName { get; set; }
-
         [Required]
         [EmailAddress]
         public string Email { get; set; }
@@ -19,5 +16,7 @@ namespace Memento.Models.ViewModels
         [DataType(DataType.Password)]
         [Compare(nameof(Password), ErrorMessage = "Passwords should match.")]
         public string PasswordConfirm { get; set; }
+
+        public string Token { get; set; }
     }
 }

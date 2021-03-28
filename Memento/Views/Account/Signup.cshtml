@@ -10,29 +10,36 @@
         Log in
     </a>
 }
+<div class="col-xs-1" align="center">
+    <h5 class="bg-primary text-white text-center p-2 w-50">Sign up</h5>
 
-<h5 class="bg-primary text-white text-center p-2">Sign up</h5>
+    <form class="w-50" method="post" asp-controller="Account" asp-action="Signup">
+        <div asp-validation-summary="All" class="text-danger" align="left"></div>
 
-<form method="post" asp-controller="Account" asp-action="Signup">
-    <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group" align="left">
+            <label asp-for="UserName">Username</label>
+            <div asp-validation-for="UserName" class="text-danger"></div>
+            <input asp-for="UserName" class="form-control" />
+        </div>
 
-    <div class="form-group">
-        <label asp-for="UserName"></label>
-        <div asp-validation-for="UserName" class="text-danger"></div>
-        <input asp-for="UserName" class="form-control" />
-    </div>
+        <div class="form-group" align="left">
+            <label asp-for="Email"></label>
+            <div asp-validation-for="Email" class="text-danger"></div>
+            <input asp-for="Email" class="form-control" />
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <div asp-validation-for="Email" class="text-danger"></div>
-        <input asp-for="Email" class="form-control" />
-    </div>
+        <div class="form-group" align="left">
+            <label asp-for="Password"></label>
+            <div asp-validation-for="Password" class="text-danger"></div>
+            <input asp-for="Password" type="password" class="form-control" />
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <div asp-validation-for="Password" class="text-danger"></div>
-        <input asp-for="Password" type="password" class="form-control" />
-    </div>
+        <div class="form-group" align="left">
+            <label asp-for="PasswordConfirm"></label>
+            <div asp-validation-for="Password" class="text-danger"></div>
+            <input asp-for="PasswordConfirm" type="password" class="form-control" />
+        </div>
 
-    <button class="btn btn-primary" type="submit">Log In</button>
-</form>
+        <button class="btn btn-primary" type="submit">Sign Up</button>
+    </form>
+</div>
