@@ -18,6 +18,7 @@ namespace Memento
         public Startup(IConfiguration config)
         {
             Configuration = config;
+
         }
 
         private IConfiguration Configuration { get; set; }

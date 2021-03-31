@@ -19,5 +19,12 @@ namespace Memento.Controllers
 
         public ViewResult Settings()
             => View(new SettingsModel());
+
+        [Route("Statistics")]
+        public IActionResult Statistics()
+        {
+            //you code here
+            return View("Statistics");
+        }
     }
 }
