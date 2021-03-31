@@ -4,6 +4,8 @@
     <meta name="viewport" content="width=device-width" />
     <title>Memento</title>
     <link href="~/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
     <header class="navbar navbar-light" style="background-color: #e3f2fd;">
@@ -22,38 +24,15 @@
         <div class="row">
             <nav class="col-md-2 d-none d-md-block bg-light sidebar">
                 <div class="sidebar-sticky">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">
-                                Home
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                Play
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                Settings
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                Decks
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                Browse Decks
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                About
-                            </a>
-                        </li>
-                    </ul>
+                    <div class="nav flex-column">
+                        <a class="nav-link active" href="#">Home</a>
+                        <a class="nav-link" href="#">Play</a>
+                        <a class="nav-link" asp-action="Settings" asp-controller="Home">Settings</a>
+                        <a class="nav-link" href="#">Decks</a>
+                        <a class="nav-link" href="#">Browse Decks</a>
+                        <a class="nav-link" href="#">About</a>
+                        <div class="dropdown-divider"></div>
+                    </div>
                 </div>
             </nav>
 

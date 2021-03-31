@@ -19,6 +19,8 @@ namespace Memento.Controllers
         private readonly SignInManager<User> signInManager;
         private readonly EmailConfig emailConfig;
 
+        private User user;
+
         public AccountController(UserManager<User> userMgr, SignInManager<User> signInMgr, IOptions<EmailConfig> opts)
         {
             userManager = userMgr;
@@ -81,7 +83,7 @@ namespace Memento.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = signupModel.UserName, Email = signupModel.Email };
+                user = new User { UserName = signupModel.UserName, Email = signupModel.Email };
                 IdentityResult result = await userManager.CreateAsync(user, signupModel.Password);
 
                 if (result.Succeeded)
@@ -243,5 +245,14 @@ namespace Memento.Controllers
 
             smtp.Send(mailMessage);
         }
+
+        public ViewResult ProfileSettings()
+            => View(new ProfileSettingsModel
+            {
+                Email = (user != null) ? user.Email : "",
+                Username = User.Identity.Name,
+                NewPassword = "",
+                PasswordConfirm = ""
+            });
     }
 }

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Memento.Models;
+using Memento.Models.ViewModels;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace Memento.Controllers
@@ -13,5 +16,8 @@ namespace Memento.Controllers
         {
             return View();
         }
+
+        public ViewResult Settings()
+            => View(new SettingsModel());
     }
 }

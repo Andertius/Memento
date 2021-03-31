@@ -7,17 +7,22 @@
 @section status {
     @if (User.Identity.IsAuthenticated)
     {
-        <p class="d-inline">@User.Identity.Name</p>
-        <a class="btn btn-outline-info btn-sm" asp-action="Logout" asp-controller="Account">Logout</a>
+        <div class="d-inline dropdown">
+            <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                @User.Identity.Name
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="Account">Profile Settings</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item small" asp-action="Logout" asp-controller="Account">Log out</a>
+            </div>
+        </div>
     }
     else
     {
-        <a class="btn btn-outline-info btn-sm" asp-action="Login" asp-controller="Account">
-            Log in
-        </a>
-        <a class="btn btn-outline-info btn-sm" asp-action="Signup" asp-controller="Account">
-            Sign up
-        </a>
+        <a class="btn btn-outline-info btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+        <a class="btn btn-outline-info btn-sm" asp-action="Signup" asp-controller="Account">Sign up</a>
     }
 }
 
