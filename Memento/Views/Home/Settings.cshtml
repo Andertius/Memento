@@ -29,37 +29,45 @@
 
 <div class="col-lg-8 pb-5">
     <form class="row">
-        <div class="col-md-5">
+        <div class="col-md-6">
             <div class="form-group">
                 <label for="hrs-per-day">Daily Milestone (hrs)</label>
                 <input class="form-control" type="text" id="hrs-per-day" value="3.5">
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="dark-theme">Dark Theme</label>
+                <input type="checkbox" checked data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary" id="dark-theme">
+            </div>
+        </div>
+        <div class="col-md-6">
             <div class="form-group">
                 <label for="cards-per-day">Daily Milestone (cards)</label>
                 <input class="form-control" type="text" id="cards-per-day" value="24">
             </div>
         </div>
-        @*<div class="col-md-5">
+        <div class="col-md-6">
             <div class="form-group">
-                <label for="account-email">E-mail Address</label>
-                <input class="form-control" type="email" id="account-email" value="daniel.adams@example.com" disabled="">
+                <label for="show-images">Show Images</label>
+                <input type="checkbox" checked data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary" id="show-images" />
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-6">
             <div class="form-group">
-                <label for="account-phone">Phone Number</label>
-                <input class="form-control" type="text" id="account-phone" value="+7 (805) 348 95 72" required="">
+                <label for="card-order">Card Order (by difficulty)</label>
+                <div class="row" id="card-order">
+                    <div class="col-sm-3">
+                        <select class="mdb-select md-form rounded">
+                            <option value="Random">Random</option>
+                            <option value="Ascending">Ascending</option>
+                            <option value="Descending">Descending</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-md-5">
-            <div class="form-group">
-                <label for="account-pass">New Password</label>
-                <input class="form-control" type="password" id="account-pass">
-            </div>
-        </div>*@
-        <div class="col-12">
+        <div class="col-md-6">
             <button class="btn btn-style-1 btn-primary" type="button" data-toast="" data-toast-position="topRight" data-toast-type="success" data-toast-icon="fe-icon-check-circle" data-toast-title="Success!" data-toast-message="Your profile updated successfuly.">Update Settings</button>
         </div>
     </form>
