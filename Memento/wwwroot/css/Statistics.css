@@ -1,13 +1,12 @@
-﻿/*.progress-section {
+﻿.progress-section {
     text-align: center;
     padding: 80px 0px;
-    background: #303030;
 }
 
     .progress-section h1 {
         margin-bottom: 70px;
         color: #fff;
-    }*/
+    }
 
 .progress-bars {
     margin: auto;
@@ -22,6 +21,7 @@
         line-height: 130px;
         text-align: center;
         transform: rotate(-45deg);
+        position:relative;
     }
 
     .progress-bars:before {
