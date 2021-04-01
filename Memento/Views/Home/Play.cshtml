@@ -1,0 +1,99 @@
+﻿@{
+    Layout = "_Layout";
+}
+@section pageTitle {
+    <span>Play</span>
+}
+@section status {
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="d-inline dropdown">
+            <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                @User.Identity.Name
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="Account">Profile Settings</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item small" asp-action="Logout" asp-controller="Account">Log out</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-outline-info btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+        <a class="btn btn-outline-info btn-sm" asp-action="Signup" asp-controller="Account">Sign up</a>
+    }
+}
+
+<style>
+    ul#menu li {
+        display: inline;
+        font-size: 55pt;
+        margin: 0 15PX;
+    }
+
+    button {
+        font-size: 24pt;
+        border-radius: 25px;
+        border: solid 5px #0061f3;
+        background-color: white;
+        padding: 0 20px;
+        color: #0061f3;
+    }
+
+        button:hover {
+            background-color: #0061f3;
+            color: white;
+        }
+
+    h1 {
+        text-align: right;
+        margin: 0 5% 0 0;
+    }
+
+    .right {
+        width: 60%;
+        padding: 5%;
+        padding-bottom: 10px;
+        border-style: solid;
+        margin-left: auto;
+        margin-right: 0;
+        border-radius: 25px;
+    }
+
+    .left {
+        width: 40%;
+        margin-left: 0;
+        margin-right: auto;
+        float: left;
+    }
+
+    hr {
+        width: 50%;
+        margin-left: auto;
+        margin-right: 10px;
+        border-top: solid 3px;
+    }
+</style>
+
+<section class="play-section">
+
+    <div class="left">
+        <img src="/img/Card.png">
+    </div>
+
+    <div class="right">
+        <h1>Tulip</h1>
+        <hr>
+        <h1>[tulip]</h1>
+        <hr>
+        <p style="text-align:center; font-size:24pt;">Тюльпа́н — рід багаторічних рослин із родини лілієвих.</p>
+
+        <ul id="menu">
+            <li><button> Trivial</button></li>
+            <li><button> Got it</button></li>
+            <li><button> Again</button></li>
+        </ul>
+    </div>
+</section>
