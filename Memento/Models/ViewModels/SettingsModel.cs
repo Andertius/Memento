@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Memento.Models.ViewModels
 {
@@ -7,7 +8,7 @@ namespace Memento.Models.ViewModels
         [Range(0, 24.0, ErrorMessage = "Hours per day should be in range [0, 24]")]
         public float HoursPerDay { get; set; }
 
-        [Range(0, 1000, ErrorMessage = "Cards per day should be in range [0, 1000]")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Cards per day should be in range [0, 2147483647]")]
         public int CardsPerDay { get; set; }
 
         public string Theme { get; set; }
