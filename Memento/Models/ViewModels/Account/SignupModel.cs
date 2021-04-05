@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Memento.Models.ViewModels
+namespace Memento.Models.ViewModels.Account
 {
     public class SignupModel
     {

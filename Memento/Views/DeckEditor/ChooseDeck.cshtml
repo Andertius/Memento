@@ -1,0 +1,38 @@
+﻿@model ChooseDeckModel
+
+@section pageTitle {
+    <span>Choose Deck</span>
+}
+
+@section status {
+    <div class="d-inline dropdown">
+        <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+            @User.Identity.Name
+            <span class="caret"></span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="Account">Profile Settings</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item small" asp-action="Logout" asp-controller="Account">Log out</a>
+        </div>
+    </div>
+}
+
+<a class="btn btn-primary mb-4" asp-action="CreateDeck">Create a deck</a>
+
+<ul class="container">
+    @foreach (var deck in Model.Decks)
+    {
+        <li class="list-group mb-2">
+            <form method="post" class="row p-1">
+                <div class="col-3">
+                    <label>@deck.Name</label>
+                    <input type="hidden" asp-for="@deck.Id" value="@deck.Id" />
+                </div>
+
+                <button class="btn btn-outline-primary btn-sm col-1" type="submit">Select</button>
+            </form>
+        </li>
+    }
+</ul>
+    

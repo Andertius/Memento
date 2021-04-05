@@ -1,15 +1,13 @@
+using Memento.Configuration;
 using Memento.Models;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Memento.Configuration;
 
 namespace Memento
 {
@@ -18,7 +16,6 @@ namespace Memento
         public Startup(IConfiguration config)
         {
             Configuration = config;
-
         }
 
         private IConfiguration Configuration { get; set; }
