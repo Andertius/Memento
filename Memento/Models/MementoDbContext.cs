@@ -19,6 +19,8 @@ namespace Memento.Models
 
         public DbSet<DeckTag> DeckTags { get; set; }
 
+        public DbSet<Settings> Settings { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

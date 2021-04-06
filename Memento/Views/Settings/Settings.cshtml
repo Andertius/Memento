@@ -1,0 +1,79 @@
+﻿@model SettingsModel
+
+@section pageTitle {
+    <span>Settings</span>
+}
+@section status {
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="d-inline dropdown">
+            <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                @User.Identity.Name
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="Account">Profile Settings</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item small" asp-action="Logout" asp-controller="Account">Log out</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-outline-info btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+        <a class="btn btn-outline-info btn-sm" asp-action="Signup" asp-controller="Account">Sign up</a>
+    }
+}
+
+<div class="container mt-5">
+    <form asp-action="UpdateSettings" asp-controller="Settings" method="post">
+        <div class="form-group">
+            <div class="row justify-content-center">
+                <label class="col-lg-3 text-center" asp-for="HoursPerDay">Daily Milestone (hrs)</label>
+                <div class="col-lg-3" align="center">
+                    <input class="form-control w-50" type="number" min="0" max="24" step="0.1" asp-for="HoursPerDay" value="@Model.HoursPerDay">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row justify-content-center">
+                <label class="col-lg-3 text-center" asp-for="CardsPerDay">Daily Milestone (cards)</label>
+                <div class="col-lg-3" align="center">
+                    <input class="form-control w-50" type="number" min="0" max="@Int32.MaxValue" asp-for="CardsPerDay" value="@Model.CardsPerDay">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row justify-content-center">
+                <label class="col-lg-3 text-center" asp-for="CardsOrder">Card Order (by difficulty)</label>
+                <div class="col-lg-3">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-6">
+                            <select class="mdb-select rounded btn-outline-primary" asp-for="CardsOrder" 
+                                        asp-items="@Model.CardsOrders"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row justify-content-center">
+                <label class="col-lg-3 text-center" asp-for="DarkTheme">Dark Theme</label>
+                <input class="col-lg-3" type="checkbox" data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary" 
+                       asp-for="DarkTheme">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row justify-content-center">
+                <label class="col-lg-3 text-center" asp-for="ShowImages">Show Images</label>
+                <input class="col-lg-3" type="checkbox" data-toggle="toggle" data-onstyle="primary" 
+                       data-offstyle="secondary" asp-for="ShowImages" />
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-6" align="center">
+                <button class="btn btn-style-1 btn-primary" type="submit" data-toast="" data-toast-position="topRight" data-toast-type="success" data-toast-icon="fe-icon-check-circle" data-toast-title="Success!" data-toast-message="Your profile updated successfuly.">Update Settings</button>
+            </div>
+        </div>
+    </form>
+</div>
