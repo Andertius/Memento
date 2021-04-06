@@ -1,5 +1,5 @@
 ﻿using Memento.Models.ViewModels;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Memento.Controllers
@@ -10,9 +10,6 @@ namespace Memento.Controllers
         {
             return View();
         }
-
-        public ViewResult Settings()
-            => View(new SettingsModel());
 
         [Route("Statistics")]
         public IActionResult Statistics()
