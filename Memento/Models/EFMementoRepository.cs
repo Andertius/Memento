@@ -21,6 +21,8 @@ namespace Memento.Models
 
         public IQueryable<User> Users => context.Users;
 
+        public IQueryable<Statistics> Statistics => context.Statistics;
+
         public IQueryable<Settings> Settings => context.Settings;
     }
 }

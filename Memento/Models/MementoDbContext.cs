@@ -21,6 +21,8 @@ namespace Memento.Models
 
         public DbSet<Settings> Settings { get; set; }
 
+        public DbSet<Statistics> Statistics { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -40,6 +42,12 @@ namespace Memento.Models
                 .Entity<User>()
                 .HasIndex(user => user.Email)
                 .IsUnique();
+
+            modelBuilder
+                .Entity<Statistics>()
+                .HasOne(stat => stat.User)
+                .WithMany(user => user.Statistics)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
