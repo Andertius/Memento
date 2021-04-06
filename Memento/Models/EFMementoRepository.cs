@@ -20,5 +20,7 @@ namespace Memento.Models
         public IQueryable<DeckTag> DeckTags => context.DeckTags;
 
         public IQueryable<User> Users => context.Users;
+
+        public IQueryable<Statistics> Statistics => context.Statistics;
     }
 }

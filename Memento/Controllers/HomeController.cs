@@ -17,9 +17,6 @@ namespace Memento.Controllers
             //you code here
             return View("Statistics");
         }
-<<<<<<< HEAD
-        
-=======
 
         [Route("Play")]
         public IActionResult Play()
@@ -27,6 +24,5 @@ namespace Memento.Controllers
             //you code here
             return View("Play");
         }
->>>>>>> 4b81858b8f4a6e927f6c4375f300318902680b14
     }
 }

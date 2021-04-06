@@ -23,5 +23,7 @@ namespace Memento.Models
         public virtual ICollection<Deck> Decks { get; set; }
 
         public virtual ICollection<Deck> CreatedDecks { get; set; }
+
+        public virtual ICollection<Statistics> Statistics { get; set; }
     }
 }
