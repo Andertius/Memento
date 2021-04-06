@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Memento.Migrations
 {
     [DbContext(typeof(MementoDbContext))]
-    [Migration("20210406150042_AddStatisticsTable")]
+    [Migration("20210406152107_AddStatisticsTable")]
     partial class AddStatisticsTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -212,8 +212,10 @@ namespace Memento.Migrations
 
             modelBuilder.Entity("Memento.Models.Statistics", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<float>("AverageHoursPerDay")
                         .HasColumnType("real");
@@ -224,7 +226,12 @@ namespace Memento.Migrations
                     b.Property<float>("HoursPerDay")
                         .HasColumnType("real");
 
-                    b.HasKey("UserId");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Statistics");
                 });
@@ -528,8 +535,7 @@ namespace Memento.Migrations
                     b.HasOne("Memento.Models.User", "User")
                         .WithMany("Statistics")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
                 });
