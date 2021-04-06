@@ -10,6 +10,7 @@ namespace Memento.Models
     public class Statistics
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [ForeignKey(nameof(User))]

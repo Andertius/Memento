@@ -1,0 +1,123 @@
+﻿@model DeckEditorModel
+
+@section pageTitle {
+    <span>Edit Deck - @Model.Deck.Name</span>
+}
+
+@section status {
+    <div class="d-inline dropdown">
+        <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+            @User.Identity.Name
+            <span class="caret"></span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="Account">Profile Settings</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item small" asp-action="Logout" asp-controller="Account">Log out</a>
+        </div>
+    </div>
+}
+
+<form method="post" asp-action="SaveChanges" enctype="multipart/form-data">
+    <h4 class="mb-3">@Model.Deck.Name</h4>
+
+    <div class="row mb-2">
+        <div class="border rounded float-left col p-2 ml-5 mr-5" style="width: 25% !important; height: 25% !important">
+            <h5>Deck Thumbnail</h5>
+            <img id="thumb" src="@Url.Action("GetThumb", new { Model.Deck.Id })" alt="Deck Thumbnail" style="max-height: 100%; max-width: 100%" />
+            <br />
+            <input type="file" class="form-control-file" id="thumbInp" onchange="readThumb(this)" asp-for="@Model.Deck.Thumb" />
+            <a class="btn btn-danger btn-sm" id="removeThumb" href="#">Remove</a>
+
+            <input type="hidden" id="thumbRemoved" asp-for="@Model.Deck.ThumbRemoved" value="@false"/>
+        </div>
+
+        <div class="border rounded float-left col p-2" style="width: 25% !important; height: 25% !important">
+            <h5>Deck Cover</h5>
+            <img id="cover" src="@Url.Action("GetCover", new { Model.Deck.Id })" alt="Deck Cover" style="max-height: 100%; max-width: 100%" />
+            <br />
+            <input type="file" class="form-control-file" id="coverInp" onchange="readCover(this)" asp-for="@Model.Deck.Cover" />
+            <a class="btn btn-danger btn-sm" id="removeCover" href="#">Remove</a>
+
+            <input type="hidden" id="coverRemoved" asp-for="@Model.Deck.CoverRemoved" value="@false" />
+        </div>        
+    </div>
+
+    <input type="hidden" asp-for="@Model.Deck.Id" value="@Model.Deck.Id" />
+    <input type="hidden" asp-for="@Model.Deck.Name" value="@Model.Deck.Name" />
+    <input type="hidden" asp-for="@Model.Deck.IsPublic" value="@Model.Deck.IsPublic" />
+    <input type="hidden" asp-for="@Model.Deck.Difficulty" value="@Model.Deck.Difficulty" />
+
+    <button class="btn btn-success" type="submit">Save Changes</button>
+</form>
+
+<div class="float-left p-1" style="width: 500px">
+    <h5>Cards</h5>
+
+    <a class="btn btn-primary mb-4" asp-controller="CardEditor" asp-action="NewCard" asp-route-deckId="@Model.Deck.Id">New Card</a>
+
+    <ul class="list-group">
+        @foreach (var card in Model.Cards)
+        {
+            <li class="list-group-item">
+                <div class="row">
+                    <form method="post" class="row col-sm-10 mr-1" asp-action="EditCard">
+                        <div class="col-sm-8">
+                            <label>@card.Word</label>
+                            <input type="hidden" asp-for="@card.Id" value="@card.Id" />
+                        </div>
+
+                        <button class="btn btn-outline-primary btn-sm col-sm" type="submit">Edit</button>
+                    </form>
+
+                    <a class="btn btn-outline-danger btn-sm col-sm"
+                       href="@Url.Action("DeleteCard", new { deckId = Model.Deck.Id, cardId = card.Id })">
+                        Delete
+                    </a>
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+
+<script>
+    $("#removeCover").click(function (e) {
+        e.preventDefault();
+        $('#cover').attr('src', "");
+        $("#coverInp").val(null);
+        $('#coverRemoved').val(true);
+    });
+
+    $("#removeThumb").click(function (e) {
+        e.preventDefault();
+        $('#thumb').attr('src', "");
+        $("#thumbInp").val(null);
+        $('#thumbRemoved').val(true);
+    });
+
+    function readCover(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#cover').attr('src', e.target.result);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+            $('#thumbRemoved').val(false);
+        }
+    }
+
+    function readThumb(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#thumb').attr('src', e.target.result);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+            $('#thumbRemoved').val(false);
+        }
+    }
+</script>

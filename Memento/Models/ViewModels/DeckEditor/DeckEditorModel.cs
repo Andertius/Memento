@@ -1,11 +1,11 @@
-﻿namespace Memento.Models.ViewModels.DeckEditor
+﻿using System.Collections.Generic;
+
+namespace Memento.Models.ViewModels.DeckEditor
 {
     public class DeckEditorModel
     {
         public DeckModel Deck { get; set; }
 
-        public CardModel Card { get; set; }
-
-        public string UserName { get; set; }
+        public List<CardModel> Cards { get; set; }
     }
 }

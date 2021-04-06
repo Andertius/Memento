@@ -18,20 +18,24 @@
     </div>
 }
 
-<a class="btn btn-primary mb-4" asp-action="CreateDeck">Create a deck</a>
+<a class="btn btn-primary mb-4" asp-action="CreateDeck">New deck</a>
 
-<ul class="container">
-    @foreach (var deck in Model.Decks)
+<ul class="list-group">
+   @foreach (var deck in Model.Decks)
     {
-        <li class="list-group mb-2">
-            <form method="post" class="row p-1">
-                <div class="col-3">
-                    <label>@deck.Name</label>
-                    <input type="hidden" asp-for="@deck.Id" value="@deck.Id" />
-                </div>
+        <li class="list-group-item w-25">
+            <div class="row">
+                <form method="post" class="row col-sm-10 mr-1">
+                    <div class="col-sm-8">
+                        <label>@deck.Name</label>
+                        <input type="hidden" asp-for="@deck.Id" value="@deck.Id" />
+                    </div>
 
-                <button class="btn btn-outline-primary btn-sm col-1" type="submit">Select</button>
-            </form>
+                    <button class="btn btn-outline-primary btn-sm col-sm" type="submit">Select</button>
+                </form>
+
+                <a class="btn btn-outline-danger btn-sm col-sm" href="@Url.Action("DeleteDeck", new { deckId = deck.Id })">Delete</a>
+            </div>
         </li>
     }
 </ul>
