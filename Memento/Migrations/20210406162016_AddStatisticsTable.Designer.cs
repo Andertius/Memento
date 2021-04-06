@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Memento.Migrations
 {
     [DbContext(typeof(MementoDbContext))]
-    [Migration("20210406152107_AddStatisticsTable")]
+    [Migration("20210406162016_AddStatisticsTable")]
     partial class AddStatisticsTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
