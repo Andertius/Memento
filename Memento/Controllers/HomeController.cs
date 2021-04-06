@@ -26,5 +26,6 @@ namespace Memento.Controllers
             //you code here
             return View("Statistics");
         }
+        
     }
 }
