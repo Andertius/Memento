@@ -11,13 +11,6 @@ namespace Memento.Controllers
             return View();
         }
 
-        [Route("Statistics")]
-        public IActionResult Statistics()
-        {
-            //you code here
-            return View("Statistics");
-        }
-
         [Route("Play")]
         public IActionResult Play()
         {

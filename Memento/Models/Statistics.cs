@@ -24,6 +24,8 @@ namespace Memento.Models
         [Range(0, 24.0)]
         public float AverageHoursPerDay { get; set; }
 
+        public DateTime Date { get; set; }
+
         public User User { get; set; }
     }
 }
