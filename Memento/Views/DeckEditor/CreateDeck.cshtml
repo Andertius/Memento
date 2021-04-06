@@ -1,0 +1,35 @@
+﻿@model CreateDeckModel
+
+@section pageTitle {
+    <span>Deck Editor</span>
+}
+
+@section status {
+    <div class="d-inline dropdown">
+        <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+            @User.Identity.Name
+            <span class="caret"></span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="Account">Profile Settings</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item small" asp-action="Logout" asp-controller="Account">Log out</a>
+        </div>
+    </div>
+}
+
+<div class="col-xs-1" align="center">
+    <h5 class="bg-primary text-white text-center p-2 w-50">Create deck</h5>
+
+    <form method="post" class="w-50">
+        <div asp-validation-summary="All" class="text-danger" align="left"></div>
+
+        <div class="form-group" align="left">
+            <label asp-for="Name">Deck name</label>
+            <div asp-validation-for="Name" class="text-danger"></div>
+            <input asp-for="Name" class="form-control" />
+        </div>
+
+        <button class="btn btn-primary" type="submit">Create</button>
+    </form>
+</div>

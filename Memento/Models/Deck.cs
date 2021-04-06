@@ -30,6 +30,8 @@ namespace Memento.Models
 
         public byte[] Thumbnail { get; set; }
 
+        public Difficulty Difficulty { get; set; }
+
 
         public User Creator { get; set; }
 

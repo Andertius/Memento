@@ -1,7 +1,5 @@
 ﻿@model ProfileSettingsModel
-@{
-    Layout = "_Layout";
-}
+
 @section pageTitle {
     <span>Profile Settings</span>
 }
@@ -20,66 +18,52 @@
 }
 
 <div class="container mt-5">
-    <div class="row">
-        <div class="col-lg-8 pb-5">
+    <div class="row justify-content-md-center">
+        <div class="col-lg-4 pb-5">
             <form class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="account-fn">First Name</label>
-                        <input class="form-control" type="text" id="account-fn" value="@Model.FirstName">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="account-ln">Last Name</label>
-                        <input class="form-control" type="text" id="account-ln" value="@Model.LastName">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="account-email">E-mail Address</label>
-                        <input class="form-control" type="email" runat="server" id="account-email" value="@Model.Email" disabled="">
-                    </div>
-                </div>
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="form-group">
                         <label for="account-username">Username</label>
                         <input class="form-control" type="text" id="account-username" value="@Model.Username" required="">
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="account-email">E-mail Address</label>
+                        <input class="form-control" type="email" runat="server" id="account-email" value="@Model.Email" disabled="">
+                    </div>
+                </div>
+                <div class="col-md-12">
                     <div class="form-group">
                         <label for="account-pass">New Password</label>
                         <input class="form-control" type="password" id="account-pass">
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="form-group">
                         <label for="account-confirm-pass">Confirm Password</label>
                         <input class="form-control" type="password" id="account-confirm-pass">
                     </div>
                 </div>
-                <div class="col-12">
+                <div class="col-md-12">
                     <button class="btn btn-style-1 btn-primary" type="button" data-toast="" data-toast-position="topRight" data-toast-type="success" data-toast-icon="fe-icon-check-circle" data-toast-title="Success!" data-toast-message="Your profile updated successfuly.">Update Profile</button>
                 </div>
             </form>
         </div>
         <div class="col-lg-4 pb-5">
-            <div class="author-card pb-3">
-                <div class="author-card-profile">
-                    <div class="author-card-avatar text-center">
-                        <img src="https://www.peoples.ru/character/movie/donkey/donkey_4.jpg" alt="@User.Identity.Name"
-                             style="max-width:300px;max-height:300px;">
-                    </div>
-                    <div class="dropdown-divider"></div>
+            <div class="row justify-content-md-center">
+                <div class="col-lg-4 align-self-end">
+                    <img src="https://www.peoples.ru/character/movie/donkey/donkey_4.jpg" alt="@User.Identity.Name"
+                         style="max-width:300px;max-height:300px;">
                 </div>
-            </div>
-            <div class="wizard">
-                <nav class="list-group list-group-flush">
-                    <a class="list-group-item nav-link active" href="#">General</a>
-                    <a class="list-group-item nav-link" href="#">Security</a>
-                    <a class="list-group-item nav-link" href="#">Notifications</a>
-                </nav>
+                <div class="col-lg-4 align-self-end">
+                    <button class="rounded">
+                        <img src="~/img/edit-regular.svg" width="30" height="30">
+                    </button>
+                    <button class="rounded">
+                        <img src="~/img/trash-alt-solid.svg" width="30" height="30" />
+                    </button>
+                </div>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-﻿namespace Memento.Models.ViewModels
+﻿namespace Memento.Models.ViewModels.Account
 {
     public class AccountErrorModel
     {

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Memento.Configuration;
 using Memento.Models;
 using Memento.Models.ViewModels;
+using Memento.Models.ViewModels.Account;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

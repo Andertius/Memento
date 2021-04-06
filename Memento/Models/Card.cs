@@ -16,6 +16,8 @@ namespace Memento.Models
 
         public string Transcription { get; set; }
 
+        public Difficulty Difficulty { get; set; }
+
         public byte[] Image { get; set; }
 
         public byte[] ShirtImage { get; set; }
