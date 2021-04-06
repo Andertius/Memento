@@ -142,6 +142,7 @@ namespace Memento.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult ResetPassword(string token, string email)
         {
             if (token is null || email is null)

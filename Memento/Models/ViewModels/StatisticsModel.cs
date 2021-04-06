@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Memento.Models.ViewModels
 {
-    public class StatisticsModelcs
+    public class StatisticsModel
     {
     }
 }
