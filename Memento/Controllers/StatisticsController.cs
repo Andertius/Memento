@@ -14,5 +14,10 @@ namespace Memento.Controllers
             //you code here
             return View();
         }
+
+        public ActionResult Graphs()
+        {
+            return PartialView();
+        }
     }
 }
