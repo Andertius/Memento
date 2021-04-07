@@ -71,7 +71,8 @@
                     </form>
 
                     <a class="btn btn-outline-danger btn-sm col-sm"
-                       href="@Url.Action("DeleteCard", new { deckId = Model.Deck.Id, cardId = card.Id })">
+                       asp-controller="CardEditor" asp-action="DeleteCard"
+                       asp-route-deckId="@Model.Deck.Id" asp-route-cardId="@card.Id">
                         Delete
                     </a>
                 </div>

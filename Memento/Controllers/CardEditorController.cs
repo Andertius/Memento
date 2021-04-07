@@ -101,7 +101,7 @@ namespace Memento.Controllers
             deck.Cards.Remove(card);
             _context.SaveChanges();
 
-            return RedirectToAction(nameof(DeckEditorController.EditDeck), nameof(DeckEditorController), new { deckId });
+            return RedirectToAction(nameof(DeckEditorController.EditDeck), "DeckEditor", new { deckId });
         }
     }
 }
