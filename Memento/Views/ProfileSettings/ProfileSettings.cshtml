@@ -36,13 +36,13 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="account-pass">New Password</label>
-                        <input class="form-control" type="password" id="account-pass">
+                        <input class="form-control" type="password" id="account-pass" value="@Model.NewPassword">
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="account-confirm-pass">Confirm Password</label>
-                        <input class="form-control" type="password" id="account-confirm-pass">
+                        <input class="form-control" type="password" id="account-confirm-pass" value="@Model.PasswordConfirm">
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -53,7 +53,7 @@
         <div class="col-lg-4 pb-5">
             <div class="row justify-content-md-center">
                 <div class="col-lg-4 align-self-end">
-                    <img src="https://www.peoples.ru/character/movie/donkey/donkey_4.jpg" alt="@User.Identity.Name"
+                    <img src="data:image/jpg;base64,@Model.ProfilePicture" alt="@User.Identity.Name"
                          style="max-width:300px;max-height:300px;">
                 </div>
                 <div class="col-lg-4 align-self-end">
