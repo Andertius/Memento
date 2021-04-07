@@ -76,14 +76,21 @@
         {
             <li class="list-group-item">
                 <div class="row">
-                    <form method="post" class="row col-sm-10 mr-1" asp-action="EditCard">
+                    <div class="row col-sm-10 mr-1"
+                          asp-action="EditCard"
+                          asp-controller="CardEditor"
+                          asp-route-deckId="@Model.Deck.Id"
+                          asp-route-cardId="@card.Id">
                         <div class="col-sm-8">
                             <label>@card.Word</label>
-                            <input type="hidden" asp-for="@card.Id" value="@card.Id" />
                         </div>
 
-                        <button class="btn btn-outline-primary btn-sm col-sm" type="submit">Edit</button>
-                    </form>
+                        <a class="btn btn-outline-primary btn-sm col-sm"
+                           asp-action="EditCard"
+                          asp-controller="CardEditor"
+                          asp-route-deckId="@Model.Deck.Id"
+                          asp-route-cardId="@card.Id">Edit</a>
+                    </div>
 
                     <a class="btn btn-outline-danger btn-sm col-sm"
                        asp-controller="CardEditor" asp-action="DeleteCard"
