@@ -1,6 +1,4 @@
-﻿using Memento.Models.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Memento.Controllers
 {
@@ -17,5 +15,9 @@ namespace Memento.Controllers
             //you code here
             return View("Play");
         }
+
+        [Route(nameof(About))]
+        public IActionResult About()
+            => View();
     }
 }

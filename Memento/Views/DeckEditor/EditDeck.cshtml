@@ -22,42 +22,57 @@
     <h4 class="mb-3">@Model.Deck.Name</h4>
 
     <div class="row mb-2">
-        <div class="border rounded float-left col p-2 ml-5 mr-5" style="width: 25% !important; height: 25% !important">
-            <h5>Deck Thumbnail</h5>
-            <img id="thumb" src="@Url.Action("GetThumb", new { Model.Deck.Id })" alt="Deck Thumbnail" style="max-height: 100%; max-width: 100%" />
+        <div class="border rounded float-left col p-2 ml-5 mr-5 w-25 h-25">
+            <h5 class="mb-1">Deck Thumbnail</h5>
+            <img id="thumb" class="mb-1 mh-100 mw-100" src="@Url.Action("GetThumb", new { Model.Deck.Id })" alt="Deck Thumbnail"/>
             <br />
-            <input type="file" class="form-control-file" id="thumbInp" onchange="readThumb(this)" asp-for="@Model.Deck.Thumb" />
+            <input type="file" class="form-control-file mb-1" id="thumbInp" onchange="readThumb(this)" asp-for="@Model.Deck.Thumb" />
             <a class="btn btn-danger btn-sm" id="removeThumb" href="#">Remove</a>
 
             <input type="hidden" id="thumbRemoved" asp-for="@Model.Deck.ThumbRemoved" value="@false"/>
         </div>
 
-        <div class="border rounded float-left col p-2" style="width: 25% !important; height: 25% !important">
-            <h5>Deck Cover</h5>
-            <img id="cover" src="@Url.Action("GetCover", new { Model.Deck.Id })" alt="Deck Cover" style="max-height: 100%; max-width: 100%" />
+        <div class="border rounded float-left col p-2 w-25 h-25">
+            <h5 class="mb-1">Deck Cover</h5>
+            <img id="cover" class="mb-1 mh-100 mw-100" src="@Url.Action("GetCover", new { Model.Deck.Id })" alt="Deck Cover"/>
             <br />
-            <input type="file" class="form-control-file" id="coverInp" onchange="readCover(this)" asp-for="@Model.Deck.Cover" />
+            <input type="file" class="form-control-file mb-1" id="coverInp" onchange="readCover(this)" asp-for="@Model.Deck.Cover" />
             <a class="btn btn-danger btn-sm" id="removeCover" href="#">Remove</a>
 
             <input type="hidden" id="coverRemoved" asp-for="@Model.Deck.CoverRemoved" value="@false" />
         </div>        
     </div>
 
-    <input type="hidden" asp-for="@Model.Deck.Id" value="@Model.Deck.Id" />
-    <input type="hidden" asp-for="@Model.Deck.Name" value="@Model.Deck.Name" />
-    <input type="hidden" asp-for="@Model.Deck.IsPublic" value="@Model.Deck.IsPublic" />
-    <input type="hidden" asp-for="@Model.Deck.Difficulty" value="@Model.Deck.Difficulty" />
+    <div class="mb-2">
+        <h4 class="mb-1">Difficulty</h4>
+       @foreach (var c in System.Enum.GetValues(typeof(Difficulty)).OfType<Difficulty>())
+        {
+            <input type="radio" asp-for="@Model.Deck.Difficulty" value="@((int)c)" checked="@(c == Model.Deck.Difficulty)"/>
+            <label asp-for="@Model.Deck.Difficulty">@c</label>
+            <br/>
+        }
+    </div>
+
+    <div>
+        <input type="checkbox" asp-for="@Model.Deck.IsPublic" value="@Model.Deck.IsPublic" />
+        <label>Public</label>
+    </div>
+
+    <input type="hidden" asp-for="@Model.Deck.Id" value="@Model.Deck.Id"/>
+    <input type="hidden" asp-for="@Model.Deck.Name" value="@Model.Deck.Name"/>
+    <input type="hidden" asp-for="@Model.Deck.IsPublic" value="@Model.Deck.IsPublic"/>
+    <input type="hidden" asp-for="@Model.Deck.Difficulty" value="@Model.Deck.Difficulty"/>
 
     <button class="btn btn-success" type="submit">Save Changes</button>
 </form>
 
-<div class="float-left p-1" style="width: 500px">
+<div class="float-left p-1 border rounded" style="width: 500px">
     <h5>Cards</h5>
 
     <a class="btn btn-primary mb-4" asp-controller="CardEditor" asp-action="NewCard" asp-route-deckId="@Model.Deck.Id">New Card</a>
 
     <ul class="list-group">
-        @foreach (var card in Model.Cards)
+       @foreach (var card in Model.Cards)
         {
             <li class="list-group-item">
                 <div class="row">
