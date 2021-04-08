@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace Memento.Models.ViewModels.Play
 {
@@ -8,16 +9,6 @@ namespace Memento.Models.ViewModels.Play
 
         public long Id { get; set; }
 
-        public IFormFile Thumb { get; set; }
-
-        public bool ThumbRemoved { get; set; }
-
-        public IFormFile Cover { get; set; }
-
-        public bool CoverRemoved { get; set; }
-
-        public Difficulty Difficulty { get; set; }
-
-        public bool IsPublic { get; set; }
+        public ICollection<CardModel> Cards { get; set; }
     }
 }

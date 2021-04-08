@@ -87,12 +87,13 @@
         <div class="col-8 b">
             <h1>@Model.CurrentCard.Word</h1>
             <hr>
-            <h1>[tulip]</h1>
+            <h1>@Model.CurrentCard.Transcription</h1>
             <hr>
-            <p style="text-align:center; font-size:24pt;">Тюльпа́н — рід багаторічних рослин із родини лілієвих.</p>
+            <p style="text-align:center; font-size:24pt;">@Model.CurrentCard.Description</p>
 
             <ul id="menu" class="text-center">
-                <li><button>Trivial</button></li>
+                @*<li><button asp-controller="PlayController" asp-action="NextCard">Trivial</button></li>*@
+                <li><a class="nav-link" asp-action="NextCard" asp-controller="PlayController">Play</a></li>
                 <li><button>Got it</button></li>
                 <li><button>Again</button></li>
             </ul>
