@@ -4,9 +4,10 @@ namespace Memento.Models.ViewModels
 {
     public class ProfileSettingsModel
     {
-        public string Email { get; set; }
-
         public string Username { get; set; }
+
+        [EmailAddress]
+        public string Email { get; set; }
 
         [DataType(DataType.Password)]
         public string NewPassword { get; set; }
@@ -14,5 +15,7 @@ namespace Memento.Models.ViewModels
         [DataType(DataType.Password)]
         [Compare(nameof(NewPassword), ErrorMessage = "Passwords should match.")]
         public string PasswordConfirm { get; set; }
+
+        public string ProfilePicture { get; set; }
     }
 }

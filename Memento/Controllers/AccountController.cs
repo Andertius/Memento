@@ -247,14 +247,5 @@ namespace Memento.Controllers
 
             smtp.Send(mailMessage);
         }
-
-        public ViewResult ProfileSettings()
-            => View(new ProfileSettingsModel
-            {
-                Email = (user != null) ? user.Email : "",
-                Username = User.Identity.Name,
-                NewPassword = "",
-                PasswordConfirm = ""
-            });
     }
 }
