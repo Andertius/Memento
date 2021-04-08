@@ -9,13 +9,6 @@ namespace Memento.Controllers
             return View();
         }
 
-        [Route("Play")]
-        public IActionResult Play()
-        {
-            //you code here
-            return View("Play");
-        }
-
         [Route(nameof(About))]
         public IActionResult About()
             => View();
