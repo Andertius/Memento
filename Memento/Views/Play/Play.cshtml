@@ -1,6 +1,5 @@
-﻿@{
-    Layout = "_Layout";
-}
+﻿@model PlayModel
+
 @section pageTitle {
     <span>Play</span>
 }
@@ -86,7 +85,7 @@
         </div>
 
         <div class="col-8 b">
-            <h1>Tulip</h1>
+            <h1>@Model.CurrentCard.Word</h1>
             <hr>
             <h1>[tulip]</h1>
             <hr>
