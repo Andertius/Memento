@@ -18,7 +18,13 @@
     </div>
 }
 
-<a class="btn btn-primary mb-4" asp-action="CreateDeck">New deck</a>
+<div class="row mb-4">
+    <a class="btn btn-primary col-xs-6" asp-action="CreateDeck">New deck</a>
+    <form method="get" asp-action="ChooseDeck" asp-controller="DeckEditor" class="col-xs-6 row ml-3">
+        <input placeholder="Search" asp-for="SearchFilter" class="h-100 col-xs-6 mr-1"/>
+        <button type="submit" class="btn btn-outline-secondary col-xs-6">Search</button>
+    </form>
+</div>
 
 <ul class="list-group">
    @foreach (var deck in Model.Decks)

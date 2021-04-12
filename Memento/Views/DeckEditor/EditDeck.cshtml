@@ -18,83 +18,120 @@
     </div>
 }
 
-<form method="post" asp-action="SaveChanges" enctype="multipart/form-data">
-    <h4 class="mb-3">@Model.Deck.Name</h4>
+<h4 class="mb-3">@Model.Deck.Name</h4>
 
+<form method="post" asp-action="SaveChanges" enctype="multipart/form-data" class="float-right">
     <div class="row mb-2">
-        <div class="border rounded float-left col p-2 ml-5 mr-5 w-25 h-25">
+        <div class="border rounded col p-2 ml-5 mr-5">
             <h5 class="mb-1">Deck Thumbnail</h5>
-            <img id="thumb" class="mb-1 mh-100 mw-100" src="@Url.Action("GetThumb", new { Model.Deck.Id })" alt="Deck Thumbnail"/>
+            <img id="thumb" class="mb-1 mh-100 mw-100" src="@Url.Action("GetThumb", new { deckId = Model.Deck.Id })" alt="Deck Thumbnail" accept="image/*" />
             <br />
             <input type="file" class="form-control-file mb-1" id="thumbInp" onchange="readThumb(this)" asp-for="@Model.Deck.Thumb" />
             <a class="btn btn-danger btn-sm" id="removeThumb" href="#">Remove</a>
 
-            <input type="hidden" id="thumbRemoved" asp-for="@Model.Deck.ThumbRemoved" value="@false"/>
+            <input type="hidden" id="thumbRemoved" asp-for="@Model.Deck.ThumbRemoved" value="@false" />
         </div>
 
-        <div class="border rounded float-left col p-2 w-25 h-25">
+        <div class="border rounded col p-2">
             <h5 class="mb-1">Deck Cover</h5>
-            <img id="cover" class="mb-1 mh-100 mw-100" src="@Url.Action("GetCover", new { Model.Deck.Id })" alt="Deck Cover"/>
+            <img id="cover" class="mb-1 mh-100 mw-100" src="@Url.Action("GetCover", new { deckId = Model.Deck.Id })" alt="Deck Cover" accept="image/*" />
             <br />
             <input type="file" class="form-control-file mb-1" id="coverInp" onchange="readCover(this)" asp-for="@Model.Deck.Cover" />
             <a class="btn btn-danger btn-sm" id="removeCover" href="#">Remove</a>
 
             <input type="hidden" id="coverRemoved" asp-for="@Model.Deck.CoverRemoved" value="@false" />
-        </div>        
+        </div>
     </div>
 
     <div class="mb-2">
         <h4 class="mb-1">Difficulty</h4>
-       @foreach (var c in System.Enum.GetValues(typeof(Difficulty)).OfType<Difficulty>())
+        @foreach (var c in System.Enum.GetValues(typeof(Difficulty)).OfType<Difficulty>())
         {
-            <input type="radio" asp-for="@Model.Deck.Difficulty" value="@((int)c)" checked="@(c == Model.Deck.Difficulty)"/>
+            <input type="radio" asp-for="@Model.Deck.Difficulty" value="@((int)c)" checked="@(c == Model.Deck.Difficulty)" />
             <label asp-for="@Model.Deck.Difficulty">@c</label>
-            <br/>
+            <br />
         }
     </div>
 
     <div>
-        <input type="checkbox" asp-for="@Model.Deck.IsPublic" value="@Model.Deck.IsPublic" />
+        <input type="checkbox" asp-for="@Model.Deck.IsPublic" name="@Model.Deck.IsPublic" />
         <label>Public</label>
     </div>
 
-    <input type="hidden" asp-for="@Model.Deck.Id" value="@Model.Deck.Id"/>
-    <input type="hidden" asp-for="@Model.Deck.Name" value="@Model.Deck.Name"/>
-    <input type="hidden" asp-for="@Model.Deck.IsPublic" value="@Model.Deck.IsPublic"/>
-    <input type="hidden" asp-for="@Model.Deck.Difficulty" value="@Model.Deck.Difficulty"/>
+    <input type="hidden" asp-for="@Model.Deck.Id" value="@Model.Deck.Id" />
+    <input type="hidden" asp-for="@Model.Deck.Name" value="@Model.Deck.Name" />
+    <input type="hidden" asp-for="@Model.Deck.IsPublic" value="@Model.Deck.IsPublic" />
+    <input type="hidden" asp-for="@Model.Deck.Difficulty" value="@Model.Deck.Difficulty" />
 
     <button class="btn btn-success" type="submit">Save Changes</button>
 </form>
 
-<div class="float-left p-1 border rounded" style="width: 500px">
+<div class="float-left p-1 border rounded float-left" style="width: 500px">
     <h5>Cards</h5>
+    
+    <div class="row ml-1 mb-4 col-xs-6">
+        <a class="btn btn-primary" asp-controller="CardEditor" asp-action="EditCard" asp-route-deckId="@Model.Deck.Id">New Card</a>
 
-    <a class="btn btn-primary mb-4" asp-controller="CardEditor" asp-action="NewCard" asp-route-deckId="@Model.Deck.Id">New Card</a>
+        <form method="post" asp-action="EditDeck" asp-controller="DeckEditor" class="col-xs-6 row ml-3">
+            <input placeholder="Search" asp-for="CardSearchFilter" class="h-100 col-xs-6 mr-1" />
+            <input type="hidden" asp-for="Deck.Id"/>
+            <button type="submit" class="btn btn-outline-secondary col-xs-6">Search</button>
+        </form>
+    </div>
 
     <ul class="list-group">
-       @foreach (var card in Model.Cards)
+        @foreach (var card in Model.Cards)
         {
             <li class="list-group-item">
                 <div class="row">
-                    <div class="row col-sm-10 mr-1"
-                          asp-action="EditCard"
-                          asp-controller="CardEditor"
-                          asp-route-deckId="@Model.Deck.Id"
-                          asp-route-cardId="@card.Id">
+                    <div class="row col-sm-10 mr-1">
                         <div class="col-sm-8">
                             <label>@card.Word</label>
                         </div>
 
                         <a class="btn btn-outline-primary btn-sm col-sm"
                            asp-action="EditCard"
-                          asp-controller="CardEditor"
-                          asp-route-deckId="@Model.Deck.Id"
-                          asp-route-cardId="@card.Id">Edit</a>
+                           asp-controller="CardEditor"
+                           asp-route-deckId="@Model.Deck.Id"
+                           asp-route-cardId="@card.Id">Edit</a>
                     </div>
 
                     <a class="btn btn-outline-danger btn-sm col-sm"
                        asp-controller="CardEditor" asp-action="DeleteCard"
                        asp-route-deckId="@Model.Deck.Id" asp-route-cardId="@card.Id">
+                        Delete
+                    </a>
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+
+<div class="border rounded">
+    <h5>Tags</h5>
+
+    <div class="row ml-1 mb-4 col-xs-6">
+        <form method="post" asp-action="AddTag" asp-controller="DeckEditor" class="col-xs-6 row ml-3">
+            <input placeholder="Tag Name" asp-for="TagInput" class="h-100 col-xs-6 mr-1" />
+            <input type="hidden" asp-for="Deck.Id" />
+            <button type="submit" class="btn btn-outline-secondary col-xs-6">Add</button>
+        </form>
+    </div>
+
+    <ul class="list-group">
+        @foreach (var tag in Model.Tags)
+        {
+            <li class="list-group-item">
+                <div class="row col-sm-10 mr-1">
+                    <div class="col-sm-8">
+                        <label>@tag.Name</label>
+                    </div>
+
+                    <a class="btn btn-outline-primary btn-sm col-sm"
+                       asp-action="RemoveTag"
+                       asp-controller="DeckEditor"
+                       asp-route-deckId="@Model.Deck.Id"
+                       asp-route-tag="@tag.Name">
                         Delete
                     </a>
                 </div>

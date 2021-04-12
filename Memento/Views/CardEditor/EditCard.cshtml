@@ -1,4 +1,4 @@
-﻿@model CardModel
+﻿@model CardEditorModel
 
 @section pageTitle {
     <span>Edit card</span>
@@ -24,9 +24,9 @@
             <div class="col-sm">
                 <div class="border rounded float-left col p-2 ml-5 mr-5 w-25 h-25">
                     <h5 class="mb-1">Image</h5>
-                    <img id="image" class="mb-1 mh-100 mw-100" src="@Url.Action("GetImage", new { Model.DeckId, Model.Id })" alt="Image" />
+                    <img id="image" class="mb-1 mh-100 mw-100" src="@Url.Action("GetImage", new { deckId = Model.DeckId, cardId = Model.Id })" alt="Image" />
                     <br />
-                    <input type="file" class="form-control-file mb-1" id="imageInp" onchange="readImage(this)" asp-for="@Model.Image" />
+                    <input type="file" class="form-control-file mb-1" id="imageInp" onchange="readImage(this)" asp-for="@Model.Image" accept="image/*" />
                     <a class="btn btn-danger btn-sm" id="removeImage" href="#">Remove</a>
 
                     <input type="hidden" id="imageRemoved" asp-for="@Model.ImageRemoved" value="@false" />
@@ -56,6 +56,43 @@
 
     <button class="btn btn-success" type="submit">Save Changes</button>
 </form>
+
+@if (Model.Id != 0) {
+    <div class="border rounded">
+        <h5>Tags</h5>
+
+        <div class="row ml-1 mb-4 col-xs-6">
+            <form method="post" asp-action="AddTag" asp-controller="CardEditor" class="col-xs-6 row ml-3">
+                <input placeholder="Tag Name" asp-for="TagInput" class="h-100 col-xs-6 mr-1" />
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="DeckId" />
+                <button type="submit" class="btn btn-outline-secondary col-xs-6">Add</button>
+            </form>
+        </div>
+
+        <ul class="list-group">
+           @foreach (var tag in Model.Tags)
+            {
+                <li class="list-group-item">
+                    <div class="row col-sm-10 mr-1">
+                        <div class="col-sm-8">
+                            <label>@tag.Name</label>
+                        </div>
+
+                        <a class="btn btn-outline-primary btn-sm col-sm"
+                           asp-action="RemoveTag"
+                           asp-controller="CardEditor"
+                           asp-route-deckId="@Model.DeckId"
+                           asp-route-cardId="@Model.Id"
+                           asp-route-tag="@tag.Name">
+                            Delete
+                        </a>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+}
 
 <script>
     $("#removeImage").click(function (e) {

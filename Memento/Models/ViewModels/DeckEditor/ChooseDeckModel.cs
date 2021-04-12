@@ -8,6 +8,8 @@ namespace Memento.Models.ViewModels.DeckEditor
 
         public string UserId { get; set; }
 
+        public string SearchFilter { get; set; }
+
         public List<DeckModel> Decks { get; set; }
     }
 }
