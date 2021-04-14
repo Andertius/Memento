@@ -25,52 +25,6 @@
     }
 }
 
-@*<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>*@
-@if (User.Identity.IsAuthenticated)
-{
 <div id="results">
-
-    <form action="/Statistics/Graphs" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#results" id="form0" method="post">
-    <div class="container">
-        <div class="row justify-content-end align-items-start ">
-            <div class="col-md-3" style="background-color:white">
-                <div class="row justify-content-around align-items-start ">
-                    <input type="submit" value="Поиск" />
-                    <a class="btn btn-outline-info btn-sm" asp-action="Login" asp-controller="Account">Change view</a>
-                    <a class="btn btn-outline-info btn-sm" asp-action="Settings" asp-controller="Settings">Set milestones</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <section class="progress-section d-inline">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-3">
-                    <div class="progress-bars">
-                        <h2>85%</h2>
-                    </div><!--progress-bars-->
-                </div>
-                <div class="col-md-3">
-                    <div class="progress-bars-four">
-                        <h2>55%</h2>
-                    </div><!--progress-bars-->
-                </div>
-
-                <div class="col-md-3">
-                    <div class="progress-bars-six">
-                        <h2>65%</h2>
-                    </div><!--progress-bars-->
-                </div>
-            </div>
-        </div>
-    </section>
-    </form>
+    @await Html.PartialAsync("ProgressBars")
 </div>
-    
-}
-else
-{
-    <h4>Statistics is only for authentificated users please, <a asp-action="Login">click here</a> to log in!</h4>
-}

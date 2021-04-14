@@ -21,7 +21,7 @@ namespace Memento.Models
 
         public DbSet<Settings> Settings { get; set; }
 
-        public DbSet<Statistics> Statistics { get; set; }
+        public DbSet<UserStats> Statistics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,7 +44,7 @@ namespace Memento.Models
                 .IsUnique();
 
             modelBuilder
-                .Entity<Statistics>()
+                .Entity<UserStats>()
                 .HasOne(stat => stat.User)
                 .WithMany(user => user.Statistics)
                 .OnDelete(DeleteBehavior.Cascade);

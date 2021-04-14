@@ -11,5 +11,6 @@ namespace Memento.Models.ViewModels
         public float AverageHoursPerDay { get; set; }
         public int CardsPerDay { get; set; }
         public DateTime Date { get; set; }
+        public int DayNumber { get; set; }
     }
 }

@@ -1,15 +1,112 @@
 ﻿<div class="container">
 
-    <form action="~/StatisticsController/ProgressBars" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#results" id="form0" method="post">
-        <div class="row justify-content-end align-items-start ">
-            <div class="col-md-3" style="background-color:white">
-                <div class="row justify-content-around align-items-start ">
-                    <input type="submit" value="Change view" />
-                    <a class="btn btn-outline-info btn-sm" asp-action="Login" asp-controller="Account">Change view</a>
-                    <a class="btn btn-outline-info btn-sm" asp-action="Settings" asp-controller="Settings">Set milestones</a>
+    <form action="~/Statistics/ProgressBars" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#results" id="form0" method="post">
+        <div class="container">
+            <div class="row justify-content-end align-items-start ">
+                <div class="col-md-3" style="background-color:white">
+                    <div class="row justify-content-center align-items-start ">
+                        <input class="btn btn-outline-info btn-sm" type="submit" value="Progress bars" />
+                        <a class="btn btn-outline-info btn-sm offset-1" asp-action="Settings" asp-controller="Settings">Set milestones</a>
+                    </div>
+                    <div class="row justify-content-end mr-2 mt-1">
+                        <div class="dropdown" id="Testing">
+                            <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                30 Days
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">30 Days</a>
+                                <a class="dropdown-item" href="#">7 Days</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </form>
+    <div class="container">
+        <div class="row justify-content-start">
+            <div class="col-md-9">
+                <ul class="list-unstyled">
+                    <li>
+                        <div id="hours" class="border border-dark mb-1"/>
+                    </li>
+                    <li>
+                        <div id="averageHours" class="border border-dark mb-1"/>
+                    </li>
+                    <li>
+                        <div id="cards" class="border border-dark mb-1"/>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <p id="test">Hello</p>
+            </div>
+        </div>
+    </div>
 
 </div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        // Load the Visualization API and the corechart package.
+        google.charts.load('current', { 'packages': ['line'] });
+        google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(drawAverageChart);
+        google.charts.setOnLoadCallback(drawCardsChart);
+
+                function drawChart() {
+                    $.get('GetHours',
+                        {dayNumber : 30},
+                        function (jsonData) {
+                        data = google.visualization.arrayToDataTable(jsonData, false);
+                        var option = {
+                            title: "Hours",
+                        };
+                        chart = new google.charts.Line(document.getElementById('hours'));
+                        chart.draw(data, option);
+                    })
+                }
+
+                function drawAverageChart() {
+                    $.get('GetAverageHours', function (jsonData) {
+                        data = google.visualization.arrayToDataTable(jsonData, false);
+                        var option = {
+                            title: "Average Hours",
+                        };
+                        chart = new google.charts.Line(document.getElementById('averageHours'));
+                        chart.draw(data, option);
+                    })
+                }
+
+                function drawCardsChart() {
+                    $.get('GetCards', function (jsonData) {
+                        data = google.visualization.arrayToDataTable(jsonData, false);
+                        var option = {
+                            title: "Cards",
+                        };
+                        chart = new google.charts.Line(document.getElementById('cards'));
+                        chart.draw(data, option);
+                    })
+                }
+
+        $('#Testing').on('hidden.bs.dropdown', function (e) {
+            var ddlvalue = $(this).val();
+            var txt = ($(this).text());
+            var x = $(event.target).text();
+            $('.p').text(ddlvalue);
+            if (x == '30 Days') {
+                $('#test').text('30 days');
+                $('#dropdownMenuButton').text('30 Days');
+            }
+            else if (x == '7 Days') {
+                $('#test').text('7 days');
+                $('#dropdownMenuButton').text('7 Days');
+            }
+            //alert('alerted');
+            e.preventDefault();
+            
+        });
+
+    </script>
+

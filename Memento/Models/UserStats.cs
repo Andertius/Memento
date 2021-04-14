@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Memento.Models
 {
-    public class Statistics
+    public class UserStats
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
