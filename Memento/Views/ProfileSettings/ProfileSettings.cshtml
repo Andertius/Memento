@@ -20,51 +20,105 @@
 <div class="container mt-5">
     <div class="row justify-content-md-center">
         <div class="col-lg-4 pb-5">
-            <form class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="account-username">Username</label>
-                        <input class="form-control" type="text" id="account-username" value="@Model.Username" required="">
-                    </div>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="list-general" role="tabpanel" aria-labelledby="general">
+                    <form class="row" method="post" asp-action="UpdateGeneralInfo" asp-controller="ProfileSettings">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="Username">Username</label>
+                                <div asp-validation-for="Username" class="text-danger"></div>
+                                <input asp-for="Username" class="form-control" type="text" value="@Model.Username" required="">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="Email">E-mail Address</label>
+                                <div asp-validation-for="Email" class="text-danger"></div>
+                                <input asp-for="Email" class="form-control" type="email" value="@Model.Email" disabled="">
+                            </div>
+                        </div><div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-style-1 btn-primary">Update</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="account-email">E-mail Address</label>
-                        <input class="form-control" type="email" runat="server" id="account-email" value="@Model.Email" disabled="">
-                    </div>
+                <div class="tab-pane fade" id="list-password" role="tabpanel" aria-labelledby="password">
+                    <form class="row" method="post" asp-action="ChangePassword" asp-controller="ProfileSettings">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="CurrentPassword">Current Password</label>
+                                <div asp-validation-for="CurrentPassword" class="text-danger"></div>
+                                <input asp-for="CurrentPassword" class="form-control" type="password" value="@Model.CurrentPassword">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="NewPassword">New Password</label>
+                                <div asp-validation-for="NewPassword" class="text-danger"></div>
+                                <input asp-for="NewPassword" class="form-control" type="password" value="@Model.NewPassword">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="PasswordConfirm">Confirm Password</label>
+                                <div asp-validation-for="NewPassword" class="text-danger"></div>
+                                <input asp-for="PasswordConfirm" class="form-control" type="password" value="@Model.PasswordConfirm">
+                            </div>
+                        </div>
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-style-1 btn-primary">Change Password</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="account-pass">New Password</label>
-                        <input class="form-control" type="password" id="account-pass" value="@Model.NewPassword">
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="account-confirm-pass">Confirm Password</label>
-                        <input class="form-control" type="password" id="account-confirm-pass" value="@Model.PasswordConfirm">
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <button class="btn btn-style-1 btn-primary" type="button" data-toast="" data-toast-position="topRight" data-toast-type="success" data-toast-icon="fe-icon-check-circle" data-toast-title="Success!" data-toast-message="Your profile updated successfuly.">Update Profile</button>
-                </div>
-            </form>
+            </div>
         </div>
         <div class="col-lg-4 pb-5">
-            <div class="row justify-content-md-center">
-                <div class="col-lg-4 align-self-end">
-                    <img src="data:image/jpg;base64,@Model.ProfilePicture" alt="@User.Identity.Name"
-                         style="max-width:300px;max-height:300px;">
+            <div class="row justify-content-end">
+                <img id="picture" src="@Url.Action("GetPicture")" alt="@User.Identity.Name" style="width:270px;height:270px;" accept="image/*">
+            </div>
+            <div class="row justify-content-end">
+                <div class="col-sm-1 mt-2">
+                    <label for="editInp" id="edit-label" title="@(Model.NoPicture == true ? "Add Image" : "Change Image")"><img src="~/img/edit-regular.svg" width="30" height="30"></label>
+                    <input type="file" id="editInp" style="visibility:hidden;" onchange="loadPicture(this)" asp-for="@Model.ProfilePicture" />
                 </div>
-                <div class="col-lg-4 align-self-end">
-                    <button class="rounded">
-                        <img src="~/img/edit-regular.svg" width="30" height="30">
-                    </button>
-                    <button class="rounded">
-                        <img src="~/img/trash-alt-solid.svg" width="30" height="30" />
-                    </button>
+                <div class="col-sm-1 ml-2 mt-2 mr-4">
+                    <label id="delete-label" title="Remove Image" style="visibility:@(Model.NoPicture == true ? "hidden" : "visible")"><img src="~/img/trash-alt-solid.svg" width="30" height="30" /></label>
+                    <input type="hidden" id="deleteInp" asp-for="NoPicture" value="@Model.NoPicture"/>
                 </div>
+            </div>
+            <div class="list-group align-items-end" id="myList" role="tablist">
+                <a class="list-group-item list-group-item-action py-2 w-75 active" id="general" data-toggle="list" 
+                   href="#list-general" role="tab">General</a>
+                <a class="list-group-item list-group-item-action py-2 w-75" id="password" data-toggle="list" 
+                   href="#list-password" role="tab">Password</a>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function loadPicture(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#picture').attr('src', e.target.result);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+            $('#deleteInp').val(false);
+            $('#delete-label').css('visibility', 'visible');
+            $('#edit-label').attr('title', 'Change Image');
+        }
+    }
+
+    $("#deleteInp").click(function (e) {
+        e.preventDefault();
+        $('#picture').attr('src', "");
+        $("#editInp").val(null);
+        $('#edit-label').attr('title', 'Add Image');
+        $('#deleteInp').val(true);
+        $('#delete-label').css('visibility', 'hidden');
+    });
+</script>

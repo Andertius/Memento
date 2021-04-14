@@ -10,12 +10,17 @@ namespace Memento.Models.ViewModels
         public string Email { get; set; }
 
         [DataType(DataType.Password)]
+        public string CurrentPassword { get; set; }
+
+        [DataType(DataType.Password)]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
         [Compare(nameof(NewPassword), ErrorMessage = "Passwords should match.")]
         public string PasswordConfirm { get; set; }
 
-        public string ProfilePicture { get; set; }
+        public byte[] ProfilePicture { get; set; }
+
+        public bool NoPicture { get; set; }
     }
 }
