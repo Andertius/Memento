@@ -1,4 +1,4 @@
-﻿namespace Memento.Models.ViewModels.DeckEditor
+﻿namespace Memento.Models.ViewModels.Play
 {
     public class CardModel
     {

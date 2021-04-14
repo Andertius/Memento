@@ -10,7 +10,7 @@
                 <span class="caret"></span>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="Account">Profile Settings</a>
+                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="ProfileSettings">Profile Settings</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item small" asp-action="Logout" asp-controller="Account">Log out</a>
             </div>
@@ -23,74 +23,77 @@
     }
 }
 
-<div class="w-50 h-50 container">
-    <h3 class="mb-2">Dev team!</h3>
+<div class="container">
+    <h3 class="mb-3">Dev team!</h3>
+    <div class="row">
+        <div class="col">
+            <label>Бондаренко Анастасія</label>
 
-    <div>
-        <label>Бондаренко Анастасія</label>
-
-        <div class="d-flex">
-            <div class="mr-3">
-                <img src="~/img/Devs/nb.png" class="rounded" style="width: 250px !important"/>
+            <div class="d-flex">
+                <div class="mr-3">
+                    <img src="~/img/Devs/nb.png" class="rounded" style="width: 250px !important" />
+                </div>
+                <div>
+                    <p>
+                        Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
+                    </p>
+                </div>
             </div>
-            <div>
-                <p>
-                    Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
-                </p>
+        </div>
+
+        <div class="dropdown-divider"></div>
+
+        <div class="col">
+            <label>Пилипчук Сергій</label>
+
+            <div class="d-flex">
+                <div class="mr-3">
+                    <img src="~/img/Devs/sp.png" class="rounded" style="width: 250px !important" />
+                </div>
+                <div>
+                    <p>
+                        Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 
+
     <div class="dropdown-divider"></div>
+    <div class="row">
+        <div class="col">
+            <label>Подоляк Артем</label>
 
-    <div>
-        <label>Пилипчук Сергій</label>
-
-        <div class="d-flex">
-            <div class="mr-3">
-                <img src="~/img/Devs/sp.png" class="rounded" style="width: 250px !important"/>
-            </div>
-            <div>
-                <p>
-                    Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
-                </p>
+            <div class="d-flex">
+                <div class="mr-3">
+                    <img src="~/img/Devs/ap.png" class="rounded" style="width: 250px !important" />
+                </div>
+                <div>
+                    <p>
+                        Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="dropdown-divider"></div>
+        <div class="dropdown-divider"></div>
 
-    <div>
-        <label>Подоляк Артем</label>
+        <div class="col">
+            <label>Шимків Максим</label>
 
-        <div class="d-flex">
-            <div class="mr-3">
-                <img src="~/img/Devs/ap.png" class="rounded" style="width: 250px !important"/>
-            </div>
-            <div>
-                <p>
-                    Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="dropdown-divider"></div>
-
-    <div>
-        <label>Шимків Максим</label>
-
-        <div class="d-flex">
-            <div class="mr-3">
-                <img src="~/img/Devs/ms.png" class="rounded" style="width: 250px !important"/>
-            </div>
-            <div>
-                <p>
-                    Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
-                </p>
+            <div class="d-flex">
+                <div class="mr-3">
+                    <img src="~/img/Devs/ms.png" class="rounded" style="width: 250px !important" />
+                </div>
+                <div>
+                    <p>
+                        Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="dropdown-divider"></div>
+        <div class="dropdown-divider"></div>
+    </div>
 </div>

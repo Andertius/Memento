@@ -1,4 +1,6 @@
-﻿@section pageTitle {
+﻿@model BrowseDecksModel
+
+@section pageTitle {
     <span>Home</span>
 }
 @section status {
@@ -10,7 +12,7 @@
                 <span class="caret"></span>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="Account">Profile Settings</a>
+                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="ProfileSettings">Profile Settings</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item small" asp-action="Logout" asp-controller="Account">Log out</a>
             </div>
@@ -23,4 +25,74 @@
     }
 }
 
-<h4>Welcome to Memento!</h4>
+<h3>Welcome to Memento!</h3>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div>
+        <h4>Your collection</h4>
+
+       @foreach (var deck in Model.YourDecks)
+        {
+            <p>@deck.Name</p>
+
+            <a class="btn btn-primary" href="#">Play</a>
+
+            <a class="btn btn-outline-danger"
+               asp-action="RemoveDeckFromCollection"
+               asp-controller="Home"
+               asp-route-deckId="@deck.Id">
+                Remove from collection
+            </a>
+        }
+    </div>
+
+    <div>
+        <h4>Decks by you</h4>
+
+       @foreach (var deck in Model.CreatedDecks)
+        {
+            <p>@deck.Name</p>
+
+            <a class="btn btn-outline-primary"
+               asp-action="AddDeck"
+               asp-controller="Home"
+               asp-route-deckId="@deck.Id">
+                Play
+            </a>
+
+            <a class="btn btn-outline-info"
+               asp-action="EditDeck"
+               asp-controller="DeckEditor"
+               asp-route-deckId="@deck.Id">
+                Edit
+            </a>
+
+            <a class="btn btn-outline-danger"
+               asp-action="DeleteDeckFromDatabase"
+               asp-controller="Home"
+               asp-route-deckId="@deck.Id">
+                Delete for everyone
+            </a>
+        }
+    </div>
+}
+
+<div>
+    <h4>Popular Decks</h4>
+
+   @foreach (var deck in Model.PopularDecks)
+    {
+        <p>@deck.Name</p>
+
+        if (User.Identity.IsAuthenticated)
+        {
+            <a class="btn btn-outline-primary"
+               asp-action="AddDeck"
+               asp-controller="Home"
+               asp-route-deckId="@deck.Id">
+                Add to collection
+            </a>
+        }
+   }
+</div>

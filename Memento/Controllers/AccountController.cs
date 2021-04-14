@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 
 using Memento.Configuration;
 using Memento.Models;
-using Memento.Models.ViewModels;
 using Memento.Models.ViewModels.Account;
 
 using Microsoft.AspNetCore.Authorization;
@@ -247,14 +246,5 @@ namespace Memento.Controllers
 
             smtp.Send(mailMessage);
         }
-
-        public ViewResult ProfileSettings()
-            => View(new ProfileSettingsModel
-            {
-                Email = (user != null) ? user.Email : "",
-                Username = User.Identity.Name,
-                NewPassword = "",
-                PasswordConfirm = ""
-            });
     }
 }

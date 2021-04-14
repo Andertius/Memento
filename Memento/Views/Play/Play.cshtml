@@ -1,6 +1,5 @@
-﻿@{
-    Layout = "_Layout";
-}
+﻿@model PlayModel
+
 @section pageTitle {
     <span>Play</span>
 }
@@ -13,7 +12,7 @@
                 <span class="caret"></span>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="Account">Profile Settings</a>
+                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="ProfileSettings">Profile Settings</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item small" asp-action="Logout" asp-controller="Account">Log out</a>
             </div>
@@ -52,22 +51,15 @@
         margin: 0 5% 0 0;
     }
 
-    .right {
-        width: 60%;
-        padding: 5%;
-        padding-bottom: 10px;
-        border-style: solid;
-        margin-left: auto;
-        margin-right: 0;
+    .b {
+        border: solid 5px;
         border-radius: 25px;
     }
 
-    .left {
-        width: 40%;
-        margin-left: 0;
-        margin-right: auto;
-        float: left;
+    .a {
+        align-content: center;
     }
+
 
     hr {
         width: 50%;
@@ -75,25 +67,37 @@
         margin-right: 10px;
         border-top: solid 3px;
     }
+
+    .center {
+       margin:auto;
+       height:100%;
+       width:100%;
+    }
 </style>
 
-<section class="play-section">
+<div class="play-section container">
+    <div class="row">
 
-    <div class="left">
-        <img src="/img/Card.png">
+        <div class="col-4 b">
+
+            <img class="col center b" src="/img/Card.png">
+
+        </div>
+
+        <div class="col-8 b">
+            <h1>@Model.CurrentCard.Word</h1>
+            <hr>
+            <h1>@Model.CurrentCard.Transcription</h1>
+            <hr>
+            <p style="text-align:center; font-size:24pt;">@Model.CurrentCard.Description</p>
+
+            <ul id="menu" class="text-center">
+                @*<li><button asp-controller="PlayController" asp-action="NextCard">Trivial</button></li>*@
+                <li><a class="nav-link" asp-action="NextCard" asp-controller="PlayController">Play</a></li>
+                <li><button>Got it</button></li>
+                <li><button>Again</button></li>
+            </ul>
+        </div>
     </div>
 
-    <div class="right">
-        <h1>Tulip</h1>
-        <hr>
-        <h1>[tulip]</h1>
-        <hr>
-        <p style="text-align:center; font-size:24pt;">Тюльпа́н — рід багаторічних рослин із родини лілієвих.</p>
-
-        <ul id="menu">
-            <li><button> Trivial</button></li>
-            <li><button> Got it</button></li>
-            <li><button> Again</button></li>
-        </ul>
-    </div>
-</section>
+</div>
