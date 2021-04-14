@@ -1,8 +1,11 @@
 ﻿using Memento.Models;
 using Memento.Models.ViewModels;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Memento.Controllers
@@ -26,23 +29,107 @@ namespace Memento.Controllers
             {
                 Username = user.UserName,
                 Email = user.Email,
+                CurrentPassword = "",
                 NewPassword = string.Empty,
                 PasswordConfirm = string.Empty,
-                ProfilePicture = user.ProfilePicture is null ? "" : Convert.ToBase64String(user.ProfilePicture)
+                ProfilePicture = user.ProfilePicture,
+                NoPicture = user.ProfilePicture is null
             };
 
             return View(profSetts);
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateProfileSettings(ProfileSettingsModel profSetts)
+        public async Task<IActionResult> UpdateProfileSettings(ProfileSettingsModel model)
         {
             if (ModelState.IsValid)
             {
                 User user = await userManager.GetUserAsync(User);
-                var updatedUser = new User { Id = user.Id, UserName = profSetts.Username };
+
+                IdentityResult result = await userManager.SetUserNameAsync(user, model.Username);
+
+                if (result.Succeeded)
+                {
+                    result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            if (model.ProfilePicture is not null)
+                            {
+                                ms.Read(model.ProfilePicture);
+                                user.ProfilePicture = ms.ToArray();
+                            }
+                            else if (model.NoPicture)
+                            {
+                                user.ProfilePicture = null;
+                            }
+                        }
+
+                        context.Users.Update(user);
+                        context.SaveChanges();
+
+                        return View(nameof(ProfileSettings));
+                    }
+                }
+                foreach (IdentityError err in result.Errors)
+                {
+                    ModelState.AddModelError("", err.Description);
+                }
             }
             return View(nameof(ProfileSettings));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateGeneralInfo(ProfileSettingsModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = await userManager.GetUserAsync(User);
+
+                IdentityResult result = await userManager.SetUserNameAsync(user, model.Username);
+
+                if (result.Succeeded)
+                {
+                    return View(nameof(ProfileSettings));
+                }
+                foreach (IdentityError err in result.Errors)
+                {
+                    ModelState.AddModelError("", err.Description);
+                }
+            }
+            return View(nameof(ProfileSettings));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ProfileSettingsModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = await userManager.GetUserAsync(User);
+
+                IdentityResult result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+                if (result.Succeeded)
+                {
+                    context.Users.Update(user);
+                    context.SaveChanges();
+
+                    return View(nameof(ProfileSettings));
+                }
+                foreach (IdentityError err in result.Errors)
+                {
+                    ModelState.AddModelError("", err.Description);
+                }
+            }
+            return View(nameof(ProfileSettings));
+        }
+
+        [HttpGet]
+        public async Task<FileResult> GetPicture()
+        {
+            User user = await userManager.GetUserAsync(User);
+            return File(user.ProfilePicture, "image/*");
         }
     }
 }

@@ -18,11 +18,14 @@
     </div>
 }
 
-<h4 class="mb-3">@Model.Deck.Name</h4>
+<div class="row d-flex justify-content-center align-items-center mb-3">
+    <h4 class="col-xs-6 mr-1" id="name-display-h4">@Model.Deck.Name</h4>
+    <input type="image" class="col-xs-6" src="~/img/pencil.png" width="25" height="25" onclick="changeName()" id="name-display-button" />
+</div>
 
-<form method="post" asp-action="SaveChanges" enctype="multipart/form-data" class="float-right">
+<form method="post" asp-action="SaveChanges" enctype="multipart/form-data">
     <div class="row mb-2">
-        <div class="border rounded col p-2 ml-5 mr-5">
+        <div class="border rounded col p-2 mr-5 w-25">
             <h5 class="mb-1">Deck Thumbnail</h5>
             <img id="thumb" class="mb-1 mh-100 mw-100" src="@Url.Action("GetThumb", new { deckId = Model.Deck.Id })" alt="Deck Thumbnail" accept="image/*" />
             <br />
@@ -32,7 +35,7 @@
             <input type="hidden" id="thumbRemoved" asp-for="@Model.Deck.ThumbRemoved" value="@false" />
         </div>
 
-        <div class="border rounded col p-2">
+        <div class="border rounded col p-2 w-25">
             <h5 class="mb-1">Deck Cover</h5>
             <img id="cover" class="mb-1 mh-100 mw-100" src="@Url.Action("GetCover", new { deckId = Model.Deck.Id })" alt="Deck Cover" accept="image/*" />
             <br />
@@ -59,22 +62,22 @@
     </div>
 
     <input type="hidden" asp-for="@Model.Deck.Id" value="@Model.Deck.Id" />
-    <input type="hidden" asp-for="@Model.Deck.Name" value="@Model.Deck.Name" />
+    <input type="hidden" asp-for="@Model.Deck.Name" value="@Model.Deck.Name" id="name-input" />
     <input type="hidden" asp-for="@Model.Deck.IsPublic" value="@Model.Deck.IsPublic" />
     <input type="hidden" asp-for="@Model.Deck.Difficulty" value="@Model.Deck.Difficulty" />
 
     <button class="btn btn-success" type="submit">Save Changes</button>
 </form>
 
-<div class="float-left p-1 border rounded float-left" style="width: 500px">
+<div class="p-1 border rounded float-left" style="width: 500px">
     <h5>Cards</h5>
-    
+
     <div class="row ml-1 mb-4 col-xs-6">
         <a class="btn btn-primary" asp-controller="CardEditor" asp-action="EditCard" asp-route-deckId="@Model.Deck.Id">New Card</a>
 
         <form method="post" asp-action="EditDeck" asp-controller="DeckEditor" class="col-xs-6 row ml-3">
             <input placeholder="Search" asp-for="CardSearchFilter" class="h-100 col-xs-6 mr-1" />
-            <input type="hidden" asp-for="Deck.Id"/>
+            <input type="hidden" asp-for="Deck.Id" />
             <button type="submit" class="btn btn-outline-secondary col-xs-6">Search</button>
         </form>
     </div>
@@ -90,15 +93,15 @@
                         </div>
 
                         <a class="btn btn-outline-primary btn-sm col-sm"
-                           asp-action="EditCard"
-                           asp-controller="CardEditor"
-                           asp-route-deckId="@Model.Deck.Id"
-                           asp-route-cardId="@card.Id">Edit</a>
+                            asp-action="EditCard"
+                            asp-controller="CardEditor"
+                            asp-route-deckId="@Model.Deck.Id"
+                            asp-route-cardId="@card.Id">Edit</a>
                     </div>
 
                     <a class="btn btn-outline-danger btn-sm col-sm"
-                       asp-controller="CardEditor" asp-action="DeleteCard"
-                       asp-route-deckId="@Model.Deck.Id" asp-route-cardId="@card.Id">
+                        asp-controller="CardEditor" asp-action="DeleteCard"
+                        asp-route-deckId="@Model.Deck.Id" asp-route-cardId="@card.Id">
                         Delete
                     </a>
                 </div>
@@ -128,10 +131,10 @@
                     </div>
 
                     <a class="btn btn-outline-primary btn-sm col-sm"
-                       asp-action="RemoveTag"
-                       asp-controller="DeckEditor"
-                       asp-route-deckId="@Model.Deck.Id"
-                       asp-route-tag="@tag.Name">
+                        asp-action="RemoveTag"
+                        asp-controller="DeckEditor"
+                        asp-route-deckId="@Model.Deck.Id"
+                        asp-route-tag="@tag.Name">
                         Delete
                     </a>
                 </div>
@@ -157,7 +160,7 @@
 
     function readCover(input) {
         if (input.files && input.files[0]) {
-            var reader = new FileReader();
+            const reader = new FileReader();
 
             reader.onload = function (e) {
                 $('#cover').attr('src', e.target.result);
@@ -170,7 +173,7 @@
 
     function readThumb(input) {
         if (input.files && input.files[0]) {
-            var reader = new FileReader();
+            const reader = new FileReader();
 
             reader.onload = function (e) {
                 $('#thumb').attr('src', e.target.result);
@@ -179,5 +182,59 @@
             reader.readAsDataURL(input.files[0]);
             $('#thumbRemoved').val(false);
         }
+    }
+
+    function changeName() {
+        const nameDisplayText = document.getElementById('name-display-h4');
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.value = nameDisplayText.innerHTML;
+        nameInput.id = "change-name-input";
+
+        nameInput.classList.add("input-group-sm");
+        nameInput.classList.add("w-25");
+        nameInput.classList.add("mr-1");
+        nameInput.classList.add("border");
+        nameInput.classList.add("border-dark");
+        nameInput.classList.add("rounded");
+
+        const saveButton = document.createElement('button');
+        saveButton.innerHTML = "Save";
+        saveButton.id = "change-name-button";
+        saveButton.onclick = displayName;
+
+        saveButton.classList.add("btn");
+        saveButton.classList.add("btn-sm");
+        saveButton.classList.add("btn-outline-success");
+
+        const nameDisplayButton = document.getElementById("name-display-button");
+        nameDisplayText.parentNode.replaceChild(nameInput, nameDisplayText);
+        nameDisplayButton.parentNode.replaceChild(saveButton, nameDisplayButton);
+    }
+
+    function displayName() {
+        const nameInput = document.getElementById('change-name-input');
+        const nameDisplayText = document.createElement('h4');
+        nameDisplayText.innerHTML = nameInput.value;
+        nameDisplayText.id = "name-display-h4";
+
+        nameDisplayText.classList.add("col-xs-6");
+        nameDisplayText.classList.add("mr-1");
+
+        const nameDisplayButton = document.createElement('input');
+        nameDisplayButton.type = "image";
+        nameDisplayButton.src = "/img/pencil.png";
+        nameDisplayButton.id = "name-display-button";
+        nameDisplayButton.width = 25;
+        nameDisplayButton.height = 25;
+        nameDisplayButton.onclick = changeName;
+
+        nameDisplayButton.classList.add("col-xs-6");
+
+        document.getElementById("name-input").value = nameInput.value;
+
+        const saveButton = document.getElementById("change-name-button");
+        nameInput.parentNode.replaceChild(nameDisplayText, nameInput);
+        saveButton.parentNode.replaceChild(nameDisplayButton, saveButton);
     }
 </script>
