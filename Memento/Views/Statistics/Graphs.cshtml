@@ -16,7 +16,6 @@
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" href="#">30 Days</a>
                                 <a class="dropdown-item" href="#">7 Days</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
                             </div>
                         </div>
                     </div>
@@ -101,7 +100,7 @@
             $('.p').text(ddlvalue);
             if (x == '30 Days') {
                 $('#test').text('30 days');
-                $('#dropdownMenuButton').text('30 Days');
+                $('#dropdownMenuButton').html('30 Days');
                 $.get('GetHours',
                     { dayNumber: 30 },
                     function (jsonData) {
@@ -138,7 +137,7 @@
             }
             else if (x == '7 Days') {
                 $('#test').text('7 days');
-                $('#dropdownMenuButton').text('7 Days');
+                $('#dropdownMenuButton').html('7 Days');
                 $.get('GetHours',
                     { dayNumber: 7 },
                     function (jsonData) {
