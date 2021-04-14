@@ -20,13 +20,15 @@ namespace Memento.Models
 
             list.Add(new[] { "Date", "Hours" });
 
-            List<UserStats> data = context.Statistics.Where(stats => stats.UserId == id).ToList();
+            List<UserStats> data = context.Statistics
+                .Where(stats => stats.UserId == id)
+                .ToList();
 
             if (days > data.Count)
             {
                 for (int i = 0; i < data.Count; i++)
                 {
-                    list.Add(new Object[] { data[i].Date, data[i].HoursPerDay });
+                    list.Add(new object[] { data[i].Date, data[i].HoursPerDay });
                 }
             }
             else
@@ -39,15 +41,27 @@ namespace Memento.Models
 
         public List<object> GetAverageHours(string id, int days)
         {
-            var list = new List<object>();
-
-            list.Add(new[] { "Date", "Average Hours" });
-
-            List<UserStats> data = context.Statistics.Where(stats => stats.UserId == id).ToList();
-            for (int i = 0; i < data.Count; i++)
+            var list = new List<object>
             {
-                list.Add(new Object[] { data[i].Date, data[i].AverageHoursPerDay });
+                new[] { "Date", "Average Hours" }
+            };
+
+            List<UserStats> data = context.Statistics
+                .Where(stats => stats.UserId == id)
+                .ToList();
+
+            if (days > data.Count)
+            {
+                for (int i = 0; i < data.Count; i++)
+                {
+                    list.Add(new object[] { data[i].Date, data[i].AverageHoursPerDay });
+                }
             }
+            else
+            {
+
+            }
+
             return list;
         }
 
@@ -57,10 +71,20 @@ namespace Memento.Models
 
             list.Add(new[] { "Date", "Cards" });
 
-            List<UserStats> data = context.Statistics.Where(stats => stats.UserId == id).ToList();
-            for (int i = 0; i < data.Count; i++)
+            List<UserStats> data = context.Statistics
+                .Where(stats => stats.UserId == id)
+                .ToList();
+
+            if (days > data.Count)
             {
-                list.Add(new Object[] { data[i].Date, data[i].CardsPerDay });
+                for (int i = 0; i < data.Count; i++)
+                {
+                    list.Add(new object[] { data[i].Date, data[i].CardsPerDay });
+                }
+            }
+            else
+            {
+
             }
             return list;
         }

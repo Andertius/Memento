@@ -55,22 +55,22 @@ namespace Memento.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetAverageHours()
+        public JsonResult GetAverageHours(int dayNumber)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var stats = new GetUserStats(_context);
 
-            var data = stats.GetAverageHours(userId, Day);
+            var data = stats.GetAverageHours(userId, dayNumber);
             return Json(data);
         }
 
         [HttpGet]
-        public JsonResult GetCards()
+        public JsonResult GetCards(int dayNumber)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var stats = new GetUserStats(_context);
 
-            var data = stats.GetCards(userId, Day);
+            var data = stats.GetCards(userId, dayNumber);
             return Json(data);
         }
 
