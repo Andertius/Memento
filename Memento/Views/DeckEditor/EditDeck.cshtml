@@ -20,7 +20,7 @@
 
 <div class="row d-flex justify-content-center align-items-center mb-3">
     <h4 class="col-xs-6 mr-1" id="name-display-h4">@Model.Deck.Name</h4>
-    <input type="image" class="col-xs-6" src="~/img/pencil.png" width="25" height="25" onclick="changeName()" id="name-display-button" />
+    <input type="image" class="col-xs-6" src="~/img/pencil.png" width="20" height="20" onclick="changeName()" id="name-display-button" />
 </div>
 
 <form method="post" asp-action="SaveChanges" enctype="multipart/form-data">
@@ -225,8 +225,8 @@
         nameDisplayButton.type = "image";
         nameDisplayButton.src = "/img/pencil.png";
         nameDisplayButton.id = "name-display-button";
-        nameDisplayButton.width = 25;
-        nameDisplayButton.height = 25;
+        nameDisplayButton.width = 20;
+        nameDisplayButton.height = 20;
         nameDisplayButton.onclick = changeName;
 
         nameDisplayButton.classList.add("col-xs-6");

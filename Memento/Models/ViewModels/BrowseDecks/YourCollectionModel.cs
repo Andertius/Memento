@@ -2,12 +2,10 @@
 
 namespace Memento.Models.ViewModels.BrowseDecks
 {
-    public class BrowseDecksModel
+    public class YourCollectionModel
     {
         public List<DeckModel> YourDecks { get; set; }
 
-        public List<DeckModel> CreatedDecks { get; set; }
-
-        public List<DeckModel> PopularDecks { get; set; }
+        public string SearchFilter { get; set; }
     }
 }

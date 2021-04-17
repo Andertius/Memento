@@ -1,0 +1,45 @@
+﻿@model PopularDecksModel
+
+@section pageTitle {
+    <span>Popular Decks</span>
+}
+@section status {
+   @if (User.Identity.IsAuthenticated)
+    {
+        <div class="d-inline dropdown">
+            <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                @User.Identity.Name
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="ProfileSettings">Profile Settings</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item small" asp-action="Logout" asp-controller="Account">Log out</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-outline-info btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+        <a class="btn btn-outline-info btn-sm" asp-action="Signup" asp-controller="Account">Sign up</a>
+    }
+}
+
+<form method="get" asp-action="PopularDecks" asp-controller="Home" class="row ml-3 mb-4">
+    <input placeholder="Search" asp-for="SearchFilter" class="col-xs-6 mr-1" />
+    <button type="submit" class="btn btn-outline-secondary col-xs-6">Search</button>
+</form>
+
+@foreach (var deck in Model.PopularDecks)
+{
+    <p>@deck.Name</p>
+
+    <a class="btn btn-primary" href="#">Play</a>
+
+    <a class="btn btn-outline-primary"
+       asp-action="DeckPage"
+       asp-controller="Home"
+       asp-route-deckId="@deck.Id">
+        View Details
+    </a>
+}

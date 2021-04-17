@@ -1,0 +1,69 @@
+﻿@model Memento.Models.ViewModels.BrowseDecks.DeckModel
+
+@section pageTitle {
+    <span>@Model.Name</span>
+}
+
+@section status {
+   @if (User.Identity.IsAuthenticated)
+    {
+        <div class="d-inline dropdown">
+            <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                @User.Identity.Name
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="ProfileSettings">Profile Settings</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item small" asp-action="Logout" asp-controller="Account">Log out</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-outline-info btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+        <a class="btn btn-outline-info btn-sm" asp-action="Signup" asp-controller="Account">Sign up</a>
+    }
+}
+
+<img class="mb-1 mh-100 mw-100" src="@Url.Action("GetThumb", new { deckId = Model.Id })" alt="Deck Thumbnail" accept="image/*" />
+
+<h4>@Model.Name</h4>
+<h6>Difficulty - @Model.Difficulty</h6>
+<h6>@Model.Rating / 10</h6>
+<h6>@Model.CardNumber @(Model.CardNumber == 1 ? "card" : "cards")</h6>
+<h6>by - @Model.CreatorName</h6>
+
+@if (User.Identity.IsAuthenticated)
+{
+    if (Model.HasInCollection)
+    {
+        <a class="btn btn-outline-danger"
+           asp-action="RemoveDeckFromCollection"
+           asp-controller="Home"
+           asp-route-deckId="@Model.Id">
+            Remove from collection
+        </a>
+    }
+    else if (User.Identity.Name != Model.CreatorName)
+    {
+        <a class="btn btn-outline-primary"
+           asp-action="AddDeck"
+           asp-controller="Home"
+           asp-route-deckId="@Model.Id">
+            Add to collection
+        </a>
+    }
+
+    <a class="btn btn-primary" href="#">Play</a>
+
+    if (User.Identity.Name == Model.CreatorName)
+    {
+        <a class="btn btn-outline-info"
+           asp-action="EditDeck"
+           asp-controller="DeckEditor"
+           asp-route-deckId="@Model.Id">
+            Edit
+        </a>
+    }
+}
