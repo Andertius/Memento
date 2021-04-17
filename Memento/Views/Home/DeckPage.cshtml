@@ -5,7 +5,7 @@
 }
 
 @section status {
-   @if (User.Identity.IsAuthenticated)
+    @if (User.Identity.IsAuthenticated)
     {
         <div class="d-inline dropdown">
             <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
@@ -30,7 +30,6 @@
 
 <h4>@Model.Name</h4>
 <h6>Difficulty - @Model.Difficulty</h6>
-<h6>@Model.Rating / 10</h6>
 <h6>@Model.CardNumber @(Model.CardNumber == 1 ? "card" : "cards")</h6>
 <h6>by - @Model.CreatorName</h6>
 
@@ -66,4 +65,80 @@
             Edit
         </a>
     }
+}
+
+<h6>@(Model.AverageRating is Double.NaN ? "0" : Model.AverageRating) / 10 (@(Model.RatingNumber) votes)</h6>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <a class="btn @(Model.UserRating == 1 ? "btn-success" : "btn-outline-primary")"
+       asp-action="RateDeck"
+       asp-controller="Home"
+       asp-route-deckId="@Model.Id"
+       asp-route-rating="1">
+        1
+    </a>
+    <a class="btn @(Model.UserRating == 2 ? "btn-success" : "btn-outline-primary")"
+       asp-action="RateDeck"
+       asp-controller="Home"
+       asp-route-deckId="@Model.Id"
+       asp-route-rating="2">
+        2
+    </a>
+    <a class="btn @(Model.UserRating == 3 ? "btn-success" : "btn-outline-primary")"
+       asp-action="RateDeck"
+       asp-controller="Home"
+       asp-route-deckId="@Model.Id"
+       asp-route-rating="3">
+        3
+    </a>
+    <a class="btn @(Model.UserRating == 4 ? "btn-success" : "btn-outline-primary")"
+       asp-action="RateDeck"
+       asp-controller="Home"
+       asp-route-deckId="@Model.Id"
+       asp-route-rating="4">
+        4
+    </a>
+    <a class="btn @(Model.UserRating == 5 ? "btn-success" : "btn-outline-primary")"
+       asp-action="RateDeck"
+       asp-controller="Home"
+       asp-route-deckId="@Model.Id"
+       asp-route-rating="5">
+        5
+    </a>
+    <a class="btn @(Model.UserRating == 6 ? "btn-success" : "btn-outline-primary")"
+       asp-action="RateDeck"
+       asp-controller="Home"
+       asp-route-deckId="@Model.Id"
+       asp-route-rating="6">
+        6
+    </a>
+    <a class="btn @(Model.UserRating == 7 ? "btn-success" : "btn-outline-primary")"
+       asp-action="RateDeck"
+       asp-controller="Home"
+       asp-route-deckId="@Model.Id"
+       asp-route-rating="7">
+        7
+    </a>
+    <a class="btn @(Model.UserRating == 8 ? "btn-success" : "btn-outline-primary")"
+       asp-action="RateDeck"
+       asp-controller="Home"
+       asp-route-deckId="@Model.Id"
+       asp-route-rating="8">
+        8
+    </a>
+    <a class="btn @(Model.UserRating == 9 ? "btn-success" : "btn-outline-primary")"
+       asp-action="RateDeck"
+       asp-controller="Home"
+       asp-route-deckId="@Model.Id"
+       asp-route-rating="9">
+        9
+    </a>
+    <a class="btn @(Model.UserRating == 10 ? "btn-success" : "btn-outline-primary")"
+       asp-action="RateDeck"
+       asp-controller="Home"
+       asp-route-deckId="@Model.Id"
+       asp-route-rating="10">
+        10
+    </a>
 }

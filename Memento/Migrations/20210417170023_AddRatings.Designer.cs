@@ -4,14 +4,16 @@ using Memento.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Memento.Migrations
 {
     [DbContext(typeof(MementoDbContext))]
-    partial class MementoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210417170023_AddRatings")]
+    partial class AddRatings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -280,7 +282,7 @@ namespace Memento.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Memento.Models.UserRating", b =>
+            modelBuilder.Entity("Memento.Models.UserDeckRating", b =>
                 {
                     b.Property<long>("DeckId")
                         .HasColumnType("bigint");
@@ -295,7 +297,7 @@ namespace Memento.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Ratings");
+                    b.ToTable("UserDeckRating");
                 });
 
             modelBuilder.Entity("Memento.Models.UserStats", b =>
@@ -540,7 +542,7 @@ namespace Memento.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Memento.Models.UserRating", b =>
+            modelBuilder.Entity("Memento.Models.UserDeckRating", b =>
                 {
                     b.HasOne("Memento.Models.Deck", "Deck")
                         .WithMany("Ratings")

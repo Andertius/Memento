@@ -20,6 +20,8 @@ namespace Memento.Models
 
         public DbSet<UserStats> Statistics { get; set; }
 
+        public DbSet<UserRating> Ratings { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -45,6 +47,10 @@ namespace Memento.Models
                 .HasOne(stat => stat.User)
                 .WithMany(user => user.Statistics)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder
+                .Entity<UserRating>()
+                .HasKey(rating => new { rating.DeckId, rating.UserId });
         }
     }
 }

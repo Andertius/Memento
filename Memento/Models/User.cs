@@ -20,10 +20,12 @@ namespace Memento.Models
         public double AverageTime { get; set; }
 
 
-        public virtual ICollection<Deck> Decks { get; set; }
+        public ICollection<Deck> Decks { get; set; }
 
-        public virtual ICollection<Deck> CreatedDecks { get; set; }
+        public ICollection<Deck> CreatedDecks { get; set; }
 
-        public virtual ICollection<UserStats> Statistics { get; set; }
+        public ICollection<UserStats> Statistics { get; set; }
+
+        public ICollection<UserRating> Ratings { get; set; }
     }
 }

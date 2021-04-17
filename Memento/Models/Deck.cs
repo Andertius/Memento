@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Memento.Models
 {
@@ -20,9 +21,6 @@ namespace Memento.Models
 
         public bool IsPublic { get; set; }
 
-        [Column(TypeName = "decimal(2, 2)")]
-        public double Rating { get; set; }
-
         [Range(0, Int32.MaxValue)]
         public int CardNumber { get; set; }
 
@@ -40,5 +38,7 @@ namespace Memento.Models
         public ICollection<DeckTag> Tags { get; set; }
 
         public ICollection<Card> Cards { get; set; }
+
+        public ICollection<UserRating> Ratings { get; set; }
     }
 }

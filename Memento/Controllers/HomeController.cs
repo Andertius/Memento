@@ -34,12 +34,10 @@ namespace Memento.Controllers
             var model = new BrowseDecksModel
             {
                 PopularDecks = _context.Decks
-                    .OrderBy(deck => deck.Rating)
                     .Select(deck => new DeckModel
                     {
                         Id = deck.Id,
                         Name = deck.Name,
-                        Rating = deck.Rating,
                         Difficulty = deck.Difficulty,
                     })
                     .ToList(),
@@ -55,7 +53,6 @@ namespace Memento.Controllers
                     {
                         Id = deck.Id,
                         Name = deck.Name,
-                        Rating = deck.Rating,
                         Difficulty = deck.Difficulty,
                     })
                     .ToList();
@@ -65,7 +62,6 @@ namespace Memento.Controllers
                     {
                         Id = deck.Id,
                         Name = deck.Name,
-                        Rating = deck.Rating,
                         Difficulty = deck.Difficulty,
                     })
                     .ToList();
@@ -131,8 +127,20 @@ namespace Memento.Controllers
         [HttpGet("[controller]/[action]/{deckId}")]
         public async Task<IActionResult> DeckPage([FromRoute] long deckId)
         {
-            var deck = await _context.Decks.FindAsync(deckId);
+            var deck = await _context.Decks
+                .Where(deck => deck.Id == deckId)
+                .Include(deck => deck.Ratings)
+                .FirstOrDefaultAsync();
+
             bool hasInCollection = false;
+            int userRating = 0;
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                var rating = deck.Ratings.Where(r => r.UserId == user.Id).FirstOrDefault();
+                userRating = rating is null ? 0 : rating.Rating;
+            }
 
             //if (!deck.IsPublic)
             //{
@@ -155,11 +163,13 @@ namespace Memento.Controllers
             {
                 Id = deck.Id,
                 Name = deck.Name,
-                Rating = deck.Rating,
                 Difficulty = deck.Difficulty,
                 CardNumber = deck.CardNumber,
                 CreatorName = creator.UserName,
                 HasInCollection = hasInCollection,
+                AverageRating = deck.Ratings.Sum(r => r.Rating) / (double)deck.Ratings.Count,
+                UserRating = userRating,
+                RatingNumber = deck.Ratings.Count,
             });
         }
 
@@ -222,12 +232,10 @@ namespace Memento.Controllers
             {
                 model.PopularDecks = decks
                     .Where(deck => deck.Name.ToLower().Contains(model.SearchFilter.ToLower()))
-                    .OrderBy(deck => deck.Rating)
                     .Select(deck => new DeckModel
                     {
                         Id = deck.Id,
                         Name = deck.Name,
-                        Rating = deck.Rating,
                         Difficulty = deck.Difficulty,
                     })
                     .ToList();
@@ -235,18 +243,52 @@ namespace Memento.Controllers
             else
             {
                 model.PopularDecks = decks
-                    .OrderBy(deck => deck.Rating)
                     .Select(deck => new DeckModel
                     {
                         Id = deck.Id,
                         Name = deck.Name,
-                        Rating = deck.Rating,
                         Difficulty = deck.Difficulty,
                     })
                     .ToList();
             }
 
             return View(model);
+        }
+
+        [Authorize]
+        [HttpGet("[controller]/[action]/{deckId}/{rating}")]
+        public async Task<IActionResult> RateDeck(long deckId, int rating)
+        {
+            var user = await _context.Users
+                .Where(user => user.UserName == User.Identity.Name)
+                .Include(user => user.Ratings)
+                .FirstOrDefaultAsync();
+
+            var deck = await _context.Decks
+                .Where(deck => deck.Id == deckId)
+                .Include(deck => deck.Ratings)
+                .FirstOrDefaultAsync();
+
+            var currentRating = deck.Ratings
+                .Where(rating => rating.UserId == user.Id)
+                .FirstOrDefault();
+
+            if (currentRating is null)
+            {
+                _context.Ratings.Add(new UserRating { UserId = user.Id, DeckId = deckId, Rating = rating });
+            }
+            else if (currentRating.Rating == rating)
+            {
+                _context.Ratings.Remove(currentRating);
+            }
+            else
+            {
+                currentRating.Rating = rating;
+                _context.Ratings.Update(currentRating);
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction(nameof(DeckPage), new { deckId });
         }
 
         [Authorize]

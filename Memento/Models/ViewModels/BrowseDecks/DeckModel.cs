@@ -14,7 +14,11 @@ namespace Memento.Models.ViewModels.BrowseDecks
 
         public IFormFile Thumb { get; set; }
 
-        public double Rating { get; set; }
+        public double AverageRating { get; set; }
+
+        public double UserRating { get; set; }
+
+        public int RatingNumber { get; set; }
 
         public Difficulty Difficulty { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Memento.Models.ViewModels.DeckEditor
+namespace Memento.Models
 {
     public class DeckDto
     {
@@ -14,8 +14,12 @@ namespace Memento.Models.ViewModels.DeckEditor
 
         public bool IsPublic { get; set; }
 
+        public int CardNumber { get; set; }
+
         public ICollection<Card> Cards { get; set; }
 
         public ICollection<DeckTag> Tags { get; set; }
+
+        public ICollection<UserRating> Ratings { get; set; }
     }
 }

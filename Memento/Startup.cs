@@ -27,8 +27,6 @@ namespace Memento
                     Configuration["ConnectionStrings:MementoConnection"]);
             });
 
-            services.AddScoped<IMementoRepository, EFMementoRepository>();
-
             services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.User.RequireUniqueEmail = true;
