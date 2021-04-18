@@ -4,7 +4,7 @@
     <span>Home</span>
 }
 @section status {
-   @if (User.Identity.IsAuthenticated)
+    @if (User.Identity.IsAuthenticated)
     {
         <div class="d-inline dropdown">
             <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
@@ -25,12 +25,17 @@
     }
 }
 
+<form method="get" asp-action="SearchedDecks" asp-controller="BrowseDecks" class="row ml-3 mb-4">
+    <input placeholder="Search" asp-for="SearchValue" class="col-xs-6 mr-1" />
+    <button type="submit" class="btn btn-outline-secondary col-xs-6">Search</button>
+</form>
+
 @if (User.Identity.IsAuthenticated)
 {
     <div>
         <h4>Your collection</h4>
 
-       @foreach (var deck in Model.YourDecks.Take(3))
+        @foreach (var deck in Model.YourDecks.Take(3))
         {
             <p>@deck.Name</p>
 
@@ -38,26 +43,26 @@
 
             <a class="btn btn-outline-primary"
                asp-action="DeckPage"
-               asp-controller="Home"
+               asp-controller="BrowseDecks"
                asp-route-deckId="@deck.Id">
                 View Details
             </a>
 
             <a class="btn btn-outline-danger"
                asp-action="RemoveDeckFromCollection"
-               asp-controller="Home"
+               asp-controller="BrowseDecks"
                asp-route-deckId="@deck.Id">
                 Remove from collection
             </a>
         }
 
-        <br/>
+        <br />
 
-       @if (Model.YourDecks.Count > 3)
+        @if (Model.YourDecks.Count > 3)
         {
             <a class="btn btn-outline-info mt-2"
                asp-action="YourCollection"
-               asp-controller="Home">
+               asp-controller="BrowseDecks">
                 View more...
             </a>
         }
@@ -66,7 +71,7 @@
     <div>
         <h4>Decks by you</h4>
 
-       @foreach (var deck in Model.CreatedDecks.Take(3))
+        @foreach (var deck in Model.CreatedDecks.Take(3))
         {
             <p>@deck.Name</p>
 
@@ -81,19 +86,19 @@
 
             <a class="btn btn-outline-danger"
                asp-action="DeleteDeckFromDatabase"
-               asp-controller="Home"
+               asp-controller="BrowseDecks"
                asp-route-deckId="@deck.Id">
                 Delete for everyone
             </a>
         }
 
-        <br/>
+        <br />
 
-       @if (Model.CreatedDecks.Count > 3)
+        @if (Model.CreatedDecks.Count > 3)
         {
             <a class="btn btn-outline-info mt-2"
                asp-action="CreatedDecks"
-               asp-controller="Home">
+               asp-controller="BrowseDecks">
                 View more...
             </a>
         }
@@ -103,25 +108,25 @@
 <div>
     <h4>Popular Decks</h4>
 
-   @foreach (var deck in Model.PopularDecks.Take(5))
+    @foreach (var deck in Model.PopularDecks.Take(5))
     {
         <p>@deck.Name</p>
 
         <a class="btn btn-outline-primary"
            asp-action="DeckPage"
-           asp-controller="Home"
+           asp-controller="BrowseDecks"
            asp-route-deckId="@deck.Id">
             View Details
         </a>
     }
 
-    <br/>
+    <br />
 
-   @if (Model.PopularDecks.Count > 5)
+    @if (Model.PopularDecks.Count > 5)
     {
         <a class="btn btn-outline-info mt-2"
-            asp-action="PopularDecks"
-            asp-controller="Home">
+           asp-action="PopularDecks"
+           asp-controller="BrowseDecks">
             View more...
         </a>
     }

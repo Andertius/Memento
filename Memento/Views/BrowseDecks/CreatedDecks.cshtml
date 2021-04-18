@@ -17,7 +17,7 @@
     </div>
 }
 
-<form method="get" asp-action="CreatedDecks" asp-controller="Home" class="row ml-3 mb-4">
+<form method="get" asp-action="CreatedDecks" asp-controller="BrowseDecks" class="row ml-3 mb-4">
     <input placeholder="Search" asp-for="SearchFilter" class="col-xs-6 mr-1" />
     <button type="submit" class="btn btn-outline-secondary col-xs-6">Search</button>
 </form>
@@ -37,7 +37,7 @@
 
     <a class="btn btn-outline-danger"
        asp-action="DeleteDeckFromDatabase"
-       asp-controller="Home"
+       asp-controller="BrowseDecks"
        asp-route-deckId="@deck.Id">
         Delete for everyone
     </a>

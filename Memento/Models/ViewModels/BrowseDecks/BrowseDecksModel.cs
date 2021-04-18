@@ -9,5 +9,7 @@ namespace Memento.Models.ViewModels.BrowseDecks
         public List<DeckModel> CreatedDecks { get; set; }
 
         public List<DeckModel> PopularDecks { get; set; }
+
+        public string SearchValue { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
+
+using Microsoft.AspNetCore.Http;
 
 namespace Memento.Models.ViewModels.BrowseDecks
 {
@@ -23,5 +25,7 @@ namespace Memento.Models.ViewModels.BrowseDecks
         public Difficulty Difficulty { get; set; }
 
         public bool HasInCollection { get; set; }
+
+        public List<string> Tags { get; set; }
     }
 }

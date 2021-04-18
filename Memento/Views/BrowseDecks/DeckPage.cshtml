@@ -39,7 +39,7 @@
     {
         <a class="btn btn-outline-danger"
            asp-action="RemoveDeckFromCollection"
-           asp-controller="Home"
+           asp-controller="BrowseDecks"
            asp-route-deckId="@Model.Id">
             Remove from collection
         </a>
@@ -48,7 +48,7 @@
     {
         <a class="btn btn-outline-primary"
            asp-action="AddDeck"
-           asp-controller="Home"
+           asp-controller="BrowseDecks"
            asp-route-deckId="@Model.Id">
             Add to collection
         </a>
@@ -67,7 +67,7 @@
     }
 }
 
-<h6>@(Model.AverageRating is Double.NaN ? "0" : Model.AverageRating) / 10 (@(Model.RatingNumber) votes)</h6>
+<h6>@(Model.AverageRating is Double.NaN ? "0" : Model.AverageRating) / 10 (@(Model.RatingNumber) @(Model.RatingNumber == 1 ? "vote" : "votes"))</h6>
 
 @if (User.Identity.IsAuthenticated)
 {
@@ -75,7 +75,7 @@
     {
         <a class="btn @(Model.UserRating == i ? "btn-success" : "btn-outline-primary")"
            asp-action="RateDeck"
-           asp-controller="Home"
+           asp-controller="BrowseDecks"
            asp-route-deckId="@Model.Id"
            asp-route-rating="@i">
             @i
