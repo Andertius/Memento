@@ -80,21 +80,22 @@
             <div class="row justify-content-end">
                 <div class="col m-2">
                     <form asp-action="SavePicture" asp-controller="ProfileSettings" method="post" runat="server" EncType="multipart/form-data">
-                        <label for="edit-inp" id="edit-label" class="btn btn-success">@(Model.NoPicture == true ? "Add Image" : "Change")</label>
-                        <input type="file" id="edit-inp" style="display:none;" onchange="loadPicture(this)" asp-for="ProfilePicture" runat="server" />
+                        <label for="picture-inp" id="edit-label" class="btn btn-success">@(Model.NoPicture == true ? "Add Image" : "Change")</label>
+                        <input type="file" id="picture-inp" style="display:none;" onchange="loadPicture(this)" asp-for="ProfilePicture" runat="server" />
                         <button id="save-pict-btn" class="btn btn-success" type="submit" style="display:none;">Save</button>
                     </form>
                 </div>
                 <div class="col m-2">
-                    <label id="delete-label" class="btn btn-danger" style="display:@(Model.NoPicture == true ? "none" : "normal")">Remove</label>
-                    <input type="hidden" id="delete-inp" onchange="removePicture()" asp-for="NoPicture" value="@Model.NoPicture" />
-                    <button id="cancel-pict-btn" class="btn btn-secondary" style="display: none;" onclick="removePicture()">Cancel</button>
+                    <label for="no-picture-inp" id="remove-label" class="btn btn-danger" onclick="removePicture()"
+                           style="display:@(Model.NoPicture == true ? "none" : "normal")">Remove</label>
+                    <input type="hidden" id="no-picture-inp" asp-for="NoPicture" value="@Model.NoPicture" />
+                    <button id="cancel-pict-btn" class="btn btn-secondary" onclick="cancelPicture()" style="display:none;">Cancel</button>
                 </div>
             </div>
             <div class="list-group" id="myList" role="tablist" style="width:270px;align-content:end;">
                 <a class="list-group-item list-group-item-action py-2 active" id="general" data-toggle="list" 
                    href="#list-general" role="tab">General</a>
-                <a class="list-group-item list-group-item-action py-2" id="password" data-toggle="list" 
+                <a class="list-group-item list-group-item-action py-2" id="password" data-toggle="list"
                    href="#list-password" role="tab">Password</a>
             </div>
         </div>
@@ -111,9 +112,9 @@
             };
 
             reader.readAsDataURL(input.files[0]);
-            $('#delete-inp').val(false);
+            $('#no-picture-inp').val(false);
             $('#edit-label').hide();
-            $('#delete-label').hide();
+            $('#remove-label').hide();
             $('#save-pict-btn').show('slow');
             $('#cancel-pict-btn').show('slow');
         }
@@ -121,21 +122,21 @@
 
     function removePicture() {
         $('#picture').attr('src', '');
-        $("#edit-inp").val(null);
-        $('#edit-label').attr('title', 'Add Image');
-        $('#delete-label').hide();
-        $('#save-pict-btn').hide();
-        $('#cancel-pict-btn').hide();
-        $('#edit-label').show('slow');
-        $('#delete-inp').val(true);
+        $("#picture-inp").val(null);
+        $('#edit-label').html('Add Image');
+        $('#remove-label').hide();
+        $('#no-picture-inp').val(true);
+        $('#save-pict-btn').show('slow');
+        $('#cancel-pict-btn').show('slow');
+        $('#edit-label').hide();
     }
 
-    //$("#delete-inp").click(function (e) {
-    //    e.preventDefault();
-    //    $('#picture').attr('src', "");
-    //    $("#edit-inp").val(null);
-    //    $('#edit-label').attr('title', 'Add Image');
-    //    $('#delete-inp').val(true);
-    //    $('#delete-label').css('visibility', 'hidden');
-    //});
+    function cancelPicture() {
+        $('#picture').attr('src', '@Url.Action("GetPicture")');
+        $('#save-pict-btn').hide();
+        $('#cancel-pict-btn').hide();
+        $('#edit-label').html('Change');
+        $('#edit-label').show('slow');
+        $('#remove-label').show('slow');
+    }
 </script>
