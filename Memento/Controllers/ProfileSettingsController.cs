@@ -107,13 +107,9 @@ namespace Memento.Controllers
                     model.ProfilePicture.CopyTo(ms);
                     user.ProfilePicture = ms.ToArray();
                 }
-                else if (model.NoPicture)
+                else
                 {
                     user.ProfilePicture = null;
-                }
-                else if (model.ProfilePicture is null)
-                {
-                    return View("again fucking null");
                 }
             }
 
@@ -126,8 +122,25 @@ namespace Memento.Controllers
             if (string.IsNullOrEmpty(model.Email))
                 model.Email = user.Email;
 
+            model.NoPicture = model.ProfilePicture is null;
+
             return View(nameof(ProfileSettings), model);
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> GetPrevPicture()
+        //{
+        //    User user = await userManager.GetUserAsync(User);
+        //    return View(new ProfileSettingsModel
+        //    {
+        //        Username = user.UserName,
+        //        Email = user.Email,
+        //        CurrentPassword = string.Empty,
+        //        NewPassword = string.Empty,
+        //        PasswordConfirm = string.Empty,
+        //        NoPicture = user.ProfilePicture is null
+        //    });
+        //}
 
         [HttpGet]
         public async Task<FileResult> GetPicture()
