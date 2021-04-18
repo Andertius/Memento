@@ -22,12 +22,12 @@
         <div class="col-lg-4 pb-5">
             <div class="tab-content" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="list-general" role="tabpanel" aria-labelledby="general">
-                    <form class="row" method="post" asp-action="UpdateGeneralInfo" asp-controller="ProfileSettings">
+                    <form class="row" asp-action="UpdateGeneralInfo" asp-controller="ProfileSettings" method="post">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label asp-for="Username">Username</label>
                                 <div asp-validation-for="Username" class="text-danger"></div>
-                                <input asp-for="Username" class="form-control" type="text" value="@Model.Username" required="">
+                                <input asp-for="Username" class="form-control" type="text" value="@Model.Username">
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -36,14 +36,14 @@
                                 <div asp-validation-for="Email" class="text-danger"></div>
                                 <input asp-for="Email" class="form-control" type="email" value="@Model.Email" disabled="">
                             </div>
-                        </div><div asp-validation-summary="All" class="text-danger"></div>
+                        </div>
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-style-1 btn-primary">Update</button>
                         </div>
                     </form>
                 </div>
                 <div class="tab-pane fade" id="list-password" role="tabpanel" aria-labelledby="password">
-                    <form class="row" method="post" asp-action="ChangePassword" asp-controller="ProfileSettings">
+                    <form class="row" asp-action="ChangePassword" asp-controller="ProfileSettings" method="post">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label asp-for="CurrentPassword">Current Password</label>
@@ -65,12 +65,12 @@
                                 <input asp-for="PasswordConfirm" class="form-control" type="password" value="@Model.PasswordConfirm">
                             </div>
                         </div>
-                        <div asp-validation-summary="All" class="text-danger"></div>
                         <div class="col-md-12">
                             <button type="submit" class="btn btn-style-1 btn-primary">Change Password</button>
                         </div>
                     </form>
                 </div>
+                <div asp-validation-summary="All" class="text-danger mt-2"></div>
             </div>
         </div>
         <div class="col-lg-4 pb-5">
@@ -78,19 +78,23 @@
                 <img id="picture" src="@Url.Action("GetPicture")" alt="@User.Identity.Name" style="width:270px;height:270px;" accept="image/*">
             </div>
             <div class="row justify-content-end">
-                <div class="col-sm-1 mt-2">
-                    <label for="editInp" id="edit-label" title="@(Model.NoPicture == true ? "Add Image" : "Change Image")"><img src="~/img/edit-regular.svg" width="30" height="30"></label>
-                    <input type="file" id="editInp" style="visibility:hidden;" onchange="loadPicture(this)" asp-for="@Model.ProfilePicture" />
+                <div class="col m-2">
+                    <form asp-action="SavePicture" asp-controller="ProfileSettings" method="post" runat="server" EncType="multipart/form-data">
+                        <label for="edit-inp" id="edit-label" class="btn btn-success">@(Model.NoPicture == true ? "Add Image" : "Change")</label>
+                        <input type="file" id="edit-inp" style="display:none;" onchange="loadPicture(this)" asp-for="ProfilePicture" runat="server" />
+                        <button id="save-pict-btn" class="btn btn-success" type="submit" style="display:none;">Save</button>
+                    </form>
                 </div>
-                <div class="col-sm-1 ml-2 mt-2 mr-4">
-                    <label id="delete-label" title="Remove Image" style="visibility:@(Model.NoPicture == true ? "hidden" : "visible")"><img src="~/img/trash-alt-solid.svg" width="30" height="30" /></label>
-                    <input type="hidden" id="deleteInp" asp-for="NoPicture" value="@Model.NoPicture"/>
+                <div class="col m-2">
+                    <label id="delete-label" class="btn btn-danger" style="display:@(Model.NoPicture == true ? "none" : "normal")">Remove</label>
+                    <input type="hidden" id="delete-inp" onchange="removePicture()" asp-for="NoPicture" value="@Model.NoPicture" />
+                    <button id="cancel-pict-btn" class="btn btn-secondary" style="display: none;" onclick="removePicture()">Cancel</button>
                 </div>
             </div>
-            <div class="list-group align-items-end" id="myList" role="tablist">
-                <a class="list-group-item list-group-item-action py-2 w-75 active" id="general" data-toggle="list" 
+            <div class="list-group" id="myList" role="tablist" style="width:270px;align-content:end;">
+                <a class="list-group-item list-group-item-action py-2 active" id="general" data-toggle="list" 
                    href="#list-general" role="tab">General</a>
-                <a class="list-group-item list-group-item-action py-2 w-75" id="password" data-toggle="list" 
+                <a class="list-group-item list-group-item-action py-2" id="password" data-toggle="list" 
                    href="#list-password" role="tab">Password</a>
             </div>
         </div>
@@ -100,25 +104,38 @@
 <script>
     function loadPicture(input) {
         if (input.files && input.files[0]) {
-            var reader = new FileReader();
+            const reader = new FileReader();
 
             reader.onload = function (e) {
                 $('#picture').attr('src', e.target.result);
             };
 
             reader.readAsDataURL(input.files[0]);
-            $('#deleteInp').val(false);
-            $('#delete-label').css('visibility', 'visible');
-            $('#edit-label').attr('title', 'Change Image');
+            $('#delete-inp').val(false);
+            $('#edit-label').hide();
+            $('#delete-label').hide();
+            $('#save-pict-btn').show('slow');
+            $('#cancel-pict-btn').show('slow');
         }
     }
 
-    $("#deleteInp").click(function (e) {
-        e.preventDefault();
-        $('#picture').attr('src', "");
-        $("#editInp").val(null);
+    function removePicture() {
+        $('#picture').attr('src', '');
+        $("#edit-inp").val(null);
         $('#edit-label').attr('title', 'Add Image');
-        $('#deleteInp').val(true);
-        $('#delete-label').css('visibility', 'hidden');
-    });
+        $('#delete-label').hide();
+        $('#save-pict-btn').hide();
+        $('#cancel-pict-btn').hide();
+        $('#edit-label').show('slow');
+        $('#delete-inp').val(true);
+    }
+
+    //$("#delete-inp").click(function (e) {
+    //    e.preventDefault();
+    //    $('#picture').attr('src', "");
+    //    $("#edit-inp").val(null);
+    //    $('#edit-label').attr('title', 'Add Image');
+    //    $('#delete-inp').val(true);
+    //    $('#delete-label').css('visibility', 'hidden');
+    //});
 </script>

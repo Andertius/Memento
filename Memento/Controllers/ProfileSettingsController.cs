@@ -1,6 +1,7 @@
 ﻿using Memento.Models;
 using Memento.Models.ViewModels;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,65 +22,23 @@ namespace Memento.Controllers
             this.context = context;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> ProfileSettings()
         {
             User user = await userManager.GetUserAsync(User);
-            ProfileSettingsModel profSetts = new ProfileSettingsModel
+            return View(new ProfileSettingsModel
             {
                 Username = user.UserName,
                 Email = user.Email,
-                CurrentPassword = "",
+                CurrentPassword = string.Empty,
                 NewPassword = string.Empty,
                 PasswordConfirm = string.Empty,
-                ProfilePicture = user.ProfilePicture,
                 NoPicture = user.ProfilePicture is null
-            };
-
-            return View(profSetts);
+            });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateProfileSettings(ProfileSettingsModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                User user = await userManager.GetUserAsync(User);
-
-                IdentityResult result = await userManager.SetUserNameAsync(user, model.Username);
-
-                if (result.Succeeded)
-                {
-                    result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
-                    if (result.Succeeded)
-                    {
-                        using (MemoryStream ms = new MemoryStream())
-                        {
-                            if (model.ProfilePicture is not null)
-                            {
-                                ms.Read(model.ProfilePicture);
-                                user.ProfilePicture = ms.ToArray();
-                            }
-                            else if (model.NoPicture)
-                            {
-                                user.ProfilePicture = null;
-                            }
-                        }
-
-                        context.Users.Update(user);
-                        context.SaveChanges();
-
-                        return View(nameof(ProfileSettings));
-                    }
-                }
-                foreach (IdentityError err in result.Errors)
-                {
-                    ModelState.AddModelError("", err.Description);
-                }
-            }
-            return View(nameof(ProfileSettings));
-        }
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> UpdateGeneralInfo(ProfileSettingsModel model)
         {
@@ -91,16 +50,20 @@ namespace Memento.Controllers
 
                 if (result.Succeeded)
                 {
-                    return View(nameof(ProfileSettings));
+                    if (string.IsNullOrEmpty(model.Email))
+                        model.Email = user.Email;
+
+                    return View(nameof(ProfileSettings), model);
                 }
                 foreach (IdentityError err in result.Errors)
                 {
                     ModelState.AddModelError("", err.Description);
                 }
             }
-            return View(nameof(ProfileSettings));
+            return View(nameof(ProfileSettings), model);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ProfileSettingsModel model)
         {
@@ -115,14 +78,55 @@ namespace Memento.Controllers
                     context.Users.Update(user);
                     context.SaveChanges();
 
-                    return View(nameof(ProfileSettings));
+                    if (string.IsNullOrEmpty(model.Username))
+                        model.Username = user.UserName;
+
+                    if (string.IsNullOrEmpty(model.Email))
+                        model.Email = user.Email;
+
+                    return View(nameof(ProfileSettings), model);
                 }
                 foreach (IdentityError err in result.Errors)
                 {
                     ModelState.AddModelError("", err.Description);
                 }
             }
-            return View(nameof(ProfileSettings));
+            return View(nameof(ProfileSettings), model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> SavePicture(ProfileSettingsModel model)
+        {
+            User user = await userManager.GetUserAsync(User);
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                if (model.ProfilePicture is not null)
+                {
+                    model.ProfilePicture.CopyTo(ms);
+                    user.ProfilePicture = ms.ToArray();
+                }
+                else if (model.NoPicture)
+                {
+                    user.ProfilePicture = null;
+                }
+                else if (model.ProfilePicture is null)
+                {
+                    return View("again fucking null");
+                }
+            }
+
+            context.Users.Update(user);
+            context.SaveChanges();
+
+            if (string.IsNullOrEmpty(model.Username))
+                model.Username = user.UserName;
+
+            if (string.IsNullOrEmpty(model.Email))
+                model.Email = user.Email;
+
+            return View(nameof(ProfileSettings), model);
         }
 
         [HttpGet]

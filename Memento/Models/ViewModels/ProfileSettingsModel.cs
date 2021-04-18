@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace Memento.Models.ViewModels
 {
@@ -19,7 +20,7 @@ namespace Memento.Models.ViewModels
         [Compare(nameof(NewPassword), ErrorMessage = "Passwords should match.")]
         public string PasswordConfirm { get; set; }
 
-        public byte[] ProfilePicture { get; set; }
+        public IFormFile ProfilePicture { get; set; }
 
         public bool NoPicture { get; set; }
     }

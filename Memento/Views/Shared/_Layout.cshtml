@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    <header class="navbar navbar-light" style="background-color: #e3f2fd;">
+    <header class="navbar navbar-light sticky-top" style="background-color: #e3f2fd;">
         <a class="navbar-brand" href="#">
             <img src="/img/memento-logo.png" width="30" height="30">
             @RenderSection("pageTitle", required: true)
@@ -28,7 +28,7 @@
     </header>
     <div class="container-fluid">
         <div class="row">
-            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <nav id="left-panel" class="col-md-2 d-none d-md-block bg-light sidebar">
                 <div class="sidebar-sticky">
                     <div class="nav flex-column">
                         <a class="nav-link active" asp-action="Index" asp-controller="Home">Home</a>
@@ -51,3 +51,9 @@
     </div>
 </body>
 </html>
+
+<script>
+    $(document).ready(function () {
+        $('#left-panel').css('min-height', $(window).height()*0.92);
+    });
+</script>
