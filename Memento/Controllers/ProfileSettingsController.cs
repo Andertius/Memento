@@ -127,21 +127,6 @@ namespace Memento.Controllers
             return View(nameof(ProfileSettings), model);
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetPrevPicture()
-        //{
-        //    User user = await userManager.GetUserAsync(User);
-        //    return View(new ProfileSettingsModel
-        //    {
-        //        Username = user.UserName,
-        //        Email = user.Email,
-        //        CurrentPassword = string.Empty,
-        //        NewPassword = string.Empty,
-        //        PasswordConfirm = string.Empty,
-        //        NoPicture = user.ProfilePicture is null
-        //    });
-        //}
-
         [HttpGet]
         public async Task<FileResult> GetPicture()
         {
