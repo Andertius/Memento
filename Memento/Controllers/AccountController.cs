@@ -18,14 +18,16 @@ namespace Memento.Controllers
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly EmailConfig emailConfig;
+        private readonly MementoDbContext context;
 
         private User user;
 
-        public AccountController(UserManager<User> userMgr, SignInManager<User> signInMgr, IOptions<EmailConfig> opts)
+        public AccountController(UserManager<User> userMgr, SignInManager<User> signInMgr, IOptions<EmailConfig> opts, MementoDbContext cont)
         {
             userManager = userMgr;
             signInManager = signInMgr;
             emailConfig = opts.Value;
+            context = cont;
         }
 
         public ViewResult Login(string returnUrl)
@@ -130,6 +132,19 @@ namespace Memento.Controllers
 
             if ((await userManager.ConfirmEmailAsync(user, token)).Succeeded)
             {
+                Settings settings = new Settings
+                {
+                    UserId = user.Id,
+                    HoursPerDay = 0,
+                    CardsPerDay = 0,
+                    CardsOrder = 0,
+                    DarkTheme = false,
+                    ShowImages = true
+                };
+
+                await context.AddAsync(settings);
+                await context.SaveChangesAsync();
+
                 return View();
             }
 
