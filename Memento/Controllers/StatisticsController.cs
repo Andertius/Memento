@@ -51,6 +51,8 @@ namespace Memento.Controllers
             var stats = new GetUserStats(_context);
 
             var data = stats.GetHours(userId, dayNumber);
+
+            var debugJson = Json(data);
             return Json(data);
         }
 
@@ -71,6 +73,20 @@ namespace Memento.Controllers
             var stats = new GetUserStats(_context);
 
             var data = stats.GetCards(userId, dayNumber);
+            return Json(data);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public JsonResult GetTodayStats()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var stats = new GetUserStats(_context);
+
+            var data = stats.GetTodayStats(userId);
+
+            var debugJson = Json(data);
+
             return Json(data);
         }
 

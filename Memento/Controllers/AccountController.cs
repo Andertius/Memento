@@ -1,4 +1,7 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
@@ -18,14 +21,16 @@ namespace Memento.Controllers
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly EmailConfig emailConfig;
+        private readonly MementoDbContext _context;
 
         private User user;
 
-        public AccountController(UserManager<User> userMgr, SignInManager<User> signInMgr, IOptions<EmailConfig> opts)
+        public AccountController(UserManager<User> userMgr, SignInManager<User> signInMgr, IOptions<EmailConfig> opts, MementoDbContext context)
         {
             userManager = userMgr;
             signInManager = signInMgr;
             emailConfig = opts.Value;
+            _context = context;
         }
 
         public ViewResult Login(string returnUrl)
@@ -57,6 +62,41 @@ namespace Memento.Controllers
 
                     if ((await signInManager.PasswordSignInAsync(user.UserName, loginModel.Password, false, false)).Succeeded)
                     {
+                        var data = _context.Statistics.Where(u => u.UserId == user.Id).ToList();
+
+                        DateTime lastEntry = data[^1].Date;
+
+                        lastEntry = new DateTime(data[^1].Date.Year, data[^1].Date.Month, data[^1].Date.Day);
+
+                        DateTime today = DateTime.UtcNow;
+
+                        DateTime comparator = new DateTime(today.Year, today.Month, today.Day);
+
+                        if(lastEntry != comparator)
+                        {
+                            var average = 0.0;
+
+                            for (int i = 0; i < data.Count; i++)
+                            {
+                                average += data[i].HoursPerDay;
+                            }
+
+                            average /= data.Count;
+
+                            var newStats = new UserStats
+                            {
+                                UserId = user.Id,
+                                HoursPerDay = 0,
+                                CardsPerDay = 0,
+                                AverageHoursPerDay = (float)average,
+                                Date = comparator,
+                            };
+
+                            _context.Statistics.Add(newStats);
+                            _context.SaveChanges();
+                        }
+
+
                         return Redirect(loginModel?.ReturnUrl ?? "/");
                     }
                 }
@@ -96,6 +136,18 @@ namespace Memento.Controllers
                         SendEmailConfirmationEmail(
                             $"Dear {user.UserName},\nHere is the link to confirm your email: {confirmationLink}",
                             user.Email);
+
+                        var newStats = new UserStats
+                        {
+                            UserId = user.Id,
+                            HoursPerDay = 0,
+                            CardsPerDay = 0,
+                            AverageHoursPerDay = 0,
+                            Date = DateTime.Now,
+                        };
+
+                        _context.Statistics.Add(newStats);
+                        _context.SaveChanges();
 
                         return View("Error", new AccountErrorModel() {
                             Title = "Registration successful",

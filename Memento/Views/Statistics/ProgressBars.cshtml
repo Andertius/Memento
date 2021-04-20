@@ -9,26 +9,115 @@
             </div>
         </div>
     </div>
-    <section class="progress-section d-inline">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-3">
-                    <div class="progress-bars">
-                        <h2>85%</h2>
-                    </div><!--progress-bars-->
-                </div>
-                <div class="col-md-3">
-                    <div class="progress-bars-four">
-                        <h2>55%</h2>
-                    </div><!--progress-bars-->
-                </div>
 
-                <div class="col-md-3">
-                    <div class="progress-bars-six">
-                        <h2>65%</h2>
-                    </div><!--progress-bars-->
+    <div class="col-8" style="height:auto;">
+        <div class="diamond-progress-bar">
+            <div class="fill" id="fillHours">
+                <div class="left" id="leftHours">
+                    <div class="mezha">
+                    </div>
+                </div>
+                <div class="right" id="rightHours">
+                    <div class="mezha">
+                    </div>
                 </div>
             </div>
+            <div class="background">
+            </div>
         </div>
-    </section>
+
+        <div class="justify-content-center align-top align-self-center mr-lg-5 ml-lg-5" style="display:inline">
+            <p class="border border-info" id="average" style="box-sizing:border-box; width:100px; height:100px; display:inline-block; "></p>
+        </div>
+        
+        
+        <div class="diamond-progress-bar">
+            <div class="fill" id="fillCards">
+                <div class="left" id="leftCards">
+                    <div class="mezha">
+                    </div>
+                </div>
+                <div class="right" id="rightCards">
+                    <div class="mezha">
+                    </div>
+                </div>
+            </div>
+            <div class="background">
+            </div>
+        </div>
 </form>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+
+    function updateHoursPercentage(percent) {
+        if (percent > 50) {
+            var thisPercent = (percent - 50) * 2;
+            $('#fillHours #leftHours').css('top', 100 - thisPercent + '%');
+            $('#fillHours #rightHours').css('bottom', 0);
+        } else {
+            $('#fillHours #leftHours').css('top', '100%');
+            $('#fillHours #rightHours').css('bottom', 100 - (percent * 2) + '%');
+        }
+    }
+
+    function updateCardsPercentage(percent) {
+        if (percent > 50) {
+            var thisPercent = (percent - 50) * 2;
+            $('#fillCards #leftCards').css('top', 100 - thisPercent + '%');
+            $('#fillCards #rightCards').css('bottom', 0);
+        } else {
+            $('#fillCards #leftCards').css('top', '100%');
+            $('#fillCards #rightCards').css('bottom', 100 - (percent * 2) + '%');
+        }
+    }
+
+    //updatePercentage($('.percentage').val());
+
+    //$('.percentage').on('change', function () {
+    //    updatePercentage($(this).val());
+    //});
+    //function fuckme() {
+
+
+        $.get('GetTodayStats',
+            function (jsonData) {
+                //debugger
+                updateHoursPercentage(jsonData[1][0]);
+                updateCardsPercentage(jsonData[1][2]);
+
+                var replaceText = "Average hours:" + jsonData[1][1];
+
+                $("#average").html(replaceText);
+                //$("#fordebug").html(jsonData[1][0]);
+                //updatePercentage(data.Hours);
+                //$("#fordebug").append(jsonData.hours);
+                //if (data.hours > 50) {
+                //    var thisPercent = (data.hours - 50) * 2;
+                //    $('.fill .left').css('top', 100 - thisPercent + '%');
+                //    $('.fill .right').css('bottom', 0);
+                //} else {
+                //    $('.fill .left').css('top', '100%');
+                //    $('.fill .right').css('bottom', 100 - (data.hours * 2) + '%');
+                //}
+
+            }
+        )
+
+    //}
+    //function updatePercentage() {
+    //    $.get('GetTodayStats',
+    //        function (jsonData) {
+                
+    //            if (jsonData.hours > 50) {
+    //                var thisPercent = (jsonData.hours - 50) * 2;
+    //                $('.fill .left').css('top', 100 - thisPercent + '%');
+    //                $('.fill .right').css('bottom', 0);
+    //            } else {
+    //                $('.fill .left').css('top', '100%');
+    //                $('.fill .right').css('bottom', 100 - (jsonData.hours * 2) + '%');
+    //            }
+    //        }
+    //    )
+    //}
+</script>

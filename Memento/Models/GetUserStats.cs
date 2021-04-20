@@ -26,13 +26,74 @@ namespace Memento.Models
 
             if (days > data.Count)
             {
-                for (int i = 0; i < data.Count; i++)
+                DateTime comparator = DateTime.UtcNow.AddDays(-30);
+
+                comparator = new DateTime(comparator.Year, comparator.Month, comparator.Day);
+
+                for (int i = data.Count - 1; i > 1; i--)
                 {
-                    list.Add(new object[] { data[i].Date, data[i].HoursPerDay });
+                    DateTime date = data[i].Date;
+
+                    date = new DateTime(date.Year, date.Month, date.Day);
+
+                    if (date < comparator)
+                    {
+                        context.Remove(data[i]);
+                        context.SaveChanges();
+                    }
+
                 }
+
+                data = context.Statistics
+                    .Where(stats => stats.UserId == id)
+                    .ToList();
+                if(data.Count != 0)
+                {
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        list.Add(new object[] { data[i].Date, data[i].HoursPerDay });
+                    }
+                }
+                else
+                {
+                    list.Add(new object[] { DateTime.UtcNow, 0});
+                }
+                
             }
             else
             {
+                DateTime comparator = DateTime.UtcNow.AddDays(-30);
+
+                comparator = new DateTime(comparator.Year, comparator.Month, comparator.Day);
+
+                for (int i = data.Count - 1; i > 1; i--)
+                {
+                    DateTime date = data[i].Date;
+
+                    date = new DateTime(date.Year, date.Month, date.Day);
+
+                    if (date < comparator)
+                    {
+                        context.Remove(data[i]);
+                        context.SaveChanges();
+                    }
+                }
+
+                data = context.Statistics
+                    .Where(stats => stats.UserId == id)
+                    .ToList();
+
+                if (data.Count != 0)
+                {
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        list.Add(new object[] { data[i].Date, data[i].HoursPerDay });
+                    }
+                }
+                else
+                {
+                    list.Add(new object[] { DateTime.UtcNow, 0 });
+                }
 
             }
             
@@ -52,14 +113,76 @@ namespace Memento.Models
 
             if (days > data.Count)
             {
-                for (int i = 0; i < data.Count; i++)
+                DateTime comparator = DateTime.UtcNow.AddDays(-30);
+
+                comparator = new DateTime(comparator.Year, comparator.Month, comparator.Day);
+
+                for (int i = data.Count - 1; i > 1; i--)
                 {
-                    list.Add(new object[] { data[i].Date, data[i].AverageHoursPerDay });
+                    DateTime date = data[i].Date;
+
+                    date = new DateTime(date.Year, date.Month, date.Day);
+
+                    if (date < comparator)
+                    {
+                        context.Remove(data[i]);
+                        context.SaveChanges();
+                    }
+
                 }
+
+                data = context.Statistics
+                    .Where(stats => stats.UserId == id)
+                    .ToList();
+
+                if (data.Count != 0)
+                {
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        list.Add(new object[] { data[i].Date, data[i].AverageHoursPerDay });
+                    }
+                }
+                else
+                {
+                    list.Add(new object[] { DateTime.UtcNow, 0 });
+                }
+                
             }
             else
             {
+                DateTime comparator = DateTime.UtcNow.AddDays(-30);
 
+                comparator = new DateTime(comparator.Year, comparator.Month, comparator.Day);
+
+                for (int i = data.Count - 1; i > 1; i--)
+                {
+                    DateTime date = data[i].Date;
+
+                    date = new DateTime(date.Year, date.Month, date.Day);
+
+                    if (date < comparator)
+                    {
+                        context.Remove(data[i]);
+                        context.SaveChanges();
+                    }
+
+                }
+
+                data = context.Statistics
+                    .Where(stats => stats.UserId == id)
+                    .ToList();
+
+                if (data.Count != 0)
+                {
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        list.Add(new object[] { data[i].Date, data[i].AverageHoursPerDay });
+                    }
+                }
+                else
+                {
+                    list.Add(new object[] { DateTime.UtcNow, 0 });
+                }
             }
 
             return list;
@@ -77,15 +200,126 @@ namespace Memento.Models
 
             if (days > data.Count)
             {
-                for (int i = 0; i < data.Count; i++)
+                DateTime comparator = DateTime.UtcNow.AddDays(-30);
+
+                comparator = new DateTime(comparator.Year, comparator.Month, comparator.Day);
+
+                for (int i = data.Count - 1; i > 1; i--)
                 {
-                    list.Add(new object[] { data[i].Date, data[i].CardsPerDay });
+                    DateTime date = data[i].Date;
+
+                    date = new DateTime(date.Year, date.Month, date.Day);
+
+                    if (date < comparator)
+                    {
+                        context.Remove(data[i]);
+                        context.SaveChanges();
+                    }
+
+                }
+
+                data = context.Statistics
+                    .Where(stats => stats.UserId == id)
+                    .ToList();
+
+                if (data.Count != 0)
+                {
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        list.Add(new object[] { data[i].Date, data[i].CardsPerDay });
+                    }
+                }
+                else
+                {
+                    list.Add(new object[] { DateTime.UtcNow, 0 });
                 }
             }
             else
             {
+                DateTime comparator = DateTime.UtcNow.AddDays(-30);
+
+                comparator = new DateTime(comparator.Year, comparator.Month, comparator.Day);
+
+                for (int i = data.Count - 1; i > 1; i--)
+                {
+                    DateTime date = data[i].Date;
+
+                    date = new DateTime(date.Year, date.Month, date.Day);
+
+                    if (date < comparator)
+                    {
+                        context.Remove(data[i]);
+                        context.SaveChanges();
+                    }
+
+                }
+
+                data = context.Statistics
+                    .Where(stats => stats.UserId == id)
+                    .ToList();
+
+                if (data.Count != 0)
+                {
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        list.Add(new object[] { data[i].Date, data[i].CardsPerDay });
+                    }
+                }
+                else
+                {
+                    list.Add(new object[] { DateTime.UtcNow, 0 });
+                }
 
             }
+            return list;
+        }
+
+        public List<object> GetTodayStats(string id)
+        {
+            var list = new List<object>();
+
+            list.Add(new[] { "hours", "averageHours", "cards" });
+
+            List<UserStats> data = context.Statistics
+                .Where(stats => stats.UserId == id)
+                .ToList();
+
+            var stats = context.Settings
+                .Where(user => user.UserId == id)
+                .FirstOrDefault();
+
+            var todayStats = data[^1];
+
+            int todayHours;
+
+            if (todayStats.HoursPerDay >= stats.HoursPerDay)
+            {
+                todayHours = 100;
+            }
+            else
+            {
+                int answer = Convert.ToInt32((todayStats.HoursPerDay / stats.HoursPerDay) * 100);
+                todayHours = answer;
+            }
+
+            float todayAverage = todayStats.AverageHoursPerDay;
+
+            int todayCards;
+
+            if (todayStats.CardsPerDay >= stats.CardsPerDay)
+            {
+               todayCards = 100;
+            }
+            else
+            {
+                var test = Convert.ToDouble(todayStats.CardsPerDay) / Convert.ToDouble(stats.CardsPerDay);
+
+                int answer = Convert.ToInt32(test * 100);
+                todayCards = answer;
+            }
+
+            list.Add(new object[] { todayHours, todayAverage, todayCards });
+
             return list;
         }
     }
