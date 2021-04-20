@@ -21,16 +21,15 @@ namespace Memento.Controllers
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly EmailConfig emailConfig;
-        private readonly MementoDbContext _context;
+        private readonly MementoDbContext context;
 
         private User user;
-
         public AccountController(UserManager<User> userMgr, SignInManager<User> signInMgr, IOptions<EmailConfig> opts, MementoDbContext context)
         {
             userManager = userMgr;
             signInManager = signInMgr;
             emailConfig = opts.Value;
-            _context = context;
+            this.context = context;
         }
 
         public ViewResult Login(string returnUrl)
@@ -62,7 +61,7 @@ namespace Memento.Controllers
 
                     if ((await signInManager.PasswordSignInAsync(user.UserName, loginModel.Password, false, false)).Succeeded)
                     {
-                        var data = _context.Statistics.Where(u => u.UserId == user.Id).ToList();
+                        var data = context.Statistics.Where(u => u.UserId == user.Id).ToList();
 
                         DateTime lastEntry = data[^1].Date;
 
@@ -92,8 +91,8 @@ namespace Memento.Controllers
                                 Date = comparator,
                             };
 
-                            _context.Statistics.Add(newStats);
-                            _context.SaveChanges();
+                            context.Statistics.Add(newStats);
+                            context.SaveChanges();
                         }
 
 
@@ -146,8 +145,8 @@ namespace Memento.Controllers
                             Date = DateTime.Now,
                         };
 
-                        _context.Statistics.Add(newStats);
-                        _context.SaveChanges();
+                        context.Statistics.Add(newStats);
+                        context.SaveChanges();
 
                         return View("Error", new AccountErrorModel() {
                             Title = "Registration successful",
@@ -182,6 +181,19 @@ namespace Memento.Controllers
 
             if ((await userManager.ConfirmEmailAsync(user, token)).Succeeded)
             {
+                Settings settings = new Settings
+                {
+                    UserId = user.Id,
+                    HoursPerDay = 0,
+                    CardsPerDay = 0,
+                    CardsOrder = 0,
+                    DarkTheme = false,
+                    ShowImages = true
+                };
+
+                await context.AddAsync(settings);
+                await context.SaveChangesAsync();
+
                 return View();
             }
 
