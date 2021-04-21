@@ -9,6 +9,8 @@ namespace Memento.Models.ViewModels.DeckEditor
     {
         public long Id { get; set; }
 
+        public long ExistingId { get; set; }
+
         public long DeckId { get; set; }
 
         [Required]

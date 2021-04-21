@@ -1,7 +1,7 @@
-﻿@model ChooseDeckModel
+﻿@model ChooseCardModel
 
 @section pageTitle {
-    <span>Choose Deck</span>
+    <span>Import an existing card</span>
 }
 
 @section status {
@@ -18,29 +18,26 @@
     </div>
 }
 
-<div class="row mb-4">
-    <a class="btn btn-primary col-xs-6" asp-action="CreateDeck">New deck</a>
-    <form method="get" asp-action="ChooseDeck" asp-controller="DeckEditor" class="col-xs-6 row ml-3">
-        <input placeholder="Search" asp-for="SearchFilter" class="h-100 col-xs-6 mr-1"/>
-        <button type="submit" class="btn btn-outline-secondary col-xs-6">Search</button>
-    </form>
-</div>
+<form method="post" asp-action="ChooseCard" asp-controller="DeckEditor" class="row ml-3 mb-4">
+    <input placeholder="Search" asp-for="SearchFilter" class="col-xs-6 mr-1" />
+    <input type="hidden" asp-for="DeckId" value="@Model.DeckId"/>
+    <button type="submit" class="btn btn-outline-secondary col-xs-6">Search</button>
+</form>
 
 <ul class="list-group">
-   @foreach (var deck in Model.Decks)
+    @foreach (var card in Model.Cards)
     {
         <li class="list-group-item w-25">
             <div class="row">
-                <form method="post" class="row col-sm-10 mr-1">
+                <form method="post" class="row col-sm-10 mr-1" asp-action="EditCard" asp-controller="CardEditor">
                     <div class="col-sm-8">
-                        <label>@deck.Name</label>
-                        <input type="hidden" asp-for="@deck.Id" value="@deck.Id" />
+                        <label>@card.Word</label>
+                        <input type="hidden" asp-for="@Model.CardId" value="@card.Id" />
+                        <input type="hidden" asp-for="@Model.DeckId" value="@Model.DeckId" />
                     </div>
 
                     <button class="btn btn-outline-primary btn-sm col-sm" type="submit">Select</button>
                 </form>
-
-                <a class="btn btn-outline-danger btn-sm col-sm" href="@Url.Action("DeleteDeck", new { deckId = deck.Id })">Delete</a>
             </div>
         </li>
     }

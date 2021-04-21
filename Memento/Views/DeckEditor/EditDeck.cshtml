@@ -82,6 +82,12 @@
         </form>
     </div>
 
+    <a asp-action="ChooseCard"
+       asp-controller="DeckEditor"
+       asp-route-deckId="@Model.Deck.Id">
+        Import Card
+    </a>
+
     <ul class="list-group">
         @foreach (var card in Model.Cards)
         {

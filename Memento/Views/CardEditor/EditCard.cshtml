@@ -24,7 +24,14 @@
             <div class="col-sm">
                 <div class="border rounded float-left col p-2 ml-5 mr-5 w-25 h-25">
                     <h5 class="mb-1">Image</h5>
-                    <img id="image" class="mb-1 mh-100 mw-100" src="@Url.Action("GetImage", new { deckId = Model.DeckId, cardId = Model.Id })" alt="Image" />
+                    @if (Model.ExistingId != 0 && Model.Id == 0)
+                    {
+                        <img id="image" class="mb-1 mh-100 mw-100" src="@Url.Action("GetImage", new { deckId = Model.DeckId, cardId = Model.ExistingId })" alt="Image" />
+                    }
+                    else
+                    {
+                        <img id="image" class="mb-1 mh-100 mw-100" src="@Url.Action("GetImage", new { deckId = Model.DeckId, cardId = Model.Id })" alt="Image" />
+                    }
                     <br />
                     <input type="file" class="form-control-file mb-1" id="imageInp" onchange="readImage(this)" asp-for="@Model.Image" accept="image/*" />
                     <a class="btn btn-danger btn-sm" id="removeImage" href="#">Remove</a>
@@ -50,6 +57,7 @@
 
                 <input type="hidden" asp-for="@Model.Id" value="@Model.Id" />
                 <input type="hidden" asp-for="@Model.DeckId" value="@Model.DeckId" />
+                <input type="hidden" asp-for="@Model.ExistingId" value="@Model.ExistingId" />
             </div>
         </div>
     </div>

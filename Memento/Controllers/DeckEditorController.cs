@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -257,8 +258,8 @@ namespace Memento.Controllers
             return RedirectToAction(nameof(EditDeck), new { model.Deck.Id });
         }
 
-        [HttpGet("[controller]/[action]/{deckId}/{tag}")]
         [Authorize]
+        [HttpGet("[controller]/[action]/{deckId}/{tag}")]
         public async Task<IActionResult> RemoveTag(long deckId, string tag)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -278,10 +279,49 @@ namespace Memento.Controllers
 
                 deck.Tags.Remove(tagToRemove);
                 _context.Decks.Update(deck);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             return RedirectToAction(nameof(EditDeck), new { deckId });
+        }
+
+        [Authorize]
+        [HttpGet("[controller]/[action]/{deckId}")]
+        public async Task<IActionResult> ChooseCard([FromRoute] long deckId)
+        {
+            var user = await _context.Users
+                .Where(u => u.UserName == User.Identity.Name)
+                .Include(u => u.Decks)
+                .FirstOrDefaultAsync();
+
+            if (_context.Decks.Where(deck => deck.CreatorId == user.Id).Any())
+            {
+                return View(new ChooseCardModel { DeckId = deckId, SearchFilter = String.Empty, Cards = new List<CardModel>() });
+            }
+
+            return RedirectToAction(nameof(EditDeck), new { deckId });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChooseCard(ChooseCardModel model)
+        {
+            var user = await _context.Users
+                .Where(u => u.UserName == User.Identity.Name)
+                .Include(u => u.Decks)
+                .FirstOrDefaultAsync();
+
+            if (_context.Decks.Where(deck => deck.CreatorId == user.Id).Any())
+            {
+                var cards = await _context.Cards
+                    .Where(card => card.Word.ToLower().Contains(model.SearchFilter.ToLower()))
+                    .Select(card => new CardModel { Id = card.Id, Word = card.Word, Description = card.Description })
+                    .ToListAsync();
+
+                return View(new ChooseCardModel { DeckId = model.DeckId, SearchFilter = model.SearchFilter, Cards = cards });
+            }
+
+            return RedirectToAction(nameof(EditDeck), new { model.DeckId });
         }
 
         [HttpPost]
