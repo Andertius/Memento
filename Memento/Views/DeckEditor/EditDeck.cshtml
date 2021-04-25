@@ -23,8 +23,8 @@
     <input type="image" class="col-xs-6" src="~/img/pencil.png" width="20" height="20" onclick="changeName()" id="name-display-button" />
 </div>
 
-<form method="post" asp-action="SaveChanges" enctype="multipart/form-data">
-    <div class="row mb-2">
+<form method="post" asp-action="SaveChanges" enctype="multipart/form-data" class="mb-2">
+    <div class="row mb-2 w-50">
         <div class="border rounded col p-2 mr-5 w-25">
             <h5 class="mb-1">Deck Thumbnail</h5>
             <img id="thumb" class="mb-1 mh-100 mw-100" src="@Url.Action("GetThumb", new { deckId = Model.Deck.Id })" alt="Deck Thumbnail" accept="image/*" />
@@ -48,17 +48,27 @@
 
     <div class="mb-2">
         <h4 class="mb-1">Difficulty</h4>
-        @foreach (var c in System.Enum.GetValues(typeof(Difficulty)).OfType<Difficulty>())
-        {
-            <input type="radio" asp-for="@Model.Deck.Difficulty" value="@((int)c)" checked="@(c == Model.Deck.Difficulty)" />
-            <label asp-for="@Model.Deck.Difficulty">@c</label>
-            <br />
-        }
+        <div>
+            <input type="radio" asp-for="@Model.Deck.Difficulty" value="None" checked="@(Difficulty.None == Model.Deck.Difficulty)" id="None" />
+            <label asp-for="@Model.Deck.Difficulty" for="None">None</label>
+        </div>
+        <div>
+            <input type="radio" asp-for="@Model.Deck.Difficulty" value="Beginner" checked="@(Difficulty.Beginner == Model.Deck.Difficulty)" id="Beginner" />
+            <label asp-for="@Model.Deck.Difficulty" for="Beginner">Beginner</label>
+        </div>
+        <div>
+            <input type="radio" asp-for="@Model.Deck.Difficulty" value="Intermediate" checked="@(Difficulty.Intermediate == Model.Deck.Difficulty)" id="Intermediate" />
+            <label asp-for="@Model.Deck.Difficulty" for="Intermediate">Intermediate</label>
+        </div>
+        <div>
+            <input type="radio" asp-for="@Model.Deck.Difficulty" value="Advanced" checked="@(Difficulty.Advanced == Model.Deck.Difficulty)" id="Advanced" />
+            <label asp-for="@Model.Deck.Difficulty" for="Advanced">Advanced</label>
+        </div>
     </div>
 
     <div>
-        <input type="checkbox" asp-for="@Model.Deck.IsPublic" name="@Model.Deck.IsPublic" />
-        <label>Public</label>
+        <input type="checkbox" asp-for="DeckPublic" id="isPublic" name="isPublic" />
+        <label for="isPublic">Public</label>
     </div>
 
     <input type="hidden" asp-for="@Model.Deck.Id" value="@Model.Deck.Id" />
@@ -69,11 +79,16 @@
     <button class="btn btn-success" type="submit">Save Changes</button>
 </form>
 
-<div class="p-1 border rounded float-left" style="width: 500px">
-    <h5>Cards</h5>
+<div class="p-1 float-left w-25" style="width: 500px">
+    <h5 class="ml-1">Cards</h5>
 
-    <div class="row ml-1 mb-4 col-xs-6">
-        <a class="btn btn-primary" asp-controller="CardEditor" asp-action="EditCard" asp-route-deckId="@Model.Deck.Id">New Card</a>
+    <div class="row ml-1 mb-2 col-xs-6">
+        <a class="btn btn-primary"
+           asp-controller="CardEditor"
+           asp-action="EditCard"
+           asp-route-deckId="@Model.Deck.Id">
+            New Card
+        </a>
 
         <form method="post" asp-action="EditDeck" asp-controller="DeckEditor" class="col-xs-6 row ml-3">
             <input placeholder="Search" asp-for="CardSearchFilter" class="h-100 col-xs-6 mr-1" />
@@ -84,7 +99,8 @@
 
     <a asp-action="ChooseCard"
        asp-controller="DeckEditor"
-       asp-route-deckId="@Model.Deck.Id">
+       asp-route-deckId="@Model.Deck.Id"
+       class="btn btn-outline-info mb-2 ml-1">
         Import Card
     </a>
 
@@ -95,17 +111,17 @@
                 <div class="row">
                     <div class="row col-sm-10 mr-1">
                         <div class="col-sm-8">
-                            <label>@card.Word</label>
+                            <div class="mw-100 text-wrap text-break">@card.Word</div>
                         </div>
 
-                        <a class="btn btn-outline-primary btn-sm col-sm"
+                        <a class="btn btn-outline-primary btn-sm col-sm mh-100 justify-content-center align-self-center"
                             asp-action="EditCard"
                             asp-controller="CardEditor"
                             asp-route-deckId="@Model.Deck.Id"
                             asp-route-cardId="@card.Id">Edit</a>
                     </div>
 
-                    <a class="btn btn-outline-danger btn-sm col-sm"
+                    <a class="btn btn-outline-danger btn-sm col-sm justify-content-center align-self-center"
                         asp-controller="CardEditor" asp-action="DeleteCard"
                         asp-route-deckId="@Model.Deck.Id" asp-route-cardId="@card.Id">
                         Delete
@@ -116,10 +132,10 @@
     </ul>
 </div>
 
-<div class="border rounded">
-    <h5>Tags</h5>
+<div class="float-left ml-3 w-25 p-1">
+    <h5 class="ml-1">Tags</h5>
 
-    <div class="row ml-1 mb-4 col-xs-6">
+    <div class="row mb-4 col-xs-6">
         <form method="post" asp-action="AddTag" asp-controller="DeckEditor" class="col-xs-6 row ml-3">
             <input placeholder="Tag Name" asp-for="TagInput" class="h-100 col-xs-6 mr-1" />
             <input type="hidden" asp-for="Deck.Id" />
@@ -133,10 +149,10 @@
             <li class="list-group-item">
                 <div class="row col-sm-10 mr-1">
                     <div class="col-sm-8">
-                        <label>@tag.Name</label>
+                        <div class="mw-100 text-wrap text-break">@tag.Name</div>
                     </div>
 
-                    <a class="btn btn-outline-primary btn-sm col-sm"
+                    <a class="btn btn-outline-primary btn-sm col-sm mh-100 justify-content-center align-self-center"
                         asp-action="RemoveTag"
                         asp-controller="DeckEditor"
                         asp-route-deckId="@Model.Deck.Id"

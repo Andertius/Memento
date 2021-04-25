@@ -252,7 +252,7 @@ namespace Memento.Controllers
 
                 deck.Tags.Add(tag);
                 _context.Decks.Update(deck);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             return RedirectToAction(nameof(EditDeck), new { model.Deck.Id });
@@ -360,7 +360,7 @@ namespace Memento.Controllers
                         }
                     }
 
-                    deck.IsPublic = model.Deck.IsPublic;
+                    deck.IsPublic = model.DeckPublic;
                     deck.Name = model.Deck.Name;
                     deck.Difficulty = model.Deck.Difficulty;
                     _context.Decks.Update(deck);

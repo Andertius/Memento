@@ -26,14 +26,29 @@ namespace Memento.Controllers
         [HttpGet]
         public async Task<IActionResult> SearchedDecks(BrowseDecksModel model)
         {
-            var decks = await _context.Decks
-                .Where(deck => deck.Name.ToLower().Contains(model.SearchValue.ToLower()))
-                .Select(deck => new DeckModel
-                {
-                    Id = deck.Id,
-                    Name = deck.Name,
-                })
-                .ToListAsync();
+            List<DeckModel> decks;
+
+            if (model.SearchValue is not null)
+            {
+                decks = await _context.Decks
+                    .Where(deck => deck.Name.ToLower().Contains(model.SearchValue.ToLower()))
+                    .Select(deck => new DeckModel
+                    {
+                        Id = deck.Id,
+                        Name = deck.Name,
+                    })
+                    .ToListAsync();
+            }
+            else
+            {
+                decks = await _context.Decks
+                    .Select(deck => new DeckModel
+                    {
+                        Id = deck.Id,
+                        Name = deck.Name,
+                    })
+                    .ToListAsync();
+            }
 
             return View(new SearchedDecksModel { Decks = decks, SearchValue = model.SearchValue });
         }

@@ -6,6 +6,8 @@ namespace Memento.Models.ViewModels.DeckEditor
     {
         public DeckModel Deck { get; set; }
 
+        public bool DeckPublic { get; set; }
+
         public string CardSearchFilter { get; set; }
 
         public List<TagModel> Tags { get; set; }

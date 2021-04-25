@@ -11,6 +11,7 @@ using Memento.Models.ViewModels.DeckEditor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Memento.Controllers
@@ -46,6 +47,7 @@ namespace Memento.Controllers
                 {
                     DeckId = model.DeckId,
                     Tags = new List<TagModel>(),
+                    Errors = new List<string>(),
                 });
             }
             else
@@ -59,6 +61,7 @@ namespace Memento.Controllers
                     Description = card.Description,
                     Difficulty = card.Difficulty,
                     Tags = card.Tags.Select(tag => new TagModel { Name = tag.Name }).ToList(),
+                    Errors = new List<string>(),
                 });
             }
         }
@@ -74,19 +77,31 @@ namespace Memento.Controllers
                 .Include(card => card.Tags)
                 .FirstOrDefaultAsync();
 
+            string errors = TempData["ErrorMessage"] as string;
+            string[] errorsArray = Array.Empty<string>();
+
+            if (errors is not null)
+            {
+                errorsArray = errors.Split(", ");
+            }
+
             if (user.Id == deck.CreatorId)
             {
                 if (card is null)
                 {
-                    return View(new CardEditorModel
+                    var returnModel = new CardEditorModel
                     {
                         DeckId = deck.Id,
                         Tags = new List<TagModel>(),
-                    });
+                        Errors = errorsArray,
+                    };
+
+                    TempData["ErrorMessage"] = null;
+                    return View(returnModel);
                 }
                 else
                 {
-                    return View(new CardEditorModel
+                    var returnModel = new CardEditorModel
                     {
                         DeckId = deck.Id,
                         Id = card.Id,
@@ -95,7 +110,11 @@ namespace Memento.Controllers
                         Description = card.Description,
                         Difficulty = card.Difficulty,
                         Tags = card.Tags.Select(tag => new TagModel { Name = tag.Name }).ToList(),
-                    });
+                        Errors = errorsArray,
+                    };
+
+                    TempData["ErrorMessage"] = null;
+                    return View(returnModel);
                 }
             }
 
@@ -318,8 +337,14 @@ namespace Memento.Controllers
                     await _context.SaveChangesAsync();
                 }
 
+                TempData["ErrorMessage"] = "";
                 return RedirectToAction(nameof(EditCard), new { deckId = model.DeckId, cardId = returnCardId });
             }
+
+            TempData["ErrorMessage"] = ModelState.Values
+                .Where(x => x.Errors.Count > 0)
+                .Select(x => x.Errors[0].ErrorMessage)
+                .Aggregate((x, y) => x + ", " + y);
 
             return RedirectToAction(nameof(EditCard), new { deckId = model.DeckId, cardId = model.Id });
         }

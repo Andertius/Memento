@@ -33,14 +33,14 @@
             <div class="row">
                 <form method="post" class="row col-sm-10 mr-1">
                     <div class="col-sm-8">
-                        <label>@deck.Name</label>
+                        <div class="mw-100 text-wrap text-break">@deck.Name</div>
                         <input type="hidden" asp-for="@deck.Id" value="@deck.Id" />
                     </div>
 
                     <button class="btn btn-outline-primary btn-sm col-sm" type="submit">Select</button>
                 </form>
 
-                <a class="btn btn-outline-danger btn-sm col-sm" href="@Url.Action("DeleteDeck", new { deckId = deck.Id })">Delete</a>
+                <a class="btn btn-outline-danger btn-sm col-sm mh-100 justify-content-center align-self-center" href="@Url.Action("DeleteDeck", new { deckId = deck.Id })">Delete</a>
             </div>
         </li>
     }
