@@ -66,14 +66,13 @@
         </div>
     </div>
 
-    <div>
-        <input type="checkbox" asp-for="DeckPublic" id="isPublic" name="isPublic" />
-        <label for="isPublic">Public</label>
+    <div class="form-group">
+        <input type="checkbox" asp-for="@Model.Deck.IsPublic" />
+        <label>Public</label>
     </div>
 
     <input type="hidden" asp-for="@Model.Deck.Id" value="@Model.Deck.Id" />
     <input type="hidden" asp-for="@Model.Deck.Name" value="@Model.Deck.Name" id="name-input" />
-    <input type="hidden" asp-for="@Model.Deck.IsPublic" value="@Model.Deck.IsPublic" />
     <input type="hidden" asp-for="@Model.Deck.Difficulty" value="@Model.Deck.Difficulty" />
 
     <button class="btn btn-success" type="submit">Save Changes</button>

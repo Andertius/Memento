@@ -360,7 +360,7 @@ namespace Memento.Controllers
                         }
                     }
 
-                    deck.IsPublic = model.DeckPublic;
+                    deck.IsPublic = model.Deck.IsPublic;
                     deck.Name = model.Deck.Name;
                     deck.Difficulty = model.Deck.Difficulty;
                     _context.Decks.Update(deck);
