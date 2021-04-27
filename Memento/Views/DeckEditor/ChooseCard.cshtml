@@ -1,0 +1,44 @@
+﻿@model ChooseCardModel
+
+@section pageTitle {
+    <span>Import an existing card</span>
+}
+
+@section status {
+    <div class="d-inline dropdown">
+        <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+            @User.Identity.Name
+            <span class="caret"></span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="ProfileSettings">Profile Settings</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item small" asp-action="Logout" asp-controller="Account">Log out</a>
+        </div>
+    </div>
+}
+
+<form method="post" asp-action="ChooseCard" asp-controller="DeckEditor" class="row ml-3 mb-4">
+    <input placeholder="Search" asp-for="SearchFilter" class="col-xs-6 mr-1" />
+    <input type="hidden" asp-for="DeckId" value="@Model.DeckId"/>
+    <button type="submit" class="btn btn-outline-secondary col-xs-6">Search</button>
+</form>
+
+<ul class="list-group">
+    @foreach (var card in Model.Cards)
+    {
+        <li class="list-group-item w-25">
+            <div class="row">
+                <form method="post" class="row col-sm-12 mr-1" asp-action="EditCard" asp-controller="CardEditor">
+                    <div class="col-sm-10">
+                        <div class="mw-100 text-wrap text-break">@card.Word</div>
+                        <input type="hidden" asp-for="@Model.CardId" value="@card.Id" />
+                        <input type="hidden" asp-for="@Model.DeckId" value="@Model.DeckId" />
+                    </div>
+
+                    <button class="btn btn-outline-primary btn-sm col-sm mh-100 justify-content-center align-self-center" type="submit">Select</button>
+                </form>
+            </div>
+        </li>
+    }
+</ul>

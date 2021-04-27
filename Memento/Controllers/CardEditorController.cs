@@ -11,6 +11,7 @@ using Memento.Models.ViewModels.DeckEditor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Memento.Controllers
@@ -31,6 +32,40 @@ namespace Memento.Controllers
         public IActionResult EditCard([FromRoute] long deckId, [FromForm] CardEditorModel model)
             => RedirectToAction(nameof(EditCard), new { deckId, cardId = model.Id });
 
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> EditCard(ChooseCardModel model)
+        {
+            var card = await _context.Cards
+                .Where(card => card.Id == model.CardId)
+                .Include(card => card.Tags)
+                .FirstOrDefaultAsync();
+
+            if (card is null)
+            {
+                return View(new CardEditorModel
+                {
+                    DeckId = model.DeckId,
+                    Tags = new List<TagModel>(),
+                    Errors = new List<string>(),
+                });
+            }
+            else
+            {
+                return View(new CardEditorModel
+                {
+                    DeckId = model.DeckId,
+                    ExistingId = card.Id,
+                    Word = card.Word,
+                    Transcription = card.Transcription,
+                    Description = card.Description,
+                    Difficulty = card.Difficulty,
+                    Tags = card.Tags.Select(tag => new TagModel { Name = tag.Name }).ToList(),
+                    Errors = new List<string>(),
+                });
+            }
+        }
+
         [Authorize]
         [HttpGet("[controller]/[action]/{deckId}/{cardId?}")]
         public async Task<IActionResult> EditCard(long deckId, long cardId = 0)
@@ -42,19 +77,31 @@ namespace Memento.Controllers
                 .Include(card => card.Tags)
                 .FirstOrDefaultAsync();
 
+            string errors = TempData["ErrorMessage"] as string;
+            string[] errorsArray = Array.Empty<string>();
+
+            if (errors is not null)
+            {
+                errorsArray = errors.Split(", ");
+            }
+
             if (user.Id == deck.CreatorId)
             {
                 if (card is null)
                 {
-                    return View(new CardEditorModel
+                    var returnModel = new CardEditorModel
                     {
                         DeckId = deck.Id,
                         Tags = new List<TagModel>(),
-                    });
+                        Errors = errorsArray,
+                    };
+
+                    TempData["ErrorMessage"] = null;
+                    return View(returnModel);
                 }
                 else
                 {
-                    return View(new CardEditorModel
+                    var returnModel = new CardEditorModel
                     {
                         DeckId = deck.Id,
                         Id = card.Id,
@@ -63,7 +110,11 @@ namespace Memento.Controllers
                         Description = card.Description,
                         Difficulty = card.Difficulty,
                         Tags = card.Tags.Select(tag => new TagModel { Name = tag.Name }).ToList(),
-                    });
+                        Errors = errorsArray,
+                    };
+
+                    TempData["ErrorMessage"] = null;
+                    return View(returnModel);
                 }
             }
 
@@ -192,9 +243,21 @@ namespace Memento.Controllers
                     .Include(deck => deck.Cards)
                     .FirstOrDefaultAsync();
 
-                var card = deck.Cards
-                    .Where(card => card.Id == model.Id)
-                    .FirstOrDefault();
+                Card card;
+                long returnCardId = 0;
+
+                if (model.ExistingId == 0)
+                {
+                    card = deck.Cards
+                        .Where(card => card.Id == model.Id)
+                        .FirstOrDefault();
+                }
+                else
+                {
+                    card = await _context.Cards
+                        .Where(card => card.Id == model.ExistingId)
+                        .FirstOrDefaultAsync();
+                }
 
                 if (deck is not null)
                 {
@@ -217,7 +280,30 @@ namespace Memento.Controllers
                         card.Description = model.Description;
                         card.Transcription = model.Transcription;
                         card.Difficulty = model.Difficulty;
-                        _context.Cards.Update(card);
+
+                        if (model.ExistingId == 0)
+                        {
+                            _context.Cards.Update(card);
+                            returnCardId = card.Id;
+                        }
+                        else
+                        {
+                            var newCard = new Card
+                            {
+                                Word = card.Word,
+                                Description = card.Description,
+                                Transcription = card.Transcription,
+                                Difficulty = card.Difficulty,
+                                Image = card.Image,
+                            };
+
+                            deck.Cards.Add(newCard);
+                            deck.CardNumber++;
+                            _context.Decks.Update(deck);
+
+                            _context.SaveChanges();
+                            returnCardId = newCard.Id;
+                        }
                     }
                     else
                     {
@@ -242,20 +328,25 @@ namespace Memento.Controllers
                             }
                         }
 
-                        //_context.Cards.Add(card);
                         deck.Cards.Add(card);
                         deck.CardNumber++;
                         _context.Decks.Update(deck);
-                        _context.SaveChanges();
+                        returnCardId = card.Id;
                     }
 
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
 
-                return RedirectToAction(nameof(EditCard), new { deckId = model.DeckId, cardId = card.Id });
+                TempData["ErrorMessage"] = "";
+                return RedirectToAction(nameof(EditCard), new { deckId = model.DeckId, cardId = returnCardId });
             }
 
-            return RedirectToAction(nameof(EditCard), new { deckId = model.DeckId });
+            TempData["ErrorMessage"] = ModelState.Values
+                .Where(x => x.Errors.Count > 0)
+                .Select(x => x.Errors[0].ErrorMessage)
+                .Aggregate((x, y) => x + ", " + y);
+
+            return RedirectToAction(nameof(EditCard), new { deckId = model.DeckId, cardId = model.Id });
         }
     }
 }

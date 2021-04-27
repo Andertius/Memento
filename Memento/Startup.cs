@@ -58,8 +58,6 @@ namespace Memento
             {
                 endpoints.MapDefaultControllerRoute();
             });
-
-            IdentitySeedData.EnsurePopulated(app);
         }
     }
 }

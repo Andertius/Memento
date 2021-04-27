@@ -9,14 +9,16 @@ namespace Memento.Models.ViewModels.DeckEditor
     {
         public long Id { get; set; }
 
+        public long ExistingId { get; set; }
+
         public long DeckId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "A card cannot be without the word!")]
         public string Word { get; set; }
 
         public string Transcription { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "A card needs a description for the word!")]
         public string Description { get; set; }
 
         public string SearchFilter { get; set; }
@@ -30,5 +32,7 @@ namespace Memento.Models.ViewModels.DeckEditor
         public string TagInput { get; set; }
 
         public ICollection<TagModel> Tags { get; set; }
+
+        public ICollection<string> Errors { get; set; }
     }
 }

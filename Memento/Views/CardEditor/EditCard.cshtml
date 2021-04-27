@@ -18,39 +18,90 @@
     </div>
 }
 
-<form method="post" asp-action="SaveChanges" enctype="multipart/form-data">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm">
-                <div class="border rounded float-left col p-2 ml-5 mr-5 w-25 h-25">
-                    <h5 class="mb-1">Image</h5>
-                    <img id="image" class="mb-1 mh-100 mw-100" src="@Url.Action("GetImage", new { deckId = Model.DeckId, cardId = Model.Id })" alt="Image" />
-                    <br />
-                    <input type="file" class="form-control-file mb-1" id="imageInp" onchange="readImage(this)" asp-for="@Model.Image" accept="image/*" />
-                    <a class="btn btn-danger btn-sm" id="removeImage" href="#">Remove</a>
+<form method="post" asp-action="SaveChanges" enctype="multipart/form-data" class="mb-2">
+    <div class="container d-inline">
+        <div class="row d-inline">
+            <div class="col-xs-12 d-inline">
+                <div class="w-50 d-inline-block">
+                    <div class="w-75">
+                        <div asp-validation-summary="All" class="text-danger">
+                            <ul>
+                                @foreach (var error in Model.Errors)
+                                {
+                                    if (error != String.Empty)
+                                    {
+                                        <li>
+                                            @error
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
 
-                    <input type="hidden" id="imageRemoved" asp-for="@Model.ImageRemoved" value="@false" />
+                        <div class="form-group" align="left">
+                            <label>Word</label>
+                            <div asp-validation-for="Word" class="text-danger"></div>
+                            <input placeholder="Word" asp-for="@Model.Word" value="@Model.Word" class="form-control" />
+                        </div>
+
+                        <div class="form-group" align="left">
+                            <label>Transcription</label>
+                            <input placeholder="Transcription" asp-for="@Model.Transcription" value="@Model.Transcription" class="form-control" />
+                        </div>
+
+                        <div class="form-group" align="left">
+                            <label>Description</label>
+                            <div asp-validation-for="Description" class="text-danger"></div>
+                            <textarea placeholder="Description" asp-for="@Model.Description" value="@Model.Description" class="form-control"></textarea>
+                        </div>
+                    </div>
                 </div>
+                
+                <div class="w-25 d-inline-block align-top">
+                    <div class="border rounded p-2 ml-2">
+                        <h5 class="mb-1">Image</h5>
 
-                <div>
-                    <input placeholder="Description" asp-for="@Model.Description" value="@Model.Description" />
-                    <input placeholder="Word" asp-for="@Model.Word" value="@Model.Word" />
-                    <input placeholder="Transcription" asp-for="@Model.Transcription" value="@Model.Transcription" />
-                </div>
+                        @if (Model.ExistingId != 0 && Model.Id == 0)
+                        {
+                            <img id="image" class="mb-1 mh-100 mw-100" src="@Url.Action("GetImage", new { deckId = Model.DeckId, cardId = Model.ExistingId })" alt="Image" />
+                        }
+                        else
+                        {
+                            <img id="image" class="mb-1 mh-100 mw-100" src="@Url.Action("GetImage", new { deckId = Model.DeckId, cardId = Model.Id })" alt="Image" />
+                        }
 
-                <div>
-                    <h4 class="mb-1">Difficulty</h4>
-                    @foreach (var c in System.Enum.GetValues(typeof(Difficulty)).OfType<Difficulty>())
-                    {
-                        <input type="radio" asp-for="@Model.Difficulty" value="@((int)c)" checked="@(c == Model.Difficulty)" />
-                        <label asp-for="@Model.Difficulty">@c</label>
                         <br />
-                    }
-                </div>
+                        <input type="file" class="form-control-file mb-1" id="imageInp" onchange="readImage(this)" asp-for="@Model.Image" accept="image/*" />
+                        <a class="btn btn-danger btn-sm" id="removeImage" href="#">Remove</a>
 
-                <input type="hidden" asp-for="@Model.Id" value="@Model.Id" />
-                <input type="hidden" asp-for="@Model.DeckId" value="@Model.DeckId" />
+                        <input type="hidden" id="imageRemoved" asp-for="@Model.ImageRemoved" value="@false" />
+                    </div>
+                </div>
             </div>
+
+            <div class="col-xs-6">
+                <h4>Difficulty</h4>
+                <div>
+                    <input type="radio" asp-for="@Model.Difficulty" value="None" checked="@(Difficulty.None == Model.Difficulty)" id="None" />
+                    <label asp-for="@Model.Difficulty" for="None">None</label>
+                </div>
+                <div>
+                    <input type="radio" asp-for="@Model.Difficulty" value="Beginner" checked="@(Difficulty.Beginner == Model.Difficulty)" id="Beginner" />
+                    <label asp-for="@Model.Difficulty" for="Beginner">Beginner</label>
+                </div>
+                <div>
+                    <input type="radio" asp-for="@Model.Difficulty" value="Intermediate" checked="@(Difficulty.Intermediate == Model.Difficulty)" id="Intermediate" />
+                    <label asp-for="@Model.Difficulty" for="Intermediate">Intermediate</label>
+                </div>
+                <div>
+                    <input type="radio" asp-for="@Model.Difficulty" value="Advanced" checked="@(Difficulty.Advanced == Model.Difficulty)" id="Advanced" />
+                    <label asp-for="@Model.Difficulty" for="Advanced">Advanced</label>
+                </div>
+            </div>
+
+            <input type="hidden" asp-for="@Model.Id" value="@Model.Id" />
+            <input type="hidden" asp-for="@Model.DeckId" value="@Model.DeckId" />
+            <input type="hidden" asp-for="@Model.ExistingId" value="@Model.ExistingId" />
         </div>
     </div>
 
@@ -58,10 +109,10 @@
 </form>
 
 @if (Model.Id != 0) {
-    <div class="border rounded">
-        <h5>Tags</h5>
+    <div class="p-1 w-25">
+        <h5 class="ml-1">Tags</h5>
 
-        <div class="row ml-1 mb-4 col-xs-6">
+        <div class="row mb-4 col-xs-6">
             <form method="post" asp-action="AddTag" asp-controller="CardEditor" class="col-xs-6 row ml-3">
                 <input placeholder="Tag Name" asp-for="TagInput" class="h-100 col-xs-6 mr-1" />
                 <input type="hidden" asp-for="Id" />
@@ -76,10 +127,10 @@
                 <li class="list-group-item">
                     <div class="row col-sm-10 mr-1">
                         <div class="col-sm-8">
-                            <label>@tag.Name</label>
+                            <div class="mw-100 text-wrap text-break">@tag.Name</div>
                         </div>
 
-                        <a class="btn btn-outline-primary btn-sm col-sm"
+                        <a class="btn btn-outline-primary btn-sm col-sm mh-100 justify-content-center align-self-center"
                            asp-action="RemoveTag"
                            asp-controller="CardEditor"
                            asp-route-deckId="@Model.DeckId"
