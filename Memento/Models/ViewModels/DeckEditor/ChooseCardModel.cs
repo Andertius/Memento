@@ -10,6 +10,14 @@ namespace Memento.Models.ViewModels.DeckEditor
 
         public List<CardModel> Cards { get; set; }
 
-        public string SearchFilter{ get; set; }
+        public List<string> FilterTags { get; set; }
+
+        public string FilterTagsString { get; set; }
+
+        public string SearchFilter { get; set; }
+
+        public string TagFilter { get; set; }
+
+        public string TagToRemove { get; set; }
     }
 }

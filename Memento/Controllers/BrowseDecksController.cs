@@ -56,7 +56,7 @@ namespace Memento.Controllers
             return View(nameof(SearchedDecks), await CreateSearchedDecks(model));
         }
 
-        public async Task<SearchedDecksModel> CreateSearchedDecks(SearchedDecksModel model)
+        private async Task<SearchedDecksModel> CreateSearchedDecks(SearchedDecksModel model)
         {
             var decks = await _context.Decks
                 .Where(deck => deck.IsPublic)
@@ -291,7 +291,7 @@ namespace Memento.Controllers
             return View(nameof(YourCollection), await CreateYourCollectionModel(model));
         }
 
-        public async Task<YourCollectionModel> CreateYourCollectionModel(YourCollectionModel model)
+        private async Task<YourCollectionModel> CreateYourCollectionModel(YourCollectionModel model)
         {
             var userWithDecks = await _context.Users
                    .Where(u => u.UserName == User.Identity.Name)
@@ -393,11 +393,9 @@ namespace Memento.Controllers
             return View(nameof(CreatedDecks), await CreateCreatedDecksModel(model));
         }
 
-        public async Task<CreatedDecksModel> CreateCreatedDecksModel(CreatedDecksModel model)
+        private async Task<CreatedDecksModel> CreateCreatedDecksModel(CreatedDecksModel model)
         {
-            var userWithDecks = await _context.Users
-                .Where(u => u.UserName == User.Identity.Name)
-                .FirstOrDefaultAsync();
+            var userWithDecks = await _userManager.GetUserAsync(User);
 
             // var user = await _userManager.GetUserAsync(User);
             var decksInModel = _context.Decks
@@ -505,7 +503,7 @@ namespace Memento.Controllers
             return View(nameof(PopularDecks), await CreatePopularDecksModel(model));
         }
 
-        public async Task<PopularDecksModel> CreatePopularDecksModel(PopularDecksModel model)
+        private async Task<PopularDecksModel> CreatePopularDecksModel(PopularDecksModel model)
         {
             var decks = await _context.Decks
                    .Where(deck => deck.IsPublic)

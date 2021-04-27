@@ -20,18 +20,53 @@
 
 <div class="row mb-4">
     <a class="btn btn-primary col-xs-6" asp-action="CreateDeck">New deck</a>
-    <form method="get" asp-action="ChooseDeck" asp-controller="DeckEditor" class="col-xs-6 row ml-3">
-        <input placeholder="Search" asp-for="SearchFilter" class="h-100 col-xs-6 mr-1"/>
+    <form method="post" asp-action="ChooseDeck" asp-controller="DeckEditor" class="col-xs-6 row ml-3">
+        <input placeholder="Search" asp-for="SearchFilter" class="h-100 col-xs-6 mr-1" />
+        <input type="hidden" asp-for="@Model.FilterTagsString" value="@Model.FilterTagsString" />
         <button type="submit" class="btn btn-outline-secondary col-xs-6">Search</button>
     </form>
 </div>
+
+<form method="post" asp-action="ChooseDeck" asp-controller="DeckEditor" class="row ml-3 mb-4">
+    <label>Filter by tags</label>
+    <input placeholder="Add tag filter" class="col-xs-6 mr-1" asp-for="TagFilter" />
+    <input type="hidden" asp-for="@Model.FilterTagsString" value="@Model.FilterTagsString" />
+    <input type="hidden" asp-for="@Model.SearchFilter" value="@Model.SearchFilter" />
+
+    <button type="submit" class="btn btn-outline-secondary col-xs-6">Add</button>
+</form>
+
+@if (Model.FilterTags is not null)
+{
+    <ul class="list-group">
+       @foreach (var tag in Model.FilterTags)
+        {
+            <li>
+                <div class="row col-sm-10 mr-1">
+                    <div class="col-sm-8">
+                        <div class="mw-100 text-wrap text-break">@tag</div>
+                    </div>
+
+                    <form method="post" asp-action="RemoveTagFromChooseDeck" asp-controller="DeckEditor">
+                        <input type="hidden" class="col-xs-6 mr-1" asp-for="TagFilter" />
+                        <input type="hidden" asp-for="FilterTagsString" value="@Model.FilterTagsString" />
+                        <input type="hidden" asp-for="SearchFilter" value="@Model.SearchFilter" />
+                        <input type="hidden" asp-for="TagToRemove" value="@tag" />
+
+                        <button type="submit" class="btn btn-outline-danger mh-100 justify-content-center align-self-center">Add</button>
+                    </form>
+                </div>
+            </li>
+        }
+    </ul>
+}
 
 <ul class="list-group">
    @foreach (var deck in Model.Decks)
     {
         <li class="list-group-item w-25">
             <div class="row">
-                <form method="post" class="row col-sm-10 mr-1">
+                <form method="post" class="row col-sm-10 mr-1" asp-action="DeckChosen" asp-controller="DeckEditor">
                     <div class="col-sm-8">
                         <div class="mw-100 text-wrap text-break">@deck.Name</div>
                         <input type="hidden" asp-for="@deck.Id" value="@deck.Id" />
