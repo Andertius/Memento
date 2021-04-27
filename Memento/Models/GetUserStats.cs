@@ -51,12 +51,23 @@ namespace Memento.Models
                 {
                     for (int i = 0; i < data.Count; i++)
                     {
-                        list.Add(new object[] { data[i].Date, data[i].HoursPerDay });
+                        DateTime date = data[i].Date;
+
+                        date = new DateTime(date.Year, date.Month, date.Day);
+
+                        string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+
+                        list.Add(new object[] { returnDate, data[i].HoursPerDay });
                     }
                 }
                 else
                 {
-                    list.Add(new object[] { DateTime.UtcNow, 0});
+                    DateTime date = DateTime.UtcNow;
+
+                    date = new DateTime(date.Year, date.Month, date.Day);
+
+                    string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+                    list.Add(new object[] { returnDate, 0});
                 }
                 
             }
@@ -87,12 +98,20 @@ namespace Memento.Models
                 {
                     for (int i = 0; i < data.Count; i++)
                     {
-                        list.Add(new object[] { data[i].Date, data[i].HoursPerDay });
+                        DateTime date = data[i].Date;
+
+                        date = new DateTime(date.Year, date.Month, date.Day);
+                        string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+                        list.Add(new object[] { returnDate, data[i].HoursPerDay });
                     }
                 }
                 else
                 {
-                    list.Add(new object[] { DateTime.UtcNow, 0 });
+                    DateTime date = DateTime.UtcNow;
+
+                    date = new DateTime(date.Year, date.Month, date.Day);
+                    string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+                    list.Add(new object[] { returnDate, 0 });
                 }
 
             }
@@ -139,12 +158,20 @@ namespace Memento.Models
                 {
                     for (int i = 0; i < data.Count; i++)
                     {
-                        list.Add(new object[] { data[i].Date, data[i].AverageHoursPerDay });
+                        DateTime date = data[i].Date;
+
+                        date = new DateTime(date.Year, date.Month, date.Day);
+                        string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+                        list.Add(new object[] { returnDate, data[i].AverageHoursPerDay });
                     }
                 }
                 else
                 {
-                    list.Add(new object[] { DateTime.UtcNow, 0 });
+                    DateTime date = DateTime.UtcNow;
+
+                    date = new DateTime(date.Year, date.Month, date.Day);
+                    string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+                    list.Add(new object[] { returnDate, 0 });
                 }
                 
             }
@@ -176,12 +203,20 @@ namespace Memento.Models
                 {
                     for (int i = 0; i < data.Count; i++)
                     {
-                        list.Add(new object[] { data[i].Date, data[i].AverageHoursPerDay });
+                        DateTime date = data[i].Date;
+
+                        date = new DateTime(date.Year, date.Month, date.Day);
+                        string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+                        list.Add(new object[] { returnDate, data[i].AverageHoursPerDay });
                     }
                 }
                 else
                 {
-                    list.Add(new object[] { DateTime.UtcNow, 0 });
+                    DateTime date = DateTime.UtcNow;
+
+                    date = new DateTime(date.Year, date.Month, date.Day);
+                    string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+                    list.Add(new object[] { returnDate, 0 });
                 }
             }
 
@@ -226,12 +261,20 @@ namespace Memento.Models
                 {
                     for (int i = 0; i < data.Count; i++)
                     {
-                        list.Add(new object[] { data[i].Date, data[i].CardsPerDay });
+                        DateTime date = data[i].Date;
+
+                        date = new DateTime(date.Year, date.Month, date.Day);
+                        string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+                        list.Add(new object[] { returnDate, data[i].CardsPerDay });
                     }
                 }
                 else
                 {
-                    list.Add(new object[] { DateTime.UtcNow, 0 });
+                    DateTime date = DateTime.UtcNow;
+
+                    date = new DateTime(date.Year, date.Month, date.Day);
+                    string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+                    list.Add(new object[] { returnDate, 0 });
                 }
             }
             else
@@ -262,12 +305,20 @@ namespace Memento.Models
                 {
                     for (int i = 0; i < data.Count; i++)
                     {
-                        list.Add(new object[] { data[i].Date, data[i].CardsPerDay });
+                        DateTime date = data[i].Date;
+
+                        date = new DateTime(date.Year, date.Month, date.Day);
+                        string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+                        list.Add(new object[] { returnDate, data[i].CardsPerDay });
                     }
                 }
                 else
                 {
-                    list.Add(new object[] { DateTime.UtcNow, 0 });
+                    DateTime date = DateTime.UtcNow;
+
+                    date = new DateTime(date.Year, date.Month, date.Day);
+                    string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+                    list.Add(new object[] { returnDate, 0 });
                 }
 
             }

@@ -11,40 +11,48 @@
     </div>
 
     <div class="col-8" style="height:auto;">
-        <div class="diamond-progress-bar">
-            <div class="fill" id="fillHours">
-                <div class="left" id="leftHours">
-                    <div class="mezha">
+        <div class="d-table">
+            <label for="hoursPB" class="d-table-row text-center">Hours</label>
+            <div class="diamond-progress-bar" id="hoursPB">
+                <div class="fill" id="fillHours">
+                    <div class="left" id="leftHours">
+                        <div class="mezha">
+                        </div>
+                    </div>
+                    <div class="right" id="rightHours">
+                        <div class="mezha">
+                        </div>
                     </div>
                 </div>
-                <div class="right" id="rightHours">
-                    <div class="mezha">
-                    </div>
+                <div class="background">
                 </div>
-            </div>
-            <div class="background">
             </div>
         </div>
 
-        <div class="justify-content-center align-top align-self-center mr-lg-5 ml-lg-5" style="display:inline">
-            <p class="border border-info" id="average" style="box-sizing:border-box; width:100px; height:100px; display:inline-block; "></p>
+        <div class="w-100 d-inline-flex justify-content-center" >
+            <p class="border border-info text-center align-content-center align-items-center d-flex" id="average" style="width: 100px; height: 100px; border-width: 5px !important"></p>
         </div>
         
-        
-        <div class="diamond-progress-bar">
-            <div class="fill" id="fillCards">
-                <div class="left" id="leftCards">
-                    <div class="mezha">
+        <div class="justify-content-end w-100 d-inline-flex">
+            <div class="d-table">
+                <label for="cardsPB" class="d-table-row text-center">Cards</label>
+                <div class="diamond-progress-bar" id="cardsPB">
+                    <div class="fill" id="fillCards">
+                        <div class="left" id="leftCards">
+                            <div class="mezha">
+                            </div>
+                        </div>
+                        <div class="right" id="rightCards">
+                            <div class="mezha">
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="right" id="rightCards">
-                    <div class="mezha">
+                    <div class="background">
                     </div>
                 </div>
             </div>
-            <div class="background">
-            </div>
         </div>
+    </div>
 </form>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -86,7 +94,7 @@
                 updateHoursPercentage(jsonData[1][0]);
                 updateCardsPercentage(jsonData[1][2]);
 
-                var replaceText = "Average hours:" + jsonData[1][1];
+                var replaceText = "Average hours: " + jsonData[1][1];
 
                 $("#average").html(replaceText);
                 //$("#fordebug").html(jsonData[1][0]);

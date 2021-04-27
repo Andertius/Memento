@@ -24,9 +24,43 @@ namespace Memento.Controllers
         }
 
         [Authorize]
-        public IActionResult Statistics()
+        public async Task<IActionResult> Statistics()
         {
-            //you code here
+            var loggedInUser = await userManager.GetUserAsync(User);
+
+            var data = _context.Statistics.Where(u => u.UserId == loggedInUser.Id).ToList();
+
+            DateTime lastEntry = data[^1].Date;
+
+            lastEntry = new DateTime(data[^1].Date.Year, data[^1].Date.Month, data[^1].Date.Day);
+
+            DateTime today = DateTime.UtcNow;
+
+            DateTime comparator = new DateTime(today.Year, today.Month, today.Day);
+
+            if (lastEntry != comparator)
+            {
+                var average = 0.0;
+
+                for (int i = 0; i < data.Count; i++)
+                {
+                    average += data[i].HoursPerDay;
+                }
+
+                average /= data.Count;
+
+                var newStats = new UserStats
+                {
+                    UserId = loggedInUser.Id,
+                    HoursPerDay = 0,
+                    CardsPerDay = 0,
+                    AverageHoursPerDay = (float)average,
+                    Date = comparator,
+                };
+
+                _context.Statistics.Add(newStats);
+                _context.SaveChanges();
+            }
             return View();
         }
 
