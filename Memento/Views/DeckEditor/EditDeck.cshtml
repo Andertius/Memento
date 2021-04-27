@@ -68,7 +68,7 @@
 
     <div class="form-group">
         <input type="checkbox" asp-for="@Model.Deck.IsPublic" />
-        <label>Public</label>
+        <label asp-for="@Model.Deck.IsPublic">Public</label>
     </div>
 
     <input type="hidden" asp-for="@Model.Deck.Id" value="@Model.Deck.Id" />

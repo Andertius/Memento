@@ -10,6 +10,10 @@ namespace Memento.Models.ViewModels.BrowseDecks
 
         public string SearchFilter { get; set; }
 
+        public string FilterTagsString { get; set; }
+
         public string TagFilter { get; set; }
+
+        public string TagToRemove { get; set; }
     }
 }
