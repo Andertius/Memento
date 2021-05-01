@@ -55,9 +55,16 @@ namespace Memento.Models
 
                         date = new DateTime(date.Year, date.Month, date.Day);
 
-                        string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+                        comparator = DateTime.UtcNow.AddDays(-days);
+                        comparator = new DateTime(comparator.Year, comparator.Month, comparator.Day);
 
-                        list.Add(new object[] { returnDate, data[i].HoursPerDay });
+                        if(date >= comparator)
+                        {
+                            string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+
+                            list.Add(new object[] { returnDate, data[i].HoursPerDay });
+                        }
+                        
                     }
                 }
                 else
@@ -101,8 +108,16 @@ namespace Memento.Models
                         DateTime date = data[i].Date;
 
                         date = new DateTime(date.Year, date.Month, date.Day);
-                        string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
-                        list.Add(new object[] { returnDate, data[i].HoursPerDay });
+
+                        comparator = DateTime.UtcNow.AddDays(-days);
+                        comparator = new DateTime(comparator.Year, comparator.Month, comparator.Day);
+
+                        if (date >= comparator)
+                        {
+                            string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+
+                            list.Add(new object[] { returnDate, data[i].HoursPerDay });
+                        }
                     }
                 }
                 else
@@ -161,8 +176,16 @@ namespace Memento.Models
                         DateTime date = data[i].Date;
 
                         date = new DateTime(date.Year, date.Month, date.Day);
-                        string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
-                        list.Add(new object[] { returnDate, data[i].AverageHoursPerDay });
+
+                        comparator = DateTime.UtcNow.AddDays(-days);
+                        comparator = new DateTime(comparator.Year, comparator.Month, comparator.Day);
+
+                        if (date >= comparator)
+                        {
+                            string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+
+                            list.Add(new object[] { returnDate, data[i].AverageHoursPerDay });
+                        }
                     }
                 }
                 else
@@ -206,8 +229,15 @@ namespace Memento.Models
                         DateTime date = data[i].Date;
 
                         date = new DateTime(date.Year, date.Month, date.Day);
-                        string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
-                        list.Add(new object[] { returnDate, data[i].AverageHoursPerDay });
+                        comparator = DateTime.UtcNow.AddDays(-days);
+                        comparator = new DateTime(comparator.Year, comparator.Month, comparator.Day);
+
+                        if (date >= comparator)
+                        {
+                            string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+
+                            list.Add(new object[] { returnDate, data[i].AverageHoursPerDay });
+                        }
                     }
                 }
                 else
@@ -264,8 +294,15 @@ namespace Memento.Models
                         DateTime date = data[i].Date;
 
                         date = new DateTime(date.Year, date.Month, date.Day);
-                        string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
-                        list.Add(new object[] { returnDate, data[i].CardsPerDay });
+                        comparator = DateTime.UtcNow.AddDays(-days);
+                        comparator = new DateTime(comparator.Year, comparator.Month, comparator.Day);
+
+                        if (date >= comparator)
+                        {
+                            string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+
+                            list.Add(new object[] { returnDate, data[i].CardsPerDay });
+                        }
                     }
                 }
                 else
@@ -308,8 +345,15 @@ namespace Memento.Models
                         DateTime date = data[i].Date;
 
                         date = new DateTime(date.Year, date.Month, date.Day);
-                        string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
-                        list.Add(new object[] { returnDate, data[i].CardsPerDay });
+                        comparator = DateTime.UtcNow.AddDays(-days);
+                        comparator = new DateTime(comparator.Year, comparator.Month, comparator.Day);
+
+                        if (date >= comparator)
+                        {
+                            string returnDate = $"{date.Day}/{date.Month}/{date.Year}";
+
+                            list.Add(new object[] { returnDate, data[i].CardsPerDay });
+                        }
                     }
                 }
                 else
