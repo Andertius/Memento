@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,50 +24,93 @@ namespace Memento.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> SearchedDecks(BrowseDecksModel model)
-        {
-            List<DeckModel> decks;
+        [HttpPost]
+        public async Task<IActionResult> SearchedDecks(SearchedDecksModel model)
+            => View(await CreateSearchedDecks(model));
 
-            if (model.SearchValue is not null)
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> RemoveTagFromSearched(SearchedDecksModel model)
+        {
+            model.FilterTags = model.FilterTagsString
+                    .Split("#", StringSplitOptions.RemoveEmptyEntries)
+                    .ToList();
+
+            model.FilterTags.Remove(model.TagToRemove);
+            model.TagFilter = String.Empty;
+
+            if (model.FilterTags.Any())
             {
-                decks = await _context.Decks
-                    .Where(deck => deck.Name.ToLower().Contains(model.SearchValue.ToLower()))
-                    .Select(deck => new DeckModel
-                    {
-                        Id = deck.Id,
-                        Name = deck.Name,
-                    })
-                    .ToListAsync();
+                model.FilterTagsString = model.FilterTags.Aggregate((x, y) => "#" + x + "#" + y + "#");
+
+                if (!model.FilterTagsString.EndsWith('#'))
+                {
+                    model.FilterTagsString += "#";
+                }
             }
             else
             {
-                decks = await _context.Decks
-                    .Select(deck => new DeckModel
-                    {
-                        Id = deck.Id,
-                        Name = deck.Name,
-                    })
-                    .ToListAsync();
+                model.FilterTagsString = "#";
             }
 
-            return View(new SearchedDecksModel { Decks = decks, SearchValue = model.SearchValue });
+            return View(nameof(SearchedDecks), await CreateSearchedDecks(model));
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> SearchedDecks(SearchedDecksModel model)
-        //{
-        //    var decks = await _context.Decks
-        //        .Where(deck => deck.Name.ToLower().Contains(model.SearchValue.ToLower()))
-        //        .Select(deck => new DeckModel
-        //        {
-        //            Id = deck.Id,
-        //            Name = deck.Name,
-        //        })
-        //        .ToListAsync();
+        private async Task<SearchedDecksModel> CreateSearchedDecks(SearchedDecksModel model)
+        {
+            var decks = await _context.Decks
+                .Where(deck => deck.IsPublic)
+                .Include(deck => deck.Tags)
+                .ToListAsync();
 
-        //    return View(new SearchedDecksModel { Decks = decks, SearchValue = model.SearchValue });
-        //}
+            var decksInModel = decks.Select(deck => deck);
+
+            if (model.SearchValue is not null)
+            {
+                decksInModel = decksInModel
+                    .Where(deck => deck.Name
+                        .ToLower()
+                        .Contains(model.SearchValue
+                            .ToLower()));
+            }
+
+            if (!String.IsNullOrEmpty(model.TagFilter))
+            {
+                if (model.FilterTagsString is null)
+                {
+                    model.FilterTagsString = "#";
+                }
+
+                if (!model.FilterTagsString.Contains($"#{model.TagFilter}#"))
+                {
+                    model.FilterTagsString += $"{model.TagFilter.ToLower().Split(' ').Aggregate((x, y) => x += "_" + y)}#";
+                }
+            }
+
+            if (!String.IsNullOrEmpty(model.FilterTagsString))
+            {
+                model.FilterTags = model.FilterTagsString
+                    .Split("#", StringSplitOptions.RemoveEmptyEntries)
+                    .ToList();
+
+                decksInModel = decksInModel
+                    .Where(deck => !model.FilterTags
+                        .Except(deck.Tags is null ? new List<string>() : deck.Tags.Select(tag => tag.Name))
+                        .Any());
+            }
+
+            model.Decks = decksInModel
+                .Select(deck => new DeckModel
+                {
+                    Id = deck.Id,
+                    Name = deck.Name,
+                    Difficulty = deck.Difficulty,
+                })
+                .ToList();
+
+            model.TagFilter = String.Empty;
+            return model;
+        }
 
         [Authorize]
         [HttpGet("[controller]/[action]/{deckId}")]
@@ -81,7 +125,7 @@ namespace Memento.Controllers
             {
                 var deck = await _context.Decks.FindAsync(deckId);
 
-                if (deck is not null)
+                if (deck is not null && deck.IsPublic)
                 {
                     userWithDecks.Decks.Add(deck);
                     await _userManager.UpdateAsync(userWithDecks);
@@ -152,7 +196,7 @@ namespace Memento.Controllers
                 .Where(deck => deck.Id == deckId)
                 .FirstOrDefaultAsync();
 
-            if (deck is null)
+            if (deck is null || !deck.IsPublic)
             {
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
@@ -197,111 +241,322 @@ namespace Memento.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> YourCollection(YourCollectionModel model = null)
+        public async Task<IActionResult> YourCollection()
+        {
+            var userWithDecks = await _context.Users
+                .Where(u => u.UserName == User.Identity.Name)
+                .Include(u => u.Decks)
+                .FirstOrDefaultAsync();
+
+            var model = new YourCollectionModel
+            {
+                YourDecks = userWithDecks.Decks
+                    .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
+                    .ToList(),
+                FilterTagsString = String.Empty,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> YourCollection(YourCollectionModel model)
+            => View(await CreateYourCollectionModel(model));
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> RemoveTagFromYourCollection(YourCollectionModel model)
+        {
+            model.FilterTags = model.FilterTagsString
+                .Split("#", StringSplitOptions.RemoveEmptyEntries)
+                .ToList();
+
+            model.FilterTags.Remove(model.TagToRemove);
+            model.TagFilter = String.Empty;
+
+            if (model.FilterTags.Any())
+            {
+                model.FilterTagsString = model.FilterTags.Aggregate((x, y) => "#" + x + "#" + y + "#");
+
+                if (!model.FilterTagsString.EndsWith('#'))
+                {
+                    model.FilterTagsString += "#";
+                }
+            }
+            else
+            {
+                model.FilterTagsString = String.Empty;
+            }
+
+            return View(nameof(YourCollection), await CreateYourCollectionModel(model));
+        }
+
+        private async Task<YourCollectionModel> CreateYourCollectionModel(YourCollectionModel model)
         {
             var userWithDecks = await _context.Users
                    .Where(u => u.UserName == User.Identity.Name)
                    .Include(u => u.Decks)
+                   .ThenInclude(deck => deck.Tags)
                    .FirstOrDefaultAsync();
+
+            var decksInModel = userWithDecks.Decks.Select(deck => deck);
 
             if (model.SearchFilter is not null)
             {
-                model.YourDecks = userWithDecks.Decks
-                    .Where(deck => deck.Name.ToLower().Contains(model.SearchFilter.ToLower()))
-                    .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
-                    .ToList();
-            }
-            else
-            {
-                model.YourDecks = userWithDecks.Decks
-                    .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
-                    .ToList();
+                decksInModel = decksInModel
+                    .Where(deck => deck.Name
+                        .ToLower()
+                        .Contains(model.SearchFilter
+                            .ToLower()));
             }
 
-            return View(model);
+            if (!String.IsNullOrEmpty(model.TagFilter))
+            {
+                if (model.FilterTagsString is null)
+                {
+                    model.FilterTagsString = "#";
+                }
+
+                if (!model.FilterTagsString.Contains($"#{model.TagFilter}#"))
+                {
+                    model.FilterTagsString += $"{model.TagFilter.ToLower().Split(' ').Aggregate((x, y) => x += "_" + y)}#";
+                }
+            }
+
+            if (!String.IsNullOrEmpty(model.FilterTagsString))
+            {
+                model.FilterTags = model.FilterTagsString
+                    .Split("#", StringSplitOptions.RemoveEmptyEntries)
+                    .ToList();
+
+                decksInModel = decksInModel
+                    .Where(deck => !model.FilterTags
+                        .Except(deck.Tags is null ? new List<string>() : deck.Tags.Select(tag => tag.Name))
+                        .Any());
+            }
+
+            model.YourDecks = decksInModel
+                .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
+                .ToList();
+
+            model.TagFilter = String.Empty;
+            return model;
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> CreatedDecks(CreatedDecksModel model = null)
+        public async Task<IActionResult> CreatedDecks()
         {
             var user = await _userManager.GetUserAsync(User);
             var decks = _context.Decks.Where(deck => deck.CreatorId == user.Id);
 
-            if (model.SearchFilter is not null)
+            var model = new CreatedDecksModel
             {
-                model.CreatedDecks = await decks
-                    .Where(deck => deck.Name.ToLower().Contains(model.SearchFilter.ToLower()))
+                CreatedDecks = await decks
                     .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
-                    .ToListAsync();
-            }
-            else
-            {
-                model.CreatedDecks = await decks
-                    .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
-                    .ToListAsync();
-            }
+                    .ToListAsync(),
+            };
 
             return View(model);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> PopularDecks(PopularDecksModel model = null)
-        {
-            var decks = await _context.Decks
-                .Select(deck => deck)
-                .Include(deck => deck.Tags)
-                .ToListAsync();
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> CreatedDecks(CreatedDecksModel model)
+            => View(await CreateCreatedDecksModel(model));
 
-            if (model.SearchFilter is not null)
-            {
-                model.PopularDecks = decks
-                    .Where(deck => deck.Name.ToLower().Contains(model.SearchFilter.ToLower()))
-                    .Select(deck => new DeckModel
-                    {
-                        Id = deck.Id,
-                        Name = deck.Name,
-                        Difficulty = deck.Difficulty,
-                    })
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> RemoveTagFromCreated(CreatedDecksModel model)
+        {
+            model.FilterTags = model.FilterTagsString
+                    .Split("#", StringSplitOptions.RemoveEmptyEntries)
                     .ToList();
+
+            model.FilterTags.Remove(model.TagToRemove);
+            model.TagFilter = String.Empty;
+
+            if (model.FilterTags.Any())
+            {
+                model.FilterTagsString = model.FilterTags.Aggregate((x, y) => "#" + x + "#" + y + "#");
+
+                if (!model.FilterTagsString.EndsWith('#'))
+                {
+                    model.FilterTagsString += "#";
+                }
             }
             else
             {
-                model.PopularDecks = decks
-                    .Select(deck => new DeckModel
-                    {
-                        Id = deck.Id,
-                        Name = deck.Name,
-                        Difficulty = deck.Difficulty,
-                    })
+                model.FilterTagsString = String.Empty;
+            }
+
+            return View(nameof(CreatedDecks), await CreateCreatedDecksModel(model));
+        }
+
+        private async Task<CreatedDecksModel> CreateCreatedDecksModel(CreatedDecksModel model)
+        {
+            var userWithDecks = await _userManager.GetUserAsync(User);
+
+            // var user = await _userManager.GetUserAsync(User);
+            var decksInModel = _context.Decks
+                .Where(deck => deck.CreatorId == userWithDecks.Id)
+                .Include(deck => deck.Tags)
+                .ToList();
+
+            if (model.SearchFilter is not null)
+            {
+                decksInModel = decksInModel
+                    .Where(deck => deck.Name
+                        .ToLower()
+                        .Contains(model.SearchFilter
+                            .ToLower()))
                     .ToList();
             }
 
-            if (model.FilterTags is not null && model.FilterTags.Any())
+            if (!String.IsNullOrEmpty(model.TagFilter))
             {
-                model.PopularDecks = decks
+                if (model.FilterTagsString is null)
+                {
+                    model.FilterTagsString = "#";
+                }
+
+                if (!model.FilterTagsString.Contains($"#{model.TagFilter}#"))
+                {
+                    model.FilterTagsString += $"{model.TagFilter.ToLower().Split(' ').Aggregate((x, y) => x += "_" + y)}#";
+                }
+            }
+
+            if (!String.IsNullOrEmpty(model.FilterTagsString))
+            {
+                model.FilterTags = model.FilterTagsString
+                    .Split("#", StringSplitOptions.RemoveEmptyEntries)
+                    .ToList();
+
+                decksInModel = decksInModel
                     .Where(deck => !model.FilterTags
                         .Except(deck.Tags is null ? new List<string>() : deck.Tags.Select(tag => tag.Name))
                         .Any())
-                    .Select(deck => new DeckModel
-                    {
-                        Id = deck.Id,
-                        Name = deck.Name,
-                        Difficulty = deck.Difficulty,
-                    })
                     .ToList();
             }
+
+            model.CreatedDecks = decksInModel
+                .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
+                .ToList();
+
+            model.TagFilter = String.Empty;
+            return model;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PopularDecks()
+        {
+            var decks = await _context.Decks
+                .Where(deck => deck.IsPublic)
+                .Include(deck => deck.Tags)
+                .ToListAsync();
+
+            var model = new PopularDecksModel
+            {
+                PopularDecks = decks
+                .Select(deck => new DeckModel
+                {
+                    Id = deck.Id,
+                    Name = deck.Name,
+                    Difficulty = deck.Difficulty,
+                })
+                .ToList(),
+                FilterTagsString = String.Empty,
+            };
 
             return View(model);
         }
 
-        [HttpGet]
+        [HttpPost]
+        public async Task<IActionResult> PopularDecks(PopularDecksModel model)
+            => View(await CreatePopularDecksModel(model));
+
+        [HttpPost]
         [Authorize]
-        public IActionResult AddTagFilter(List<string> tagsList)
+        public async Task<IActionResult> RemoveTagFromPopular(PopularDecksModel model)
         {
-            //TagsList.Add(newTag);
-            var model = new PopularDecksModel { FilterTags = tagsList };
-            return RedirectToAction(nameof(PopularDecks), new { model });
+            model.FilterTags = model.FilterTagsString
+                    .Split("#", StringSplitOptions.RemoveEmptyEntries)
+                    .ToList();
+            
+            model.TagFilter = String.Empty;
+            model.FilterTags.Remove(model.TagToRemove);
+
+            if (model.FilterTags.Any())
+            {
+                model.FilterTagsString = model.FilterTags.Aggregate((x, y) => "#" + x + "#" + y + "#");
+
+                if (!model.FilterTagsString.EndsWith('#'))
+                {
+                    model.FilterTagsString += "#";
+                }
+            }
+            else
+            {
+                model.FilterTagsString = String.Empty;
+            }
+
+            return View(nameof(PopularDecks), await CreatePopularDecksModel(model));
+        }
+
+        private async Task<PopularDecksModel> CreatePopularDecksModel(PopularDecksModel model)
+        {
+            var decks = await _context.Decks
+                   .Where(deck => deck.IsPublic)
+                   .Include(deck => deck.Tags)
+                   .ToListAsync();
+
+            var decksInModel = decks.Select(deck => deck);
+
+            if (model.SearchFilter is not null)
+            {
+                decksInModel = decksInModel
+                    .Where(deck => deck.Name
+                        .ToLower()
+                        .Contains(model.SearchFilter
+                            .ToLower()));
+            }
+
+            if (!String.IsNullOrEmpty(model.TagFilter))
+            {
+                if (model.FilterTagsString is null)
+                {
+                    model.FilterTagsString = "#";
+                }
+
+                if (!model.FilterTagsString.Contains($"#{model.TagFilter}#"))
+                {
+                    model.FilterTagsString += $"{model.TagFilter.ToLower().Split(' ').Aggregate((x, y) => x += "_" + y)}#";
+                }
+            }
+
+            if (!String.IsNullOrEmpty(model.FilterTagsString))
+            {
+                model.FilterTags = model.FilterTagsString
+                    .Split("#", StringSplitOptions.RemoveEmptyEntries)
+                    .ToList();
+
+                decksInModel = decksInModel
+                    .Where(deck => !model.FilterTags
+                        .Except(deck.Tags is null ? new List<string>() : deck.Tags.Select(tag => tag.Name))
+                        .Any());
+            }
+
+            model.PopularDecks = decksInModel
+                .Select(deck => new DeckModel
+                {
+                    Id = deck.Id,
+                    Name = deck.Name,
+                    Difficulty = deck.Difficulty,
+                })
+                .ToList();
+
+            model.TagFilter = String.Empty;
+            return model;
         }
 
         [Authorize]

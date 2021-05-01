@@ -33,6 +33,7 @@ namespace Memento.Controllers
             var model = new BrowseDecksModel
             {
                 PopularDecks = _context.Decks
+                    .Where(deck => deck.IsPublic)
                     .Select(deck => new DeckModel
                     {
                         Id = deck.Id,

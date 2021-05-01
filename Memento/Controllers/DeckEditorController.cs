@@ -28,39 +28,112 @@ namespace Memento.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> ChooseDeck(ChooseDeckModel model = null)
+        public async Task<IActionResult> ChooseDeck()
         {
             var user = await _userManager.GetUserAsync(User);
             var decks = await _context.Decks
                 .Where(deck => deck.CreatorId == user.Id)
                 .ToListAsync();
 
-            if (model.SearchFilter is not null)
+            return View(new ChooseDeckModel
             {
-                return View(new ChooseDeckModel
-                {
-                    UserName = user.UserName,
-                    Decks = decks
-                        .Where(deck => deck.Name.ToLower().Contains(model.SearchFilter.ToLower()))
-                        .Select(deck => new DeckModel { Id = deck.Id, Name = deck.Name })
-                        .ToList()
-                });
-            }
-            else
-            {
-                return View(new ChooseDeckModel
-                {
-                    UserName = user.UserName,
-                    Decks = decks
-                        .Select(deck => new DeckModel { Id = deck.Id, Name = deck.Name })
-                        .ToList()
-                });
-            }
+                UserName = user.UserName,
+                Decks = decks
+                    .Select(deck => new DeckModel { Id = deck.Id, Name = deck.Name })
+                    .ToList()
+            });
         }
 
         [HttpPost]
         [Authorize]
-        public IActionResult ChooseDeck(DeckModel deck)
+        public async Task<IActionResult> ChooseDeck(ChooseDeckModel model)
+           => View(await CreateChooseDeckModel(model));
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> RemoveTagFromChooseDeck(ChooseDeckModel model)
+        {
+            model.FilterTags = model.FilterTagsString
+                    .Split("#", StringSplitOptions.RemoveEmptyEntries)
+                    .ToList();
+
+            model.FilterTags.Remove(model.TagToRemove);
+            model.TagFilter = String.Empty;
+
+            if (model.FilterTags.Any())
+            {
+                model.FilterTagsString = model.FilterTags.Aggregate((x, y) => "#" + x + "#" + y + "#");
+
+                if (!model.FilterTagsString.EndsWith('#'))
+                {
+                    model.FilterTagsString += "#";
+                }
+            }
+            else
+            {
+                model.FilterTagsString = String.Empty;
+            }
+
+            return View(nameof(ChooseDeck), await CreateChooseDeckModel(model));
+        }
+
+        private async Task<ChooseDeckModel> CreateChooseDeckModel(ChooseDeckModel model)
+        {
+            var userWithDecks = await _userManager.GetUserAsync(User);
+
+            var decksInModel = _context.Decks
+                .Where(deck => deck.CreatorId == userWithDecks.Id)
+                .Include(deck => deck.Tags)
+                .ToList();
+
+            if (model.SearchFilter is not null)
+            {
+                decksInModel = decksInModel
+                    .Where(deck => deck.Name
+                        .ToLower()
+                        .Contains(model.SearchFilter
+                            .ToLower()))
+                    .ToList();
+            }
+
+            if (!String.IsNullOrEmpty(model.TagFilter))
+            {
+                if (model.FilterTagsString is null)
+                {
+                    model.FilterTagsString = "#";
+                }
+
+                if (!model.FilterTagsString.Contains($"#{model.TagFilter}#"))
+                {
+                    model.FilterTagsString += $"{model.TagFilter.ToLower().Split(' ').Aggregate((x, y) => x += "_" + y)}#";
+                }
+            }
+
+            if (!String.IsNullOrEmpty(model.FilterTagsString))
+            {
+                model.FilterTags = model.FilterTagsString
+                    .Split("#", StringSplitOptions.RemoveEmptyEntries)
+                    .ToList();
+
+                decksInModel = decksInModel
+                    .Where(deck => !model.FilterTags
+                        .Except(deck.Tags is null ? new List<string>() : deck.Tags.Select(tag => tag.Name))
+                        .Any())
+                    .ToList();
+            }
+
+            model.Decks = decksInModel
+                .Select(deck => new DeckModel { Id = deck.Id, Name = deck.Name })
+                .ToList();
+
+            model.TagFilter = String.Empty;
+            model.UserName = userWithDecks.UserName;
+            return model;
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult DeckChosen(DeckModel deck)
             => RedirectToAction(nameof(EditDeck), new { deckId = deck.Id });
 
         [HttpGet]
@@ -313,15 +386,89 @@ namespace Memento.Controllers
 
             if (_context.Decks.Where(deck => deck.CreatorId == user.Id).Any())
             {
-                var cards = await _context.Cards
-                    .Where(card => card.Word.ToLower().Contains(model.SearchFilter.ToLower()))
-                    .Select(card => new CardModel { Id = card.Id, Word = card.Word, Description = card.Description })
-                    .ToListAsync();
-
-                return View(new ChooseCardModel { DeckId = model.DeckId, SearchFilter = model.SearchFilter, Cards = cards });
+                return View(await CreateChooseCardModel(model));
             }
 
             return RedirectToAction(nameof(EditDeck), new { model.DeckId });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> RemoveTagFromChooseCard(ChooseCardModel model)
+        {
+            model.FilterTags = model.FilterTagsString
+                    .Split("#", StringSplitOptions.RemoveEmptyEntries)
+                    .ToList();
+
+            model.FilterTags.Remove(model.TagToRemove);
+            model.TagFilter = String.Empty;
+
+            if (model.FilterTags.Any())
+            {
+                model.FilterTagsString = model.FilterTags.Aggregate((x, y) => "#" + x + "#" + y + "#");
+
+                if (!model.FilterTagsString.EndsWith('#'))
+                {
+                    model.FilterTagsString += "#";
+                }
+            }
+            else
+            {
+                model.FilterTagsString = String.Empty;
+            }
+
+            return View(nameof(ChooseCard), await CreateChooseCardModel(model));
+        }
+
+        private async Task<ChooseCardModel> CreateChooseCardModel(ChooseCardModel model)
+        {
+            var userWithDecks = await _userManager.GetUserAsync(User);
+            var cardsInModel = await _context.Cards.Select(card => card).ToListAsync();
+            bool isSearchEmpy = true;
+
+            if (model.SearchFilter is not null)
+            {
+                cardsInModel = cardsInModel
+                    .Where(card => card.Word
+                        .ToLower()
+                        .Contains(model.SearchFilter
+                            .ToLower()))
+                    .ToList();
+
+                isSearchEmpy = false;
+            }
+
+            if (!String.IsNullOrEmpty(model.TagFilter))
+            {
+                if (!model.FilterTagsString.Contains($"#{model.TagFilter}#"))
+                {
+                    model.FilterTagsString += $"#{model.TagFilter.ToLower().Split(' ').Aggregate((x, y) => x += "_" + y)}#";
+                }
+            }
+
+            if (!String.IsNullOrEmpty(model.FilterTagsString))
+            {
+                model.FilterTags = model.FilterTagsString
+                    .Split("#", StringSplitOptions.RemoveEmptyEntries)
+                    .ToList();
+
+                cardsInModel = cardsInModel
+                    .Where(deck => !model.FilterTags
+                        .Except(deck.Tags is null ? new List<string>() : deck.Tags.Select(tag => tag.Name))
+                        .Any())
+                    .ToList();
+            }
+            else if (isSearchEmpy)
+            {
+                cardsInModel = new List<Card>();
+            }
+
+            model.Cards = cardsInModel
+                .Select(card => new CardModel { Id = card.Id, Word = card.Word, Description = card.Description })
+                .ToList();
+
+            model.TagFilter = String.Empty;
+            return model;
         }
 
         [HttpPost]
