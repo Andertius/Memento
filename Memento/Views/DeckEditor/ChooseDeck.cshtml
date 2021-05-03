@@ -21,15 +21,15 @@
 <div class="row mb-4">
     <a class="btn btn-primary col-xs-6" asp-action="CreateDeck">New deck</a>
     <form method="post" asp-action="ChooseDeck" asp-controller="DeckEditor" class="col-xs-6 row ml-3">
-        <input placeholder="Search" asp-for="SearchFilter" class="h-100 col-xs-6 mr-1" />
+        <input placeholder="Search" asp-for="SearchFilter" class="h-100 col-xs-6 mr-1 rounded border border-secondary pl-2" />
         <input type="hidden" asp-for="@Model.FilterTagsString" value="@Model.FilterTagsString" />
         <button type="submit" class="btn btn-outline-secondary col-xs-6">Search</button>
     </form>
 </div>
 
-<form method="post" asp-action="ChooseDeck" asp-controller="DeckEditor" class="row ml-3 mb-4">
-    <label>Filter by tags</label>
-    <input placeholder="Add tag filter" class="col-xs-6 mr-1" asp-for="TagFilter" />
+<form method="post" asp-action="ChooseDeck" asp-controller="DeckEditor" class="row mb-4">
+    <label class="mt-1 ml-1 mr-3">Filter by tags</label>
+    <input placeholder="Add tag filter" class="col-xs-6 mr-1 rounded border border-secondary pl-2" asp-for="TagFilter" />
     <input type="hidden" asp-for="@Model.FilterTagsString" value="@Model.FilterTagsString" />
     <input type="hidden" asp-for="@Model.SearchFilter" value="@Model.SearchFilter" />
 
