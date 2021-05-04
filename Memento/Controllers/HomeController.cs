@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Memento.Models;
 using Memento.Models.ViewModels.BrowseDecks;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -70,7 +69,6 @@ namespace Memento.Controllers
             return View(model);
         }
 
-        [Authorize]
         [HttpGet("[controller]/[action]/{deckId}")]
         public async Task<FileResult> GetThumb(long deckId)
         {

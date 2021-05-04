@@ -67,6 +67,18 @@
         <div class="mt-2">
             @if (User.Identity.IsAuthenticated)
             {
+                <a class="btn btn-primary" href="#">Play</a>
+
+                if (User.Identity.Name == Model.CreatorName)
+                {
+                    <a class="btn btn-outline-info"
+                       asp-action="EditDeck"
+                       asp-controller="DeckEditor"
+                       asp-route-deckId="@Model.Id">
+                        Edit
+                    </a>
+                }
+
                 if (Model.HasInCollection)
                 {
                     <a class="btn btn-outline-danger"
@@ -83,18 +95,6 @@
                        asp-controller="BrowseDecks"
                        asp-route-deckId="@Model.Id">
                         Add to collection
-                    </a>
-                }
-
-                <a class="btn btn-primary" href="#">Play</a>
-
-                if (User.Identity.Name == Model.CreatorName)
-                {
-                    <a class="btn btn-outline-info"
-                       asp-action="EditDeck"
-                       asp-controller="DeckEditor"
-                       asp-route-deckId="@Model.Id">
-                        Edit
                     </a>
                 }
             }

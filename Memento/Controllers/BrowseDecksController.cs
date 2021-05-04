@@ -595,7 +595,6 @@ namespace Memento.Controllers
             return RedirectToAction(nameof(DeckPage), new { deckId });
         }
 
-        [Authorize]
         [HttpGet("[controller]/[action]/{deckId}")]
         public async Task<FileResult> GetThumb(long deckId)
         {
