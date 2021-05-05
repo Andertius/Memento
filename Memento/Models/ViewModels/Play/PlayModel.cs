@@ -7,6 +7,8 @@ namespace Memento.Models.ViewModels.Play
 {
     public class PlayModel
     {
+        public string Username { get; set; }
+
         public DeckModel PickedDeck { get; set; }
 
         public CardModel CurrentCard { get; set; }

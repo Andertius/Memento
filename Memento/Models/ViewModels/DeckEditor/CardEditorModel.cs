@@ -7,6 +7,8 @@ namespace Memento.Models.ViewModels.DeckEditor
 {
     public class CardEditorModel
     {
+        public string Username { get; set; }
+
         public long Id { get; set; }
 
         public long ExistingId { get; set; }

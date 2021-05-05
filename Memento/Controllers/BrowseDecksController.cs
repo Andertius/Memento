@@ -116,8 +116,9 @@ namespace Memento.Controllers
         [HttpGet("[controller]/[action]/{deckId}")]
         public async Task<IActionResult> AddDeck([FromRoute] long deckId)
         {
+            var user = await _userManager.GetUserAsync(User);
             var userWithDecks = await _context.Users
-                .Where(u => u.UserName == User.Identity.Name)
+                .Where(u => u.UserName == user.UserName)
                 .Include(u => u.Decks)
                 .FirstOrDefaultAsync();
 
@@ -139,8 +140,9 @@ namespace Memento.Controllers
         [HttpGet("[controller]/[action]/{deckId}")]
         public async Task<IActionResult> RemoveDeckFromCollection([FromRoute] long deckId)
         {
+            var user = await _userManager.GetUserAsync(User);
             var userWithDecks = await _context.Users
-                .Where(u => u.UserName == User.Identity.Name)
+                .Where(u => u.UserName == user.UserName)
                 .Include(u => u.Decks)
                 .FirstOrDefaultAsync();
 
@@ -209,10 +211,12 @@ namespace Memento.Controllers
             //    return RedirectToAction(nameof(Index));
             //}
 
+            var user = await _userManager.GetUserAsync(User);
+
             if (User.Identity.IsAuthenticated)
             {
                 var userWithDecks = await _context.Users
-                   .Where(u => u.UserName == User.Identity.Name)
+                   .Where(u => u.UserName == user.UserName)
                    .Include(u => u.Decks)
                    .FirstOrDefaultAsync();
 
@@ -226,6 +230,7 @@ namespace Memento.Controllers
 
             return View(new DeckModel
             {
+                Username = user is null ? "" : user.UserName,
                 Id = deck.Id,
                 Name = deck.Name,
                 Difficulty = deck.Difficulty,
@@ -243,13 +248,15 @@ namespace Memento.Controllers
         [Authorize]
         public async Task<IActionResult> YourCollection()
         {
+            var user = await _userManager.GetUserAsync(User);
             var userWithDecks = await _context.Users
-                .Where(u => u.UserName == User.Identity.Name)
+                .Where(u => u.UserName == user.UserName)
                 .Include(u => u.Decks)
                 .FirstOrDefaultAsync();
 
             var model = new YourCollectionModel
             {
+                Username = (await _userManager.GetUserAsync(User)).UserName,
                 YourDecks = userWithDecks.Decks
                     .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
                     .ToList(),
@@ -293,8 +300,9 @@ namespace Memento.Controllers
 
         private async Task<YourCollectionModel> CreateYourCollectionModel(YourCollectionModel model)
         {
+            var user = await _userManager.GetUserAsync(User);
             var userWithDecks = await _context.Users
-                   .Where(u => u.UserName == User.Identity.Name)
+                   .Where(u => u.UserName == user.UserName)
                    .Include(u => u.Decks)
                    .ThenInclude(deck => deck.Tags)
                    .FirstOrDefaultAsync();
@@ -352,6 +360,7 @@ namespace Memento.Controllers
 
             var model = new CreatedDecksModel
             {
+                Username = (await _userManager.GetUserAsync(User)).UserName,
                 CreatedDecks = await decks
                     .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
                     .ToListAsync(),
@@ -455,8 +464,11 @@ namespace Memento.Controllers
                 .Include(deck => deck.Tags)
                 .ToListAsync();
 
+            var user = await _userManager.GetUserAsync(User);
+
             var model = new PopularDecksModel
             {
+                Username = (user is null) ? "" : user.UserName,
                 PopularDecks = decks
                 .Select(deck => new DeckModel
                 {
@@ -563,8 +575,9 @@ namespace Memento.Controllers
         [HttpGet("[controller]/[action]/{deckId}/{rating}")]
         public async Task<IActionResult> RateDeck(long deckId, int rating)
         {
+            var currUser = await _userManager.GetUserAsync(User);
             var user = await _context.Users
-                .Where(user => user.UserName == User.Identity.Name)
+                .Where(user => user.UserName == currUser.UserName)
                 .Include(user => user.Ratings)
                 .FirstOrDefaultAsync();
 

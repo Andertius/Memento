@@ -7,6 +7,7 @@ namespace Memento.Models.ViewModels
 {
     public class StatisticsModel
     {
+        public string Username { get; set; }
         public float HoursPerDay { get; set; }
         public float AverageHoursPerDay { get; set; }
         public int CardsPerDay { get; set; }

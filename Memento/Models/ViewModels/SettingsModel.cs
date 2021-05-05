@@ -7,6 +7,8 @@ namespace Memento.Models.ViewModels
 {
     public class SettingsModel
     {
+        public string Username { get; set; }
+
         [Range(0, 24.0, ErrorMessage = "Hours per day should be in range [0, 24]")]
         public float HoursPerDay { get; set; }
 

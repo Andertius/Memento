@@ -53,6 +53,7 @@ namespace Memento.Controllers
 
             return View(new PlayModel
             {
+                Username = user.UserName,
                 CurrentCard = _d.Cards.First(),
             });
         }
@@ -64,6 +65,7 @@ namespace Memento.Controllers
             _d.Cards.ToList().RemoveAt(0);
             return View(new PlayModel
             {
+                Username = (await _userManager.GetUserAsync(User)).UserName,
                 CurrentCard = _d.Cards.First()
             });
         }

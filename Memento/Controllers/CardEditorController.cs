@@ -53,6 +53,7 @@ namespace Memento.Controllers
             {
                 return View(new CardEditorModel
                 {
+                    Username = (await _userManager.GetUserAsync(User)).UserName,
                     DeckId = model.DeckId,
                     ExistingId = card.Id,
                     Word = card.Word,
@@ -90,6 +91,7 @@ namespace Memento.Controllers
                 {
                     var returnModel = new CardEditorModel
                     {
+                        Username = (await _userManager.GetUserAsync(User)).UserName,
                         DeckId = deck.Id,
                         Tags = new List<TagModel>(),
                         Errors = errorsArray,
@@ -102,6 +104,7 @@ namespace Memento.Controllers
                 {
                     var returnModel = new CardEditorModel
                     {
+                        Username = (await _userManager.GetUserAsync(User)).UserName,
                         DeckId = deck.Id,
                         Id = card.Id,
                         Word = card.Word,

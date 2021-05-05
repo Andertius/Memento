@@ -138,8 +138,10 @@ namespace Memento.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult CreateDeck()
-            => View();
+        public async Task<IActionResult> CreateDeck()
+        {
+            return View(new CreateDeckModel { Username = (await _userManager.GetUserAsync(User)).UserName });
+        }
 
         [HttpPost]
         [Authorize]
@@ -155,7 +157,7 @@ namespace Memento.Controllers
                 return RedirectToAction(nameof(EditDeck), new { deckId = deck.Id });
             }
 
-            return View();
+            return View(new CreateDeckModel { Username = (await _userManager.GetUserAsync(User)).UserName });
         }
 
         [HttpGet]
@@ -220,6 +222,7 @@ namespace Memento.Controllers
 
             return View(new DeckEditorModel
             {
+                Username = (await _userManager.GetUserAsync(User)).UserName,
                 Cards = cards,
                 Deck = new DeckModel
                 {
@@ -259,6 +262,7 @@ namespace Memento.Controllers
 
             var cards = deck.Cards.Select(card => new CardEditorModel
             {
+                Username = user.UserName,
                 Id = card.Id,
                 DeckId = deck.Id,
                 Word = card.Word,
@@ -276,6 +280,7 @@ namespace Memento.Controllers
 
             return View(new DeckEditorModel
             {
+                Username = user.UserName,
                 Cards = cards,
                 Deck = new DeckModel
                 {
@@ -362,14 +367,21 @@ namespace Memento.Controllers
         [HttpGet("[controller]/[action]/{deckId}")]
         public async Task<IActionResult> ChooseCard([FromRoute] long deckId)
         {
+            var currUser = await _userManager.GetUserAsync(User);
             var user = await _context.Users
-                .Where(u => u.UserName == User.Identity.Name)
+                .Where(u => u.UserName == currUser.UserName)
                 .Include(u => u.Decks)
                 .FirstOrDefaultAsync();
 
             if (_context.Decks.Where(deck => deck.CreatorId == user.Id).Any())
             {
-                return View(new ChooseCardModel { DeckId = deckId, SearchFilter = String.Empty, Cards = new List<CardModel>() });
+                return View(new ChooseCardModel 
+                { 
+                    Username = user.UserName, 
+                    DeckId = deckId, 
+                    SearchFilter = String.Empty, 
+                    Cards = new List<CardModel>() 
+                });
             }
 
             return RedirectToAction(nameof(EditDeck), new { deckId });
@@ -379,8 +391,9 @@ namespace Memento.Controllers
         [Authorize]
         public async Task<IActionResult> ChooseCard(ChooseCardModel model)
         {
+            var currUser = await _userManager.GetUserAsync(User);
             var user = await _context.Users
-                .Where(u => u.UserName == User.Identity.Name)
+                .Where(u => u.UserName == currUser.UserName)
                 .Include(u => u.Decks)
                 .FirstOrDefaultAsync();
 
