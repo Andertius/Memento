@@ -61,6 +61,22 @@ namespace Memento.Controllers
                 _context.Statistics.Add(newStats);
                 _context.SaveChanges();
             }
+            else if (lastEntry == comparator)
+            {
+                var average = 0.0;
+
+                for (int i = 0; i < data.Count; i++)
+                {
+                    average += data[i].HoursPerDay;
+                }
+
+                average /= data.Count;
+
+                data[^1].AverageHoursPerDay = (float)average;
+
+                _context.Update(data[^1]);
+                _context.SaveChanges();
+            }
             return View();
         }
 
