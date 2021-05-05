@@ -34,6 +34,7 @@ namespace Memento.Controllers
 
             return View(new SettingsModel
             {
+                Username = user.UserName,
                 HoursPerDay = settings.HoursPerDay,
                 CardsPerDay = settings.CardsPerDay,
                 CardsOrder = settings.CardsOrder.ToString(),

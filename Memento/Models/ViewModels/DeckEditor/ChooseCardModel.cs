@@ -4,6 +4,8 @@ namespace Memento.Models.ViewModels.DeckEditor
 {
     public class ChooseCardModel
     {
+        public string Username { get; set; }
+
         public long CardId { get; set; }
 
         public long DeckId { get; set; }

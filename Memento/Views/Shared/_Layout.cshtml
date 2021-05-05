@@ -14,7 +14,7 @@
 
 <body>
     <header class="navbar navbar-light sticky-top" style="background-color: #e3f2fd;">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" asp-action="Index" asp-controller="Home">
             <img src="/img/memento-logo.png" width="30" height="30">
             @RenderSection("pageTitle", required: true)
         </a>

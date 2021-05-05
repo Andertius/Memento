@@ -8,7 +8,7 @@
     {
         <div class="d-inline dropdown">
             <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-                @User.Identity.Name
+                @Model.Username
                 <span class="caret"></span>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
@@ -26,14 +26,14 @@
 }
 
 <form method="post" asp-action="PopularDecks" asp-controller="BrowseDecks" class="row ml-3 mb-4">
-    <input placeholder="Search" asp-for="SearchFilter" class="col-xs-6 mr-1" />
+    <input placeholder="Search" asp-for="SearchFilter" class="col-xs-6 mr-1 rounded border border-secondary pl-2" />
     <input type="hidden" asp-for="@Model.FilterTagsString" value="@Model.FilterTagsString" />
     <button type="submit" class="btn btn-outline-secondary col-xs-6">Search</button>
 </form>
 
-<form method="post" asp-action="PopularDecks" asp-controller="BrowseDecks" class="row ml-3 mb-4">
-    <label>Filter by tags</label>
-    <input placeholder="Add tag filter" class="col-xs-6 mr-1" asp-for="TagFilter" />
+<form method="post" asp-action="PopularDecks" asp-controller="BrowseDecks" class="row w-25 ml-3 mb-4">
+    <label class="w-100">Filter by tags</label>
+    <input placeholder="Add tag filter" class="col-xs-6 mr-1 rounded border border-secondary pl-2" asp-for="TagFilter" />
     <input type="hidden" asp-for="@Model.FilterTagsString" value="@Model.FilterTagsString" />
     <input type="hidden" asp-for="@Model.SearchFilter" value="@Model.SearchFilter" />
 
@@ -42,39 +42,40 @@
 
 @if (Model.FilterTags is not null)
 {
-    <ul class="list-group">
-       @foreach (var tag in Model.FilterTags)
+    <div class="ml-3 d-flex flex-wrap">
+        @foreach (var tag in Model.FilterTags)
         {
-            <li>
-                <div class="row col-sm-10 mr-1">
-                    <div class="col-sm-8">
-                        <div class="mw-100 text-wrap text-break">@tag</div>
-                    </div>
+            <div class="p-2 d-flex flex-row">
+                <div class="text-wrap text-break mt-2">@tag</div>
 
-                    <form method="post" asp-action="RemoveTagFromPopular" asp-controller="BrowseDecks">
-                        <input type="hidden" class="col-xs-6 mr-1" asp-for="TagFilter" />
-                        <input type="hidden" asp-for="FilterTagsString" value="@Model.FilterTagsString" />
-                        <input type="hidden" asp-for="SearchFilter" value="@Model.SearchFilter" />
-                        <input type="hidden" asp-for="TagToRemove" value="@tag" />
+                <form method="post" asp-action="RemoveTagFromPopular" asp-controller="BrowseDecks">
+                    <input type="hidden" class="col-xs-6 mr-1" asp-for="TagFilter" />
+                    <input type="hidden" asp-for="FilterTagsString" value="@Model.FilterTagsString" />
+                    <input type="hidden" asp-for="SearchFilter" value="@Model.SearchFilter" />
+                    <input type="hidden" asp-for="TagToRemove" value="@tag" />
 
-                        <button type="submit" class="btn btn-outline-danger mh-100 justify-content-center align-self-center">Add</button>
-                    </form>
-                </div>
-            </li>
+                    <button type="submit" class="btn">
+                        <img src="~/img/remove.png" width="20" height="20">
+                    </button>
+                </form>
+            </div>
         }
-    </ul>
+    </div>
 }
 
-@foreach (var deck in Model.PopularDecks)
-{
-    <p>@deck.Name</p>
+<div class="row">
+    @foreach (var deck in Model.PopularDecks)
+    {
+        <div class="border border-secondary rounded col-3 ml-5 mt-3 p-2 ">
+            <a class="card-link text-dark" asp-action="DeckPage" asp-controller="BrowseDecks"
+               asp-route-deckId="@deck.Id">
+                <img id="picture" src="@Url.Action("GetThumb", new { deckId = deck.Id })" alt="Deck Thumbnail"
+                     style="width:295px;height:280px;" accept="image/*">
 
-    <a class="btn btn-primary" href="#">Play</a>
+                <h5>@deck.Name</h5>
+            </a>
 
-    <a class="btn btn-outline-primary"
-       asp-action="DeckPage"
-       asp-controller="BrowseDecks"
-       asp-route-deckId="@deck.Id">
-        View Details
-    </a>
-}
+            <a class="btn btn-primary" href="#">Play</a>
+        </div>
+    }
+</div>

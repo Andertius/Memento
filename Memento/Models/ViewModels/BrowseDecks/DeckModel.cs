@@ -6,6 +6,8 @@ namespace Memento.Models.ViewModels.BrowseDecks
 {
     public class DeckModel
     {
+        public string Username { get; set; }
+
         public long Id { get; set; }
 
         public string Name { get; set; }

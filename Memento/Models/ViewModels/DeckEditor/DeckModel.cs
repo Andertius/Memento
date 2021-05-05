@@ -6,6 +6,8 @@ namespace Memento.Models.ViewModels.DeckEditor
 {
     public class DeckModel
     {
+        public string Username { get; set; }
+
         [Required]
         public string Name { get; set; }
 

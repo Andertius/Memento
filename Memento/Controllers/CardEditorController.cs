@@ -11,7 +11,6 @@ using Memento.Models.ViewModels.DeckEditor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Memento.Controllers
@@ -54,6 +53,7 @@ namespace Memento.Controllers
             {
                 return View(new CardEditorModel
                 {
+                    Username = (await _userManager.GetUserAsync(User)).UserName,
                     DeckId = model.DeckId,
                     ExistingId = card.Id,
                     Word = card.Word,
@@ -91,6 +91,7 @@ namespace Memento.Controllers
                 {
                     var returnModel = new CardEditorModel
                     {
+                        Username = (await _userManager.GetUserAsync(User)).UserName,
                         DeckId = deck.Id,
                         Tags = new List<TagModel>(),
                         Errors = errorsArray,
@@ -103,6 +104,7 @@ namespace Memento.Controllers
                 {
                     var returnModel = new CardEditorModel
                     {
+                        Username = (await _userManager.GetUserAsync(User)).UserName,
                         DeckId = deck.Id,
                         Id = card.Id,
                         Word = card.Word,
@@ -139,7 +141,7 @@ namespace Memento.Controllers
 
                 deck.Cards.Remove(card);
                 deck.CardNumber--;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             return RedirectToAction(nameof(DeckEditorController.EditDeck), "DeckEditor", new { deckId });
@@ -197,7 +199,7 @@ namespace Memento.Controllers
 
                 card.Tags.Add(tag);
                 _context.Cards.Update(card);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             return RedirectToAction(nameof(EditCard), new { deckId = model.DeckId, cardId = model.Id });
@@ -301,7 +303,7 @@ namespace Memento.Controllers
                             deck.CardNumber++;
                             _context.Decks.Update(deck);
 
-                            _context.SaveChanges();
+                            await _context.SaveChangesAsync();
                             returnCardId = newCard.Id;
                         }
                     }
@@ -331,6 +333,7 @@ namespace Memento.Controllers
                         deck.Cards.Add(card);
                         deck.CardNumber++;
                         _context.Decks.Update(deck);
+                        await _context.SaveChangesAsync();
                         returnCardId = card.Id;
                     }
 

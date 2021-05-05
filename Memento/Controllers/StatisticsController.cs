@@ -1,4 +1,5 @@
 ﻿using Memento.Models;
+using Memento.Models.ViewModels;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -61,6 +62,7 @@ namespace Memento.Controllers
                 _context.Statistics.Add(newStats);
                 _context.SaveChanges();
             }
+
             else if (lastEntry == comparator)
             {
                 var average = 0.0;
@@ -77,7 +79,8 @@ namespace Memento.Controllers
                 _context.Update(data[^1]);
                 _context.SaveChanges();
             }
-            return View();
+            //return View();
+            return View(new StatisticsModel { Username = loggedInUser.UserName });
         }
 
         [Authorize]

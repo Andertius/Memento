@@ -4,6 +4,8 @@ namespace Memento.Models.ViewModels.BrowseDecks
 {
     public class SearchedDecksModel
     {
+        public string Username { get; set; }
+
         public List<DeckModel> Decks { get; set; }
 
         public List<string> FilterTags { get; set; }
