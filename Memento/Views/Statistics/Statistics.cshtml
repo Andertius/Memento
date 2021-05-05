@@ -1,4 +1,6 @@
-﻿@section pageTitle {
+﻿@model StatisticsModel
+
+@section pageTitle {
     <span>Statistics</span>
 }
 
@@ -7,7 +9,7 @@
     {
         <div class="d-inline dropdown">
             <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-                @User.Identity.Name
+                @Model.Username
                 <span class="caret"></span>
             </button>
             <div class="dropdown-menu dropdown-menu-right">

@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Memento.Models;
+using Memento.Models.ViewModels;
 using Memento.Models.ViewModels.BrowseDecks;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,13 +25,11 @@ namespace Memento.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userWithDecks = await _context.Users
-                .Where(u => u.UserName == User.Identity.Name)
-                .Include(u => u.Decks)
-                .FirstOrDefaultAsync();
+            var user = await _userManager.GetUserAsync(User);
 
             var model = new BrowseDecksModel
-            {
+            { 
+                Username = (user is null) ? "" : user.UserName,
                 PopularDecks = _context.Decks
                     .Where(deck => deck.IsPublic)
                     .Select(deck => new DeckModel
@@ -45,32 +43,39 @@ namespace Memento.Controllers
                 YourDecks = new List<DeckModel>(),
             };
 
-            if (userWithDecks is not null)
+            if (User.Identity.IsAuthenticated)
             {
-                model.CreatedDecks = _context.Decks
-                    .Where(deck => deck.CreatorId == userWithDecks.Id)
-                    .Select(deck => new DeckModel
-                    {
-                        Id = deck.Id,
-                        Name = deck.Name,
-                        Difficulty = deck.Difficulty,
-                    })
-                    .ToList();
+                var userWithDecks = await _context.Users
+                    .Where(u => u.UserName == user.UserName)
+                    .Include(u => u.Decks)
+                    .FirstOrDefaultAsync();
 
-                model.YourDecks = userWithDecks.Decks
-                    .Select(deck => new DeckModel
-                    {
-                        Id = deck.Id,
-                        Name = deck.Name,
-                        Difficulty = deck.Difficulty,
-                    })
-                    .ToList();
+                if (userWithDecks is not null)
+                {
+                    model.CreatedDecks = _context.Decks
+                        .Where(deck => deck.CreatorId == userWithDecks.Id)
+                        .Select(deck => new DeckModel
+                        {
+                            Id = deck.Id,
+                            Name = deck.Name,
+                            Difficulty = deck.Difficulty,
+                        })
+                        .ToList();
+
+                    model.YourDecks = userWithDecks.Decks
+                        .Select(deck => new DeckModel
+                        {
+                            Id = deck.Id,
+                            Name = deck.Name,
+                            Difficulty = deck.Difficulty,
+                        })
+                        .ToList();
+                }
             }
 
             return View(model);
         }
 
-        [Authorize]
         [HttpGet("[controller]/[action]/{deckId}")]
         public async Task<FileResult> GetThumb(long deckId)
         {
@@ -79,7 +84,10 @@ namespace Memento.Controllers
         }
 
         [Route(nameof(About))]
-        public IActionResult About()
-            => View();
+        public async Task<IActionResult> About()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            return View(new AboutModel { Username = user is null ? "" : user.UserName });
+        }
     }
 }

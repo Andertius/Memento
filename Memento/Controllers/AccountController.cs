@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -64,12 +63,10 @@ namespace Memento.Controllers
                         var data = context.Statistics.Where(u => u.UserId == user.Id).ToList();
 
                         DateTime lastEntry = data[^1].Date;
-
                         lastEntry = new DateTime(data[^1].Date.Year, data[^1].Date.Month, data[^1].Date.Day);
-
                         DateTime today = DateTime.UtcNow;
 
-                        DateTime comparator = new DateTime(today.Year, today.Month, today.Day);
+                        var comparator = new DateTime(today.Year, today.Month, today.Day);
 
                         if(lastEntry != comparator)
                         {
@@ -94,7 +91,6 @@ namespace Memento.Controllers
                             context.Statistics.Add(newStats);
                             context.SaveChanges();
                         }
-
 
                         return Redirect(loginModel?.ReturnUrl ?? "/");
                     }
@@ -181,7 +177,7 @@ namespace Memento.Controllers
 
             if ((await userManager.ConfirmEmailAsync(user, token)).Succeeded)
             {
-                Settings settings = new Settings
+                var settings = new Settings
                 {
                     UserId = user.Id,
                     HoursPerDay = 0,

@@ -1,9 +1,7 @@
 ﻿namespace Memento.Models.ViewModels
 {
-    public class TagModel
+    public class AboutModel
     {
         public string Username { get; set; }
-
-        public string Name { get; set; }
     }
 }

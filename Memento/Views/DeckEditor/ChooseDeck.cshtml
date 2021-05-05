@@ -7,7 +7,7 @@
 @section status {
     <div class="d-inline dropdown">
         <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-            @User.Identity.Name
+            @Model.UserName
             <span class="caret"></span>
         </button>
         <div class="dropdown-menu dropdown-menu-right">
@@ -18,18 +18,18 @@
     </div>
 }
 
-<div class="row mb-4">
+<div class="row mb-4 ml-2">
     <a class="btn btn-primary col-xs-6" asp-action="CreateDeck">New deck</a>
     <form method="post" asp-action="ChooseDeck" asp-controller="DeckEditor" class="col-xs-6 row ml-3">
-        <input placeholder="Search" asp-for="SearchFilter" class="h-100 col-xs-6 mr-1" />
+        <input placeholder="Search" asp-for="SearchFilter" class="h-100 col-xs-6 mr-1 rounded border border-secondary pl-2" />
         <input type="hidden" asp-for="@Model.FilterTagsString" value="@Model.FilterTagsString" />
         <button type="submit" class="btn btn-outline-secondary col-xs-6">Search</button>
     </form>
 </div>
 
-<form method="post" asp-action="ChooseDeck" asp-controller="DeckEditor" class="row ml-3 mb-4">
-    <label>Filter by tags</label>
-    <input placeholder="Add tag filter" class="col-xs-6 mr-1" asp-for="TagFilter" />
+<form method="post" asp-action="ChooseDeck" asp-controller="DeckEditor" class="row mb-4 ml-2">
+    <label class="mt-1 ml-1 mr-3">Filter by tags</label>
+    <input placeholder="Add tag filter" class="col-xs-6 mr-1 rounded border border-secondary pl-2" asp-for="TagFilter" />
     <input type="hidden" asp-for="@Model.FilterTagsString" value="@Model.FilterTagsString" />
     <input type="hidden" asp-for="@Model.SearchFilter" value="@Model.SearchFilter" />
 
@@ -38,27 +38,25 @@
 
 @if (Model.FilterTags is not null)
 {
-    <ul class="list-group">
+    <div class="d-flex flex-wrap">
        @foreach (var tag in Model.FilterTags)
         {
-            <li>
-                <div class="row col-sm-10 mr-1">
-                    <div class="col-sm-8">
-                        <div class="mw-100 text-wrap text-break">@tag</div>
-                    </div>
+        <div class="p-2 d-flex flex-row">
+            <div class="text-wrap text-break mt-2">@tag</div>
 
-                    <form method="post" asp-action="RemoveTagFromChooseDeck" asp-controller="DeckEditor">
-                        <input type="hidden" class="col-xs-6 mr-1" asp-for="TagFilter" />
-                        <input type="hidden" asp-for="FilterTagsString" value="@Model.FilterTagsString" />
-                        <input type="hidden" asp-for="SearchFilter" value="@Model.SearchFilter" />
-                        <input type="hidden" asp-for="TagToRemove" value="@tag" />
+            <form method="post" asp-action="RemoveTagFromChooseDeck" asp-controller="DeckEditor">
+                <input type="hidden" asp-for="TagFilter" />
+                <input type="hidden" asp-for="FilterTagsString" value="@Model.FilterTagsString" />
+                <input type="hidden" asp-for="SearchFilter" value="@Model.SearchFilter" />
+                <input type="hidden" asp-for="TagToRemove" value="@tag" />
 
-                        <button type="submit" class="btn btn-outline-danger mh-100 justify-content-center align-self-center">Add</button>
-                    </form>
-                </div>
-            </li>
+                <button type="submit" class="btn">
+                    <img src="~/img/remove.png" width="20" height="20">
+                </button>
+            </form>
+        </div>
         }
-    </ul>
+    </div>
 }
 
 <ul class="list-group">

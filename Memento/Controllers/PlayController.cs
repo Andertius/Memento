@@ -75,6 +75,7 @@ namespace Memento.Controllers
 
             return View(new PlayModel
             {
+                Username = user.UserName,
                 CurrentCard = _d.Cards.First(),
                 PickedDeck = _d
             });

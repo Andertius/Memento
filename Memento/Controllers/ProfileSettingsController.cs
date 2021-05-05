@@ -47,6 +47,7 @@ namespace Memento.Controllers
                 User user = await userManager.GetUserAsync(User);
 
                 IdentityResult result = await userManager.SetUserNameAsync(user, model.Username);
+                await userManager.UpdateAsync(user);
 
                 if (result.Succeeded)
                 {
