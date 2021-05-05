@@ -423,8 +423,11 @@ namespace Memento.Controllers
         private async Task<ChooseCardModel> CreateChooseCardModel(ChooseCardModel model)
         {
             var userWithDecks = await _userManager.GetUserAsync(User);
-            var cardsInModel = await _context.Cards.Select(card => card).ToListAsync();
-            bool isSearchEmpy = true;
+            var cardsInModel = await _context.Cards
+                .Select(card => card)
+                .Include(card => card.Tags)
+                .ToListAsync();
+            bool isSearchEmpty = true;
 
             if (model.SearchFilter is not null)
             {
@@ -435,11 +438,16 @@ namespace Memento.Controllers
                             .ToLower()))
                     .ToList();
 
-                isSearchEmpy = false;
+                isSearchEmpty = false;
             }
 
             if (!String.IsNullOrEmpty(model.TagFilter))
             {
+                if (model.FilterTagsString is null)
+                {
+                    model.FilterTagsString = String.Empty;
+                }
+
                 if (!model.FilterTagsString.Contains($"#{model.TagFilter}#"))
                 {
                     model.FilterTagsString += $"#{model.TagFilter.ToLower().Split(' ').Aggregate((x, y) => x += "_" + y)}#";
@@ -453,12 +461,12 @@ namespace Memento.Controllers
                     .ToList();
 
                 cardsInModel = cardsInModel
-                    .Where(deck => !model.FilterTags
-                        .Except(deck.Tags is null ? new List<string>() : deck.Tags.Select(tag => tag.Name))
+                    .Where(card => !model.FilterTags
+                        .Except(card.Tags is null ? new List<string>() : card.Tags.Select(tag => tag.Name))
                         .Any())
                     .ToList();
             }
-            else if (isSearchEmpy)
+            else if (isSearchEmpty)
             {
                 cardsInModel = new List<Card>();
             }
