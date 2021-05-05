@@ -1,10 +1,10 @@
 ﻿namespace Memento.Models.ViewModels.Play
 {
-    public class CardModel
+    public class PlayCardModel
     {
         public long Id { get; set; }
 
-        public DeckModel Deck { get; set; }
+        //public DeckModel Deck { get; set; }
 
         public string Word { get; set; }
 
