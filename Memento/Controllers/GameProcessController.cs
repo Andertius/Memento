@@ -71,6 +71,11 @@ namespace Memento.Controllers
                     break;
             }
 
+            if (!_sd.Cards.Any())
+            {
+                return RedirectToAction(nameof(PlayController.DeckList), "Play");
+            }
+
             return View(new ProcessModel
             {
                 Username = user.UserName,
