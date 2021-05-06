@@ -17,7 +17,6 @@ namespace Memento.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly MementoDbContext _context;
-        private static PlayDeckModel _sd;
 
         public PlayController(UserManager<User> userManager, MementoDbContext context)
         {
@@ -51,15 +50,10 @@ namespace Memento.Controllers
         {
             User user = await _userManager.GetUserAsync(User);
 
-            //var userWithDecks = await _context.Users
-            //    .Where(u => u.UserName == User.Identity.Name)
-            //    .Include(u => u.Decks)
-            //    .FirstOrDefaultAsync();
-            //var deck = await userWithDecks.Decks.Where(x=>x==)
             var deck = await _context.Decks
                 .Where(d => d.Id == deckId)
                 .FirstOrDefaultAsync();
-            _sd = new PlayDeckModel
+            var d = new PlayDeckModel
             {
                 Id = deck.Id,
                 Name = deck.Name,
@@ -70,7 +64,7 @@ namespace Memento.Controllers
             return View(new PlayModel
             {
                 Username = user.UserName,
-                PickedDeck = _sd
+                PickedDeck = d
             });
         }
 
