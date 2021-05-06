@@ -4,8 +4,6 @@
     {
         public long Id { get; set; }
 
-        //public DeckModel Deck { get; set; }
-
         public string Word { get; set; }
 
         public string Transcription { get; set; }

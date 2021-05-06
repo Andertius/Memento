@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Memento.Models.ViewModels.Play
 {
-    public class PlayModel
+    public class ProcessModel
     {
-        public PlayDeckModel PickedDeck { get; set; }
+        public long DeckId { get; set; }
         public string Username { get; set; }
         public PlayCardModel CurrentCard { get; set; }
     }

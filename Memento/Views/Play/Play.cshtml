@@ -26,77 +26,60 @@
 }
 
 <style>
-    ul#menu li {
-        display: inline;
-        font-size: 55pt;
-        margin: 0 15PX;
-    }
-
-    button {
-        font-size: 24pt;
-        border-radius: 25px;
-        border: solid 5px #0061f3;
-        background-color: white;
-        padding: 0 20px;
-        color: #0061f3;
-    }
-
-        button:hover {
-            background-color: #0061f3;
-            color: white;
-        }
 
     h1 {
-        text-align: right;
-        margin: 0 5% 0 0;
+        text-align: center;
+        font-family:'Century Gothic';
+        font-size:54px;
+    }
+    h2 {
+        text-align: center;
+        font-family: 'Trebuchet MS';
+        font-size: 32px;
+    }
+    h3 {
+        text-align: center;
+        font-family: Consolas;
+        font-size: 24px;
     }
 
-    .b {
-        border: solid 5px;
-        border-radius: 25px;
+    .img {
+        width: 900px;
+        height: 600px;
+        object-fit: contain;
+        border: 3px solid red;
     }
-
-    .a {
-        align-content: center;
-    }
-
 
     hr {
-        width: 50%;
-        margin-left: auto;
-        margin-right: 10px;
+        width: 70%;
         border-top: solid 3px;
     }
 
-    .center {
-       margin:auto;
-       height:100%;
-       width:100%;
-    }
 </style>
 
 <div class="play-section container">
     <div class="row">
 
-        <div class="col-4 b">
+        <div class="col-6 b">
 
-            <img class="col center b" src="/img/Card.png">
+            <img class="col img" src="@Url.Action("GetCover", new { deckId = Model.PickedDeck.Id })">
 
         </div>
 
-        <div class="col-8 b">
-            <h1>@Model.CurrentCard.Word</h1>
+        <div class="col-6">
+            <h1>@Model.PickedDeck.Name</h1>
             <hr>
-            <h1>@Model.CurrentCard.Transcription</h1>
+            <h2>@Model.PickedDeck.CreatorName</h2>
             <hr>
-            <p style="text-align:center; font-size:24pt;">@Model.CurrentCard.Description</p>
+            <h3>@Model.PickedDeck.Difficulty</h3>
+            <hr>
 
-            <ul id="menu" class="text-center">
-                @*<li><button asp-controller="PlayController" asp-action="NextCard">Trivial</button></li>*@
-                <li><a class="nav-link" asp-action="NextCard" asp-controller="Play">Play</a></li>
-                <li><button>Got it</button></li>
-                <li><button>Again</button></li>
-            </ul>
+            <a class="nav-link display-3 text-center"
+               asp-action="Process"
+               asp-controller="Play"
+               asp-route-deckId=@Model.PickedDeck.Id
+               asp-route-remember="0">Play</a>
+
         </div>
     </div>
 

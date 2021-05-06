@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using Microsoft.AspNetCore.Http;
+
 namespace Memento.Models.ViewModels.Play
 {
     public class PlayDeckModel
@@ -9,5 +11,9 @@ namespace Memento.Models.ViewModels.Play
         public long Id { get; set; }
 
         public ICollection<PlayCardModel> Cards { get; set; }
+
+        public string CreatorName { get; set; }
+
+        public string Difficulty { get; set; }
     }
 }
