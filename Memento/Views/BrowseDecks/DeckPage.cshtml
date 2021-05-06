@@ -67,7 +67,12 @@
         <div class="mt-2">
             @if (User.Identity.IsAuthenticated)
             {
-                <a class="btn btn-primary" href="#">Play</a>
+                <a class="btn btn-primary"
+                   asp-action="DeckInfo"
+                   asp-controller="Play"
+                   asp-route-deckId=@Model.Id>
+                    Play
+                </a>
 
                 if (User.Identity.Name == Model.CreatorName)
                 {
