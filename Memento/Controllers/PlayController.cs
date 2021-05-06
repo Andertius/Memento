@@ -34,14 +34,22 @@ namespace Memento.Controllers
                 .Include(u => u.Decks)
                 .FirstOrDefaultAsync();
 
-            var decks = _context.Decks.Where(deck => deck.CreatorId == user.Id);
+            var createdDecks = _context.Decks
+                .Where(deck => deck.CreatorId == user.Id)
+                .ToList();
+
+            var allDecks = createdDecks
+                .Concat(userWithDecks.Decks)
+                .ToList();
+
             var model = new PlayModel
             {
                 Username = (await _userManager.GetUserAsync(User)).UserName,
-                UserDecks = await decks
+                UserDecks = allDecks
                     .Select(deck => new PlayDeckModel { Name = deck.Name, Id = deck.Id })
-                    .ToListAsync()
+                    .ToList()
             };
+
             return View(model);
         }
         [Authorize]
@@ -52,6 +60,7 @@ namespace Memento.Controllers
 
             var deck = await _context.Decks
                 .Where(d => d.Id == deckId)
+                .Include(d => d.Creator)
                 .FirstOrDefaultAsync();
             var d = new PlayDeckModel
             {
