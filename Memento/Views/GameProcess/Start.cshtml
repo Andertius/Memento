@@ -1,0 +1,150 @@
+﻿@model ProcessModel
+
+@section pageTitle {
+    <span>Play</span>
+}
+@section status {
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="d-inline dropdown">
+            <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                @User.Identity.Name
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="ProfileSettings">Profile Settings</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item small" asp-action="Logout" asp-controller="Account">Log out</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-outline-info btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+        <a class="btn btn-outline-info btn-sm" asp-action="Signup" asp-controller="Account">Sign up</a>
+    }
+}
+
+<style>
+    ul#menu li {
+        display: inline;
+        font-size: 55pt;
+        margin: 0 15PX;
+    }
+
+    .butt {
+        font-size: 24pt;
+        border-radius: 25px;
+        border: solid 5px #0061f3;
+        background-color: white;
+        padding: 0 20px;
+        color: #0061f3;
+    }
+
+    a.butt:hover {
+        background-color: #0061f3;
+        color: white;
+    }
+    /*------------------------------------*/
+    .disp {
+        font-family: 'Century Gothic';
+        font-size: 26pt;
+        color: #0061f3;
+    }
+    h1 {
+        text-align: right;
+        font-family: 'Century Gothic';
+        font-size: 45pt;
+        margin: 0 5% 0 0;
+    }
+
+    h2 {
+        text-align: right;
+        font-family: 'Trebuchet MS';
+        font-size: 24pt;
+    }
+
+    p {
+        text-align: center;
+        font-family: 'Trebuchet MS';
+        font-size: 18pt;
+    }
+
+    hr {
+        width: 50%;
+        margin-left: auto;
+        margin-right: 10px;
+        border-top: solid 3px;
+    }
+
+    .hiddenInfo {
+        visibility: hidden;
+    }
+
+    .pads {
+        padding-right: 50px;
+        padding-top: 25px;
+    }
+    /*------------------------------------*/
+    .img {
+        width: 900px;
+        height: 600px;
+        object-fit: contain;
+    }
+
+    button {
+        border: none;
+        background-color: white;
+        color: #0061f3;
+    }
+</style>
+
+<div class="play-section container">
+    <div class="row">
+
+        <div class="col-6">
+
+            @if (Model.ShowImages)
+            {
+                <img class="col img" src="@Url.Action("GetImage", new { deckId = Model.DeckId, cardId = Model.CurrentCard.Id })">
+            }
+            else
+            {
+                <img class="col img hiddenInfo" src="@Url.Action("GetImage", new { deckId = Model.DeckId, cardId = Model.CurrentCard.Id })">
+            }
+        </div>
+
+        <div class="col-6 pads">
+            <h1>@Model.CurrentCard.Word</h1>
+            <hr>
+            <h2 class="hiddenInfo">@Model.CurrentCard.Transcription</h2>
+            <hr>
+            <p class="hiddenInfo">@Model.CurrentCard.Description</p>
+
+            <div class="text-center">
+                <button onclick="showElement()" class="display-4">Show</button>
+            </div>
+            <div>
+                <a class="nav-link disp text-center float-left" asp-action="NextCard"
+                   asp-controller="GameProcess"
+                   asp-route-deckId=@Model.DeckId
+                   asp-route-remember="1">Got it</a>
+
+                <a class="nav-link disp d text-center float-right" asp-action="NextCard"
+                   asp-controller="GameProcess"
+                   asp-route-deckId=@Model.DeckId
+                   asp-route-remember="2">Again</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    function showElement() {
+        var elements = document.querySelectorAll('.hiddenInfo');
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.visibility = 'visible';
+        }
+    }
+</script>

@@ -10,8 +10,6 @@ namespace Memento.Models.ViewModels.Play
 
         public long Id { get; set; }
 
-        public ICollection<PlayCardModel> Cards { get; set; }
-
         public string CreatorName { get; set; }
 
         public string Difficulty { get; set; }

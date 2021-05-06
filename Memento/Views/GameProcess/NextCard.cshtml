@@ -46,14 +46,28 @@
         color: white;
     }
     /*------------------------------------*/
+    .disp {
+        font-family: 'Century Gothic';
+        font-size: 26pt;
+        color: #0061f3;
+    }
     h1 {
         text-align: right;
+        font-family: 'Century Gothic';
+        font-size: 45pt;
         margin: 0 5% 0 0;
+    }
+
+    h2 {
+        text-align: right;
+        font-family: 'Trebuchet MS';
+        font-size: 24pt;
     }
 
     p {
         text-align: center;
-        font-size: 24pt;
+        font-family: 'Trebuchet MS';
+        font-size: 18pt;
     }
 
     hr {
@@ -76,9 +90,13 @@
         width: 900px;
         height: 600px;
         object-fit: contain;
-        border: 3px solid red;
     }
 
+    button {
+        border: none;
+        background-color: white;
+        color: #0061f3;
+    }
 </style>
 
 <div class="play-section container">
@@ -86,31 +104,37 @@
 
         <div class="col-6">
 
-            <img class="col img" src="@Url.Action("GetImage", new { deckId = Model.DeckId, cardId = Model.CurrentCard.Id })">
-
+            @if (Model.ShowImages)
+            {
+                <img class="col img" src="@Url.Action("GetImage", new { deckId = Model.DeckId, cardId = Model.CurrentCard.Id })">
+            }
+            else
+            {
+                <img class="col img hiddenInfo" src="@Url.Action("GetImage", new { deckId = Model.DeckId, cardId = Model.CurrentCard.Id })">
+            }
         </div>
 
         <div class="col-6 pads">
             <h1>@Model.CurrentCard.Word</h1>
             <hr>
-            <h1 class="hiddenInfo">@Model.CurrentCard.Transcription</h1>
+            <h2 class="hiddenInfo">@Model.CurrentCard.Transcription</h2>
             <hr>
             <p class="hiddenInfo">@Model.CurrentCard.Description</p>
 
-            <button onclick="showElement()" class="ui-button align-content-center">Show</button>
-            <ul id="menu" class="text-center">
-                <li>
-                    <a class="butt" asp-action="Process"
-                       asp-controller="Play"
-                       asp-route-deckId=@Model.DeckId
-                       asp-route-remember="1">Got it</a>
-                </li>
-                <li>
-                    <a class="butt" asp-action="Process"
-                       asp-controller="Play"
-                       asp-route-deckId=@Model.DeckId
-                       asp-route-remember="2">Again</a>
-            </ul>
+            <div class="text-center">
+                <button onclick="showElement()" class="display-4">Show</button>
+            </div>
+            <div>
+                <a class="nav-link disp text-center float-left" asp-action="NextCard"
+                   asp-controller="GameProcess"
+                   asp-route-deckId=@Model.DeckId
+                   asp-route-remember="1">Got it</a>
+
+                <a class="nav-link disp d text-center float-right" asp-action="NextCard"
+                   asp-controller="GameProcess"
+                   asp-route-deckId=@Model.DeckId
+                   asp-route-remember="2">Again</a>
+            </div>
         </div>
     </div>
 
@@ -118,9 +142,9 @@
 
 <script type="text/javascript">
     function showElement() {
-        var elements = document.getElementsByClassName('hiddenInfo');
+        var elements = document.querySelectorAll('.hiddenInfo');
         for (var i = 0; i < elements.length; i++) {
-            elements[i].style.visibility = visible
+            elements[i].style.visibility = 'visible';
         }
     }
 </script>
