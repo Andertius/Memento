@@ -125,12 +125,14 @@
                 <button onclick="showElement()" class="display-4">Show</button>
             </div>
             <div>
-                <a class="nav-link disp text-center float-left" asp-action="NextCard"
+                <a class="nav-link disp text-center float-left" 
+                   asp-action="NextCard"
                    asp-controller="GameProcess"
                    asp-route-deckId=@Model.DeckId
                    asp-route-remember="1">Got it</a>
 
-                <a class="nav-link disp d text-center float-right" asp-action="NextCard"
+                <a class="nav-link disp d text-center float-right" 
+                   asp-action="NextCard"
                    asp-controller="GameProcess"
                    asp-route-deckId=@Model.DeckId
                    asp-route-remember="2">Again</a>

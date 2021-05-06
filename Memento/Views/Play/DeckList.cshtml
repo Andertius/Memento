@@ -1,0 +1,53 @@
+﻿@model PlayModel
+
+@section pageTitle {
+    <span>Home</span>
+}
+@section status {
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="d-inline dropdown">
+            <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                @Model.Username
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item small" asp-action="ProfileSettings" asp-controller="ProfileSettings">Profile Settings</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item small" asp-action="Logout" asp-controller="Account">Log out</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-outline-info btn-sm" asp-action="Login" asp-controller="Account">Log in</a>
+        <a class="btn btn-outline-info btn-sm" asp-action="Signup" asp-controller="Account">Sign up</a>
+    }
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div>
+        <h4 class="text-center">Your collection</h4>
+
+        <div class="row">
+            @foreach (var deck in Model.UserDecks)
+            {
+                <div class="border border-secondary rounded col-2 ml-5 mt-3 p-2 text-center">
+
+                    <img id="picture" src="@Url.Action("GetThumb", new { deckId = deck.Id })" alt="Deck Thumbnail"
+                         style="width:150px;height:200px; object-fit: contain;" accept="image/*">
+
+                    <h5>@deck.Name</h5>
+
+                    <a class="btn btn-primary mr-1"
+                       asp-action="DeckInfo"
+                       asp-controller="Play"
+                       asp-route-deckId=@deck.Id>
+                        Play
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+}

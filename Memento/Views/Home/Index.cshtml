@@ -41,12 +41,17 @@
                 <div class="border border-secondary rounded col-3 ml-5 mt-3 p-2">
                     <a class="card-link text-dark" asp-action="DeckPage" asp-controller="BrowseDecks" asp-route-deckId="@deck.Id">
                         <img id="picture" src="@Url.Action("GetThumb", new { deckId = deck.Id })" alt="Deck Thumbnail"
-                             style="width:295px;height:280px;" accept="image/*">
+                             style="width:295px;height:280px; object-fit: contain;" accept="image/*">
 
                         <h5>@deck.Name</h5>
                     </a>
 
-                    <a class="btn btn-primary mr-1" href="#">Play</a>
+                    <a class="btn btn-primary mr-1"
+                       asp-action="DeckInfo"
+                       asp-controller="Play"
+                       asp-route-deckId=@deck.Id>
+                        Play
+                    </a>
 
                     <a class="btn btn-outline-danger"
                        asp-action="RemoveDeckFromCollection"
@@ -85,7 +90,12 @@
                         <h5>@deck.Name</h5>
                     </a>
 
-                    <a class="btn btn-primary" href="#">Play</a>
+                    <a class="btn btn-primary"
+                       asp-action="DeckInfo"
+                       asp-controller="Play"
+                       asp-route-deckId=@deck.Id>
+                        Play
+                    </a>
 
                     <a class="btn btn-outline-info"
                        asp-action="EditDeck"

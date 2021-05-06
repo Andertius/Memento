@@ -10,5 +10,7 @@ namespace Memento.Models.ViewModels.Play
         public PlayDeckModel PickedDeck { get; set; }
         public string Username { get; set; }
         public PlayCardModel CurrentCard { get; set; }
+
+        public List<PlayDeckModel> UserDecks { get; set; }
     }
 }

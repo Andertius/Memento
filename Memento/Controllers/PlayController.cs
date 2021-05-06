@@ -27,7 +27,27 @@ namespace Memento.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Play()
+        public async Task<IActionResult> DeckList()
+        {
+            User user = await _userManager.GetUserAsync(User);
+            var userWithDecks = await _context.Users
+                .Where(u => u.UserName == user.UserName)
+                .Include(u => u.Decks)
+                .FirstOrDefaultAsync();
+
+            var decks = _context.Decks.Where(deck => deck.CreatorId == user.Id);
+            var model = new PlayModel
+            {
+                Username = (await _userManager.GetUserAsync(User)).UserName,
+                UserDecks = await decks
+                    .Select(deck => new PlayDeckModel { Name = deck.Name, Id = deck.Id })
+                    .ToListAsync()
+            };
+            return View(model);
+        }
+        [Authorize]
+        [HttpGet("[controller]/[action]/{deckId}")]
+        public async Task<IActionResult> DeckInfo(long deckId)
         {
             User user = await _userManager.GetUserAsync(User);
 
@@ -37,6 +57,7 @@ namespace Memento.Controllers
             //    .FirstOrDefaultAsync();
             //var deck = await userWithDecks.Decks.Where(x=>x==)
             var deck = await _context.Decks
+                .Where(d => d.Id == deckId)
                 .FirstOrDefaultAsync();
             _sd = new PlayDeckModel
             {
@@ -49,7 +70,6 @@ namespace Memento.Controllers
             return View(new PlayModel
             {
                 Username = user.UserName,
-                //CurrentCard = _sd.Cards.First(),
                 PickedDeck = _sd
             });
         }
@@ -59,6 +79,13 @@ namespace Memento.Controllers
         {
             var deck = (Deck)await _context.FindAsync(typeof(Deck), deckId);
             return File(deck.Cover, "image/*");
+        }
+
+        [HttpGet("[controller]/[action]/{deckId}")]
+        public async Task<FileResult> GetThumb(long deckId)
+        {
+            var deck = (Deck)await _context.FindAsync(typeof(Deck), deckId);
+            return File(deck.Thumbnail, "image/*");
         }
     }
 }

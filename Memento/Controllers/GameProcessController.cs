@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Memento.Models;
+using Memento.Models.ViewModels.GameProcess;
 using Memento.Models.ViewModels.Play;
 
 using Microsoft.AspNetCore.Authorization;
