@@ -75,19 +75,20 @@
         </div>
         <div class="col-lg-4 pb-5">
             <div class="row justify-content-end">
-                <div class="border border-secondary" style="width:270px;height:270px;">
-                    <img id="picture" src="@Url.Action("GetPicture")" alt="@User.Identity.Name" style="width:270px;height:270px;" accept="image/*">
+                <div class="border border-secondary rounded p-1" style="width: 280px; height: 280px;">
+                    <img id="picture" src="@Url.Action("GetPicture")" alt="@Model.Username" style="width: 270px; height: 270px; object-fit: contain;"
+                         accept="image/*">
                 </div>
             </div>
             <div class="row justify-content-end">
-                <div class="m-2">
+                <div class="mt-2 mb-2 ml-2">
                     <form asp-action="SavePicture" asp-controller="ProfileSettings" method="post" runat="server" EncType="multipart/form-data">
                         <label for="picture-inp" id="edit-label" class="btn btn-success">@(Model.NoPicture == true ? "Add Image" : "Change")</label>
                         <input type="file" id="picture-inp" style="display:none;" onchange="loadPicture(this)" asp-for="ProfilePicture" runat="server" />
                         <button id="save-pict-btn" class="btn btn-success" type="submit" style="display:none;">Save</button>
                     </form>
                 </div>
-                <div class="m-2">
+                <div class="mt-2 mb-2 ml-2">
                     <label for="no-picture-inp" id="remove-label" class="btn btn-danger" onclick="removePicture()"
                            style="display:@(Model.NoPicture == true ? "none" : "normal")">Remove</label>
                     <input type="hidden" id="no-picture-inp" asp-for="NoPicture" value="@Model.NoPicture" />
@@ -95,7 +96,7 @@
                 </div>
             </div>
             <div class="row justify-content-end">
-                <div class="list-group" id="myList" role="tablist" style="width:270px;align-content:end;">
+                <div class="list-group" id="myList" role="tablist" style="width:280px;align-content:end;">
                     <a class="list-group-item list-group-item-action py-2 active" id="general" data-toggle="list"
                        href="#list-general" role="tab">General</a>
                     <a class="list-group-item list-group-item-action py-2" id="password" data-toggle="list"
@@ -116,7 +117,6 @@
             };
 
             reader.readAsDataURL(input.files[0]);
-            $('#no-picture-inp').val(false);
             $('#edit-label').hide();
             $('#remove-label').hide();
             $('#save-pict-btn').show('slow');
@@ -129,7 +129,6 @@
         $("#picture-inp").val(null);
         $('#edit-label').html('Add Image');
         $('#remove-label').hide();
-        $('#no-picture-inp').val(true);
         $('#save-pict-btn').show('slow');
         $('#cancel-pict-btn').show('slow');
         $('#edit-label').hide();
@@ -139,8 +138,14 @@
         $('#picture').attr('src', '@Url.Action("GetPicture")');
         $('#save-pict-btn').hide();
         $('#cancel-pict-btn').hide();
-        $('#edit-label').html('Change');
-        $('#edit-label').show('slow');
-        $('#remove-label').show('slow');
+        if ($('#no-picture-inp').val() == 'False') {
+            $('#edit-label').html('Change');
+            $('#edit-label').show('slow');
+            $('#remove-label').show('slow');
+        }
+        else {
+            $('#edit-label').html('Add Image');
+            $('#edit-label').show('slow');
+        }
     }
 </script>

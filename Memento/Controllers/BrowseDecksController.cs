@@ -108,6 +108,9 @@ namespace Memento.Controllers
                 })
                 .ToList();
 
+            var user = await _userManager.GetUserAsync(User);
+            model.Username = user.UserName;
+
             model.TagFilter = String.Empty;
             return model;
         }
@@ -206,11 +209,6 @@ namespace Memento.Controllers
             bool hasInCollection = false;
             int userRating = 0;
 
-            //if (!deck.IsPublic)
-            //{
-            //    return RedirectToAction(nameof(Index));
-            //}
-
             var user = await _userManager.GetUserAsync(User);
 
             if (User.Identity.IsAuthenticated)
@@ -256,7 +254,7 @@ namespace Memento.Controllers
 
             var model = new YourCollectionModel
             {
-                Username = (await _userManager.GetUserAsync(User)).UserName,
+                Username = user.UserName,
                 YourDecks = userWithDecks.Decks
                     .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
                     .ToList(),
@@ -347,6 +345,8 @@ namespace Memento.Controllers
                 .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
                 .ToList();
 
+            model.Username = user.UserName;
+
             model.TagFilter = String.Empty;
             return model;
         }
@@ -360,7 +360,7 @@ namespace Memento.Controllers
 
             var model = new CreatedDecksModel
             {
-                Username = (await _userManager.GetUserAsync(User)).UserName,
+                Username = user.UserName,
                 CreatedDecks = await decks
                     .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
                     .ToListAsync(),
@@ -406,7 +406,6 @@ namespace Memento.Controllers
         {
             var userWithDecks = await _userManager.GetUserAsync(User);
 
-            // var user = await _userManager.GetUserAsync(User);
             var decksInModel = _context.Decks
                 .Where(deck => deck.CreatorId == userWithDecks.Id)
                 .Include(deck => deck.Tags)
@@ -451,6 +450,8 @@ namespace Memento.Controllers
             model.CreatedDecks = decksInModel
                 .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
                 .ToList();
+
+            model.Username = userWithDecks.UserName;
 
             model.TagFilter = String.Empty;
             return model;
@@ -566,6 +567,9 @@ namespace Memento.Controllers
                     Difficulty = deck.Difficulty,
                 })
                 .ToList();
+
+            var user = await _userManager.GetUserAsync(User);
+            model.Username = user.UserName;
 
             model.TagFilter = String.Empty;
             return model;
