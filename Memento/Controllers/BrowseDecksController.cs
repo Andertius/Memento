@@ -109,7 +109,7 @@ namespace Memento.Controllers
                 .ToList();
 
             var user = await _userManager.GetUserAsync(User);
-            model.Username = user.UserName;
+            model.Username = user is null ? "" : user.UserName;
 
             model.TagFilter = String.Empty;
             return model;
@@ -345,7 +345,7 @@ namespace Memento.Controllers
                 .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
                 .ToList();
 
-            model.Username = user.UserName;
+            model.Username = user is null ? "" : user.UserName;
 
             model.TagFilter = String.Empty;
             return model;
@@ -451,7 +451,7 @@ namespace Memento.Controllers
                 .Select(deck => new DeckModel { Name = deck.Name, Id = deck.Id })
                 .ToList();
 
-            model.Username = userWithDecks.UserName;
+            model.Username = userWithDecks is null ? "" : userWithDecks.UserName;
 
             model.TagFilter = String.Empty;
             return model;
@@ -569,7 +569,7 @@ namespace Memento.Controllers
                 .ToList();
 
             var user = await _userManager.GetUserAsync(User);
-            model.Username = user.UserName;
+            model.Username = user is null ? "" : user.UserName;
 
             model.TagFilter = String.Empty;
             return model;

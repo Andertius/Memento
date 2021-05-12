@@ -46,6 +46,8 @@ namespace Memento.Controllers
             {
                 User user = await userManager.GetUserAsync(User);
 
+                model.NoPicture = model.ProfilePicture is null;
+
                 IdentityResult result = await userManager.SetUserNameAsync(user, model.Username);
                 await userManager.UpdateAsync(user);
 
@@ -71,6 +73,8 @@ namespace Memento.Controllers
             if (ModelState.IsValid)
             {
                 User user = await userManager.GetUserAsync(User);
+
+                model.NoPicture = model.ProfilePicture is null;
 
                 IdentityResult result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
 

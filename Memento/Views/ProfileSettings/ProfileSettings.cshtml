@@ -90,7 +90,7 @@
                 </div>
                 <div class="mt-2 mb-2 ml-2">
                     <label for="no-picture-inp" id="remove-label" class="btn btn-danger" onclick="removePicture()"
-                           style="display:@(Model.NoPicture == true ? "none" : "normal")">Remove</label>
+                           style="display:@(Model.NoPicture == true ? "none" : "normal");">Remove</label>
                     <input type="hidden" id="no-picture-inp" asp-for="NoPicture" value="@Model.NoPicture" />
                     <button id="cancel-pict-btn" class="btn btn-secondary" onclick="cancelPicture()" style="display:none;">Cancel</button>
                 </div>
