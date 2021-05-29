@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31019.35
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Memento", "Memento\Memento.csproj", "{8D325D47-B145-4EC5-A18C-E2705805BC63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Memento.Tests", "Memento.Tests\Memento.Tests.csproj", "{2E803591-4633-4DDB-8D93-DCD9FF8E4E72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Memento.Tests", "Memento.Tests\Memento.Tests.csproj", "{700BD3C9-CB68-4FDC-B433-36C90E73F1AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{8D325D47-B145-4EC5-A18C-E2705805BC63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D325D47-B145-4EC5-A18C-E2705805BC63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D325D47-B145-4EC5-A18C-E2705805BC63}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2E803591-4633-4DDB-8D93-DCD9FF8E4E72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E803591-4633-4DDB-8D93-DCD9FF8E4E72}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E803591-4633-4DDB-8D93-DCD9FF8E4E72}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E803591-4633-4DDB-8D93-DCD9FF8E4E72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{700BD3C9-CB68-4FDC-B433-36C90E73F1AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{700BD3C9-CB68-4FDC-B433-36C90E73F1AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{700BD3C9-CB68-4FDC-B433-36C90E73F1AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{700BD3C9-CB68-4FDC-B433-36C90E73F1AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
