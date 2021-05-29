@@ -317,7 +317,7 @@ namespace Memento.Controllers
                 .Include(deck => deck.Tags)
                 .FirstOrDefaultAsync();
 
-            if (deck.CreatorId == user.Id)
+            if (deck.CreatorId == user.Id && !String.IsNullOrEmpty(model.TagInput))
             {
                 string tagName = model.TagInput.ToLower().Split(' ').Aggregate((x, y) => x += "_" + y);
                 var tag = await _context.DeckTags.FindAsync(tagName);

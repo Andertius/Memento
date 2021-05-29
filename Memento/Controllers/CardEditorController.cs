@@ -177,7 +177,7 @@ namespace Memento.Controllers
             var user = await _userManager.GetUserAsync(User);
             var deck = await _context.Decks.FindAsync(model.DeckId);
 
-            if (deck.CreatorId == user.Id)
+            if (deck.CreatorId == user.Id && !String.IsNullOrEmpty(model.TagInput))
             {
                 var card = await _context.Cards
                     .Where(card => card.Id == model.Id)
