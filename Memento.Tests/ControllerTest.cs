@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ using Memento.Controllers;
 using Memento.Models;
 using Memento.Models.ViewModels.BrowseDecks;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +22,7 @@ namespace Memento.Tests
 {
     public class ItemsControllerTest : IClassFixture<WebTestFixture>
     {
+
         public ItemsControllerTest()
         {
             ContextOptions = new DbContextOptionsBuilder<MementoDbContext>()
@@ -54,6 +57,31 @@ namespace Memento.Tests
             IdentityResult result = await userManager.CreateAsync(user, "Secret123");
 
             Assert.Equal(user.UserName, context.Users.Find(user).UserName);
+        }
+
+        [Fact]
+        public async void Check()
+        {
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+                                        new Claim(ClaimTypes.NameIdentifier, "SomeValueHere"),
+                                        new Claim(ClaimTypes.Name, "gunnar@somecompany.com")
+                                        // other required and custom claims
+                                   }, "TestAuthentication"));
+            
+
+            using var context = new MementoDbContext(ContextOptions);
+            var userManager = MockUserManager(new List<User>()).Object;
+
+            var controller = new HomeController(userManager, context);
+            controller.ControllerContext = new ControllerContext();
+            controller.ControllerContext.HttpContext = new DefaultHttpContext { User = user };
+
+            var check = new HomeController(userManager, context);
+
+            var result = await controller.Index() as ViewResult;
+
+            Assert.True(result.ViewName is null || result.ViewName == "Index");
+
         }
     }
 }
